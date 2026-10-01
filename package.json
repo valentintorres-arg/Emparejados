@@ -1,0 +1,12 @@
+{
+  "name": "emparejados",
+  "private": true,
+  "description": "Emparejados Pádel: jugadores, parejas, torneos y partidos.",
+  "scripts": {
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "dev:api": "npm --prefix apps/api run dev",
+    "dev:web": "npm --prefix apps/web run dev",
+    "build": "npm --prefix apps/api run build && npm --prefix apps/web run build"
+  }
+}

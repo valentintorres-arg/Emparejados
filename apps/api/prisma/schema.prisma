@@ -1,0 +1,505 @@
+// Emparejados Pádel — modelo de datos
+//
+// Lo que Prisma no puede expresar (CHECK, exclusión de horarios, triggers) vive en
+// la migración "reglas_de_integridad". Las extensiones se crean en "extensiones".
+
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["partialIndexes"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum RolUsuario {
+  ADMIN
+  JUGADOR
+
+  @@map("rol_usuario")
+}
+
+enum EstadoUsuario {
+  ACTIVO
+  INACTIVO
+  BLOQUEADO
+
+  @@map("estado_usuario")
+}
+
+enum Genero {
+  MASCULINO
+  FEMENINO
+  OTRO
+
+  @@map("genero")
+}
+
+enum ManoHabil {
+  DERECHA
+  IZQUIERDA
+
+  @@map("mano_habil")
+}
+
+enum PosicionJuego {
+  DRIVE
+  REVES
+
+  @@map("posicion_juego")
+}
+
+enum EstadoPareja {
+  PENDIENTE
+  CONFIRMADA
+  ACTIVA
+  RECHAZADA
+  DISUELTA
+
+  @@map("estado_pareja")
+}
+
+enum Rama {
+  MASCULINO
+  FEMENINO
+  MIXTO
+
+  @@map("rama")
+}
+
+enum FormatoTorneo {
+  ELIMINACION_DIRECTA
+  ZONAS_Y_LLAVES
+  ROUND_ROBIN
+
+  @@map("formato_torneo")
+}
+
+enum EstadoTorneo {
+  BORRADOR
+  INSCRIPCION_ABIERTA
+  EN_CURSO
+  FINALIZADO
+  CANCELADO
+
+  @@map("estado_torneo")
+}
+
+enum EstadoInscripcion {
+  PENDIENTE
+  APROBADA
+  EN_ESPERA
+  RECHAZADA
+  BAJA
+
+  @@map("estado_inscripcion")
+}
+
+enum Instancia {
+  ZONA
+  DIECISEISAVOS
+  OCTAVOS
+  CUARTOS
+  SEMIFINAL
+  FINAL
+
+  @@map("instancia")
+}
+
+enum EstadoPartido {
+  PROGRAMADO
+  EN_JUEGO
+  FINALIZADO
+  SUSPENDIDO
+  WO
+
+  @@map("estado_partido")
+}
+
+// ─── Catálogos ────────────────────────────────────────────────────────────────
+
+model Localidad {
+  id        Int    @id @default(autoincrement())
+  nombre    String @db.VarChar(80)
+  provincia String @db.VarChar(60)
+
+  clubes    Club[]
+  jugadores Jugador[]
+
+  @@unique([provincia, nombre])
+  @@map("localidades")
+}
+
+// Un club es tanto el "club de origen" de un jugador como la sede de un torneo.
+model Club {
+  id          Int     @id @default(autoincrement())
+  nombre      String  @db.VarChar(100)
+  direccion   String? @db.VarChar(160)
+  localidadId Int     @map("localidad_id")
+
+  localidad Localidad @relation(fields: [localidadId], references: [id], onDelete: Restrict)
+  canchas   Cancha[]
+  jugadores Jugador[]
+  torneos   Torneo[]
+
+  @@unique([localidadId, nombre])
+  @@map("clubes")
+}
+
+model Cancha {
+  id     Int     @id @default(autoincrement())
+  clubId Int     @map("club_id")
+  nombre String  @db.VarChar(40)
+  activa Boolean @default(true)
+
+  club     Club      @relation(fields: [clubId], references: [id], onDelete: Restrict)
+  partidos Partido[]
+
+  @@unique([clubId, nombre])
+  @@map("canchas")
+}
+
+model Categoria {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique @db.VarChar(20)
+  // 1 = categoría más alta. Permite comparar categorías sin parsear el nombre.
+  orden  Int    @unique @db.SmallInt
+
+  jugadores Jugador[]
+  torneos   Torneo[]
+
+  @@map("categorias")
+}
+
+// ─── Usuarios y acceso ────────────────────────────────────────────────────────
+
+model Usuario {
+  id            Int           @id @default(autoincrement())
+  // citext: el UNIQUE es insensible a mayúsculas sin necesidad de lower() en cada consulta.
+  email         String        @unique @db.Citext
+  passwordHash  String        @map("password_hash") @db.VarChar(255)
+  rol           RolUsuario    @default(JUGADOR)
+  estado        EstadoUsuario @default(ACTIVO)
+  ultimoLoginEn DateTime?     @map("ultimo_login_en") @db.Timestamptz(3)
+  creadoEn      DateTime      @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn DateTime      @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  jugador                  Jugador?
+  sesiones                 Sesion[]
+  auditorias               Auditoria[]
+  torneosCreados           Torneo[]
+  parejasResueltas         Pareja[]      @relation("ParejaResueltaPor")
+  inscripcionesSolicitadas Inscripcion[] @relation("InscripcionSolicitadaPor")
+  inscripcionesResueltas   Inscripcion[] @relation("InscripcionResueltaPor")
+  resultadosCargados       Partido[]     @relation("ResultadoCargadoPor")
+
+  @@index([rol, estado])
+  @@map("usuarios")
+}
+
+// Refresh tokens. Se guarda solo el hash (SHA-256) para que una fuga de la base
+// no permita secuestrar sesiones.
+model Sesion {
+  id         Int       @id @default(autoincrement())
+  usuarioId  Int       @map("usuario_id")
+  tokenHash  String    @unique @map("token_hash") @db.Char(64)
+  userAgent  String?   @map("user_agent") @db.VarChar(255)
+  ip         String?   @db.Inet
+  creadaEn   DateTime  @default(now()) @map("creada_en") @db.Timestamptz(3)
+  expiraEn   DateTime  @map("expira_en") @db.Timestamptz(3)
+  revocadaEn DateTime? @map("revocada_en") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@index([expiraEn])
+  @@map("sesiones")
+}
+
+// ─── Jugadores ────────────────────────────────────────────────────────────────
+
+model Jugador {
+  id              Int           @id @default(autoincrement())
+  usuarioId       Int           @unique @map("usuario_id")
+  nombre          String        @db.VarChar(60)
+  apellido        String        @db.VarChar(60)
+  dni             String        @unique @db.VarChar(8)
+  fechaNacimiento DateTime      @map("fecha_nacimiento") @db.Date
+  genero          Genero
+  telefono        String        @db.VarChar(16)
+  localidadId     Int?          @map("localidad_id")
+  clubId          Int?          @map("club_id")
+  categoriaId     Int           @map("categoria_id")
+  manoHabil       ManoHabil     @map("mano_habil")
+  posicion        PosicionJuego
+  fotoUrl         String?       @map("foto_url") @db.VarChar(500)
+
+  // "apellido nombre dni" en minúsculas y sin acentos. Lo mantiene el trigger
+  // jugadores_busqueda; la app nunca lo escribe.
+  busqueda String @default("") @db.VarChar(140)
+
+  // Ley 25.326: sin consentimiento no hay jugador (NOT NULL).
+  consentimientoVersion    String   @map("consentimiento_version") @db.VarChar(20)
+  consentimientoAceptadoEn DateTime @map("consentimiento_aceptado_en") @db.Timestamptz(3)
+
+  creadoEn      DateTime  @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn DateTime  @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  // Baja lógica: un jugador con historial nunca se borra físicamente.
+  eliminadoEn   DateTime? @map("eliminado_en") @db.Timestamptz(3)
+
+  usuario           Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+  localidad         Localidad? @relation(fields: [localidadId], references: [id], onDelete: Restrict)
+  club              Club?      @relation(fields: [clubId], references: [id], onDelete: Restrict)
+  categoria         Categoria  @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
+  qrTokens          QrToken[]
+  parejasComoJ1     Pareja[]   @relation("ParejaJugador1")
+  parejasComoJ2     Pareja[]   @relation("ParejaJugador2")
+  parejasIniciadas  Pareja[]   @relation("ParejaCreadaPor")
+
+  // Búsqueda por texto parcial (nombre, apellido o DNI) con trigramas.
+  @@index([busqueda(ops: raw("gin_trgm_ops"))], type: Gin)
+  // Listados: solo jugadores vigentes, ya ordenados por apellido y nombre.
+  @@index([apellido, nombre], where: raw("eliminado_en IS NULL"))
+  @@index([categoriaId, apellido, nombre], where: raw("eliminado_en IS NULL"))
+  @@index([clubId, apellido, nombre], where: raw("eliminado_en IS NULL"))
+  @@index([localidadId])
+  @@map("jugadores")
+}
+
+// El QR contiene solo este token aleatorio, nunca el DNI. Revocar = marcar
+// revocado_en y emitir uno nuevo.
+model QrToken {
+  id         Int       @id @default(autoincrement())
+  jugadorId  Int       @map("jugador_id")
+  token      String    @unique @db.VarChar(64)
+  creadoEn   DateTime  @default(now()) @map("creado_en") @db.Timestamptz(3)
+  revocadoEn DateTime? @map("revocado_en") @db.Timestamptz(3)
+
+  jugador Jugador @relation(fields: [jugadorId], references: [id], onDelete: Cascade)
+
+  // A lo sumo un token vigente por jugador.
+  @@unique([jugadorId], where: raw("revocado_en IS NULL"))
+  @@index([jugadorId])
+  @@map("qr_tokens")
+}
+
+// ─── Parejas ──────────────────────────────────────────────────────────────────
+
+model Pareja {
+  id            Int          @id @default(autoincrement())
+  // Orden canónico (jugador1_id < jugador2_id, por CHECK): A+B y B+A son la
+  // misma fila, así el UNIQUE detecta la combinación duplicada.
+  jugador1Id    Int          @map("jugador1_id")
+  jugador2Id    Int          @map("jugador2_id")
+  estado        EstadoPareja @default(PENDIENTE)
+  // Quien escaneó el QR; el otro integrante es quien debe confirmar.
+  creadaPorId   Int          @map("creada_por_id")
+  confirmadaEn  DateTime?    @map("confirmada_en") @db.Timestamptz(3)
+  // Admin que aprobó o rechazó.
+  resueltaPorId Int?         @map("resuelta_por_id")
+  resueltaEn    DateTime?    @map("resuelta_en") @db.Timestamptz(3)
+  motivoRechazo String?      @map("motivo_rechazo") @db.VarChar(300)
+  disueltaEn    DateTime?    @map("disuelta_en") @db.Timestamptz(3)
+  creadaEn      DateTime     @default(now()) @map("creada_en") @db.Timestamptz(3)
+  actualizadaEn DateTime     @updatedAt @map("actualizada_en") @db.Timestamptz(3)
+
+  jugador1      Jugador       @relation("ParejaJugador1", fields: [jugador1Id], references: [id], onDelete: Restrict)
+  jugador2      Jugador       @relation("ParejaJugador2", fields: [jugador2Id], references: [id], onDelete: Restrict)
+  creadaPor     Jugador       @relation("ParejaCreadaPor", fields: [creadaPorId], references: [id], onDelete: Restrict)
+  resueltaPor   Usuario?      @relation("ParejaResueltaPor", fields: [resueltaPorId], references: [id], onDelete: Restrict)
+  inscripciones Inscripcion[]
+
+  // Una sola pareja "viva" por combinación; las rechazadas y disueltas quedan
+  // como historial y no bloquean volver a armarla. El predicado está escrito tal
+  // como lo guarda PostgreSQL; con IN (...) Prisma detecta una diferencia falsa
+  // y regenera el índice en cada migración.
+  @@unique([jugador1Id, jugador2Id], where: raw("estado = ANY (ARRAY['PENDIENTE'::estado_pareja, 'CONFIRMADA'::estado_pareja, 'ACTIVA'::estado_pareja])"))
+  @@index([jugador1Id])
+  @@index([jugador2Id])
+  // Bandeja de aprobaciones: por estado, las más antiguas primero.
+  @@index([estado, creadaEn])
+  @@map("parejas")
+}
+
+// ─── Torneos ──────────────────────────────────────────────────────────────────
+
+model Torneo {
+  id                     Int           @id @default(autoincrement())
+  nombre                 String        @db.VarChar(120)
+  sedeId                 Int           @map("sede_id")
+  categoriaId            Int           @map("categoria_id")
+  rama                   Rama
+  formato                FormatoTorneo
+  cupoMaximo             Int           @map("cupo_maximo") @db.SmallInt
+  fechaInicio            DateTime      @map("fecha_inicio") @db.Date
+  fechaFin               DateTime      @map("fecha_fin") @db.Date
+  fechaLimiteInscripcion DateTime      @map("fecha_limite_inscripcion") @db.Timestamptz(3)
+  estado                 EstadoTorneo  @default(BORRADOR)
+  reglamento             String?
+  creadoPorId            Int           @map("creado_por_id")
+  creadoEn               DateTime      @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn          DateTime      @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  sede          Club          @relation(fields: [sedeId], references: [id], onDelete: Restrict)
+  categoria     Categoria     @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
+  creadoPor     Usuario       @relation(fields: [creadoPorId], references: [id], onDelete: Restrict)
+  zonas         Zona[]
+  inscripciones Inscripcion[]
+  partidos      Partido[]
+
+  @@index([estado, fechaInicio])
+  @@index([categoriaId, fechaInicio])
+  @@index([sedeId, fechaInicio])
+  @@map("torneos")
+}
+
+// Round robin se modela como un torneo con una única zona.
+model Zona {
+  id       Int    @id @default(autoincrement())
+  torneoId Int    @map("torneo_id")
+  nombre   String @db.VarChar(10)
+
+  torneo        Torneo        @relation(fields: [torneoId], references: [id], onDelete: Restrict)
+  inscripciones Inscripcion[]
+  partidos      Partido[]
+
+  @@unique([torneoId, nombre])
+  // Destino de las FK compuestas: garantiza que la zona sea del mismo torneo.
+  @@unique([torneoId, id])
+  @@map("zonas")
+}
+
+model Inscripcion {
+  id              Int               @id @default(autoincrement())
+  torneoId        Int               @map("torneo_id")
+  parejaId        Int               @map("pareja_id")
+  estado          EstadoInscripcion @default(PENDIENTE)
+  zonaId          Int?              @map("zona_id")
+  // Cabeza de serie (1 = primera). NULL = sin siembra.
+  siembra         Int?              @db.SmallInt
+  solicitadaPorId Int               @map("solicitada_por_id")
+  resueltaPorId   Int?              @map("resuelta_por_id")
+  resueltaEn      DateTime?         @map("resuelta_en") @db.Timestamptz(3)
+  motivoRechazo   String?           @map("motivo_rechazo") @db.VarChar(300)
+  creadaEn        DateTime          @default(now()) @map("creada_en") @db.Timestamptz(3)
+  actualizadaEn   DateTime          @updatedAt @map("actualizada_en") @db.Timestamptz(3)
+
+  torneo        Torneo   @relation(fields: [torneoId], references: [id], onDelete: Restrict)
+  pareja        Pareja   @relation(fields: [parejaId], references: [id], onDelete: Restrict)
+  zona          Zona?    @relation(fields: [torneoId, zonaId], references: [torneoId, id], onDelete: Restrict, onUpdate: Restrict)
+  solicitadaPor Usuario  @relation("InscripcionSolicitadaPor", fields: [solicitadaPorId], references: [id], onDelete: Restrict)
+  resueltaPor   Usuario? @relation("InscripcionResueltaPor", fields: [resueltaPorId], references: [id], onDelete: Restrict)
+
+  partidosComoPareja1 Partido[] @relation("PartidoPareja1")
+  partidosComoPareja2 Partido[] @relation("PartidoPareja2")
+  partidosGanados     Partido[] @relation("PartidoGanador")
+
+  // La misma pareja no se inscribe dos veces en un torneo. También es el
+  // destino de las FK de partidos: solo juegan parejas inscriptas en ese torneo.
+  @@unique([torneoId, parejaId])
+  @@unique([torneoId, siembra])
+  // Listado por estado y lista de espera en orden de llegada.
+  @@index([torneoId, estado, creadaEn])
+  @@index([parejaId])
+  @@index([zonaId])
+  @@map("inscripciones")
+}
+
+// ─── Partidos ─────────────────────────────────────────────────────────────────
+
+model Partido {
+  id        Int           @id @default(autoincrement())
+  torneoId  Int           @map("torneo_id")
+  // Número de partido dentro del torneo (orden del fixture).
+  numero    Int           @db.SmallInt
+  instancia Instancia
+  zonaId    Int?          @map("zona_id")
+  // NULL mientras la llave espera al ganador de un partido anterior.
+  pareja1Id Int?          @map("pareja1_id")
+  pareja2Id Int?          @map("pareja2_id")
+  canchaId  Int?          @map("cancha_id")
+  inicio    DateTime?     @db.Timestamptz(3)
+  // Fin estimado: define el turno de cancha para detectar superposiciones.
+  fin       DateTime?     @db.Timestamptz(3)
+  estado    EstadoPartido @default(PROGRAMADO)
+  ganadorId Int?          @map("ganador_id")
+
+  // Llave: a qué partido y a qué lugar (1 o 2) avanza el ganador.
+  siguientePartidoId Int? @map("siguiente_partido_id")
+  siguienteSlot      Int? @map("siguiente_slot") @db.SmallInt
+
+  cargadoPorId  Int?     @map("cargado_por_id")
+  creadoEn      DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  torneo  Torneo       @relation(fields: [torneoId], references: [id], onDelete: Restrict)
+  zona    Zona?        @relation(fields: [torneoId, zonaId], references: [torneoId, id], onDelete: Restrict, onUpdate: Restrict)
+  pareja1 Inscripcion? @relation("PartidoPareja1", fields: [torneoId, pareja1Id], references: [torneoId, parejaId], onDelete: Restrict, onUpdate: Restrict)
+  pareja2 Inscripcion? @relation("PartidoPareja2", fields: [torneoId, pareja2Id], references: [torneoId, parejaId], onDelete: Restrict, onUpdate: Restrict)
+  ganador Inscripcion? @relation("PartidoGanador", fields: [torneoId, ganadorId], references: [torneoId, parejaId], onDelete: Restrict, onUpdate: Restrict)
+  cancha  Cancha?      @relation(fields: [canchaId], references: [id], onDelete: Restrict)
+
+  siguientePartido   Partido?  @relation("Llave", fields: [torneoId, siguientePartidoId], references: [torneoId, id], onDelete: Restrict, onUpdate: Restrict)
+  partidosAnteriores Partido[] @relation("Llave")
+
+  cargadoPor Usuario?     @relation("ResultadoCargadoPor", fields: [cargadoPorId], references: [id], onDelete: Restrict)
+  sets       SetPartido[]
+
+  @@unique([torneoId, numero])
+  @@unique([torneoId, id])
+  // A cada lugar de una llave llega un solo partido.
+  @@unique([siguientePartidoId, siguienteSlot])
+  // Fixture y llaves de un torneo.
+  @@index([torneoId, instancia, numero])
+  // "Mis partidos": por pareja, en cualquiera de los dos lados.
+  @@index([pareja1Id, torneoId])
+  @@index([pareja2Id, torneoId])
+  // Tabla de posiciones de la zona.
+  @@index([zonaId])
+  // Agenda de una cancha y partidos del día.
+  @@index([canchaId, inicio])
+  @@index([estado, inicio])
+  @@map("partidos")
+}
+
+model SetPartido {
+  partidoId     Int     @map("partido_id")
+  numero        Int     @map("nro_set") @db.SmallInt
+  gamesP1       Int     @map("games_p1") @db.SmallInt
+  gamesP2       Int     @map("games_p2") @db.SmallInt
+  // Set definitorio jugado como super tie-break (a 10, diferencia de 2).
+  superTiebreak Boolean @default(false) @map("super_tiebreak")
+
+  partido Partido @relation(fields: [partidoId], references: [id], onDelete: Cascade)
+
+  @@id([partidoId, numero])
+  @@map("sets")
+}
+
+// ─── Auditoría ────────────────────────────────────────────────────────────────
+
+// Solo inserción: un trigger rechaza UPDATE y DELETE.
+model Auditoria {
+  id        Int      @id @default(autoincrement())
+  usuarioId Int      @map("usuario_id")
+  accion    String   @db.VarChar(60)
+  entidad   String   @db.VarChar(40)
+  entidadId Int?     @map("entidad_id")
+  // Valores anteriores y nuevos, motivo, etc.
+  detalle   Json?
+  ip        String?  @db.Inet
+  fecha     DateTime @default(now()) @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+
+  // Historial de un registro y actividad de un usuario, lo más reciente primero.
+  @@index([entidad, entidadId, fecha(sort: Desc)])
+  @@index([usuarioId, fecha(sort: Desc)])
+  // Tabla que solo crece en orden temporal: BRIN ocupa kilobytes y alcanza
+  // para filtrar por rango de fechas.
+  @@index([fecha], type: Brin)
+  @@map("auditoria")
+}

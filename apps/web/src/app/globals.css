@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+/* Paleta tomada de la cancha: el azul del césped sintético, el blanco de las
+   líneas y el amarillo de la pelota, que se reserva para marcar al ganador y
+   lo que está en juego. Tema claro: la app se usa al aire libre. */
+@theme {
+  --color-pista: #1846a3;
+  --color-pista-700: #123680;
+  --color-pista-900: #0c2357;
+  --color-pista-50: #e8eefb;
+  --color-tinta: #0e1b3d;
+  --color-gris: #55627d;
+  --color-fondo: #eef2f8;
+  --color-linea: #d3dbe9;
+  --color-pelota: #d9f03f;
+  --color-ok: #146c48;
+  --color-ok-50: #e0f3ea;
+  --color-mal: #b02d23;
+  --color-mal-50: #fbe9e7;
+  --color-aviso: #7d4a00;
+  --color-aviso-50: #fcefd8;
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-fondo);
+  color: var(--color-tinta);
+  font-family: var(--font-sans);
+}
+
+/* Archivo es de ancho variable: los títulos y el marcador van condensados,
+   como un tablero de resultados; el texto corrido, en ancho normal. */
+.titulo {
+  font-stretch: 78%;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  line-height: 1.1;
+}
+
+.marcador {
+  font-stretch: 70%;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-pelota);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--color-tinta);
+  border-radius: 4px;
+}
+
+dialog::backdrop {
+  background: rgb(14 27 61 / 0.55);
+}
+
+/* ─── Llave de eliminación ─────────────────────────────────────────────────
+   Cada rama dibuja un tramo horizontal hacia la derecha y medio tramo
+   vertical que la une con su hermana. */
+.rama {
+  position: relative;
+  padding-right: 20px;
+}
+.rama::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 20px;
+  border-top: 2px solid var(--color-linea);
+}
+.rama-arriba::before,
+.rama-abajo::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  height: 50%;
+  border-right: 2px solid var(--color-linea);
+}
+.rama-arriba::before {
+  top: 50%;
+}
+.rama-abajo::before {
+  top: 0;
+}
+.llave-destino {
+  position: relative;
+  padding-left: 20px;
+}
+.llave-destino::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 20px;
+  border-top: 2px solid var(--color-linea);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

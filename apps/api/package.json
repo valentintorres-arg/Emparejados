@@ -1,0 +1,45 @@
+{
+  "name": "@emparejados/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js",
+    "dev": "tsc -p tsconfig.json && concurrently -k -n tsc,api \"tsc -p tsconfig.json --watch --preserveWatchOutput\" \"node --watch-path=dist dist/main.js\"",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:demo": "npm run build && node dist/demo/cargar-demo.js",
+    "db:studio": "prisma studio",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@nestjs/common": "12.1.2",
+    "@nestjs/core": "12.1.2",
+    "@nestjs/jwt": "12.0.2",
+    "@nestjs/platform-express": "12.1.2",
+    "@nestjs/throttler": "6.7.1",
+    "@prisma/adapter-pg": "7.10.0",
+    "@prisma/client": "7.10.0",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.15.1",
+    "cookie-parser": "1.4.7",
+    "dotenv": "18.0.5",
+    "helmet": "8.3.0",
+    "pg": "8.23.1",
+    "prisma": "7.10.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "1.4.10",
+    "@types/express": "5.0.6",
+    "@types/node": "26.6.3",
+    "@types/pg": "8.23.1",
+    "concurrently": "10.0.5",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  },
+  "type": "module"
+}

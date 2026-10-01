@@ -1,0 +1,107 @@
+emparejados paddle seccion carga de jugadores con datos personales.
+torneos, en donde se asignan jugadores. parejas de jugadores.
+partido, que son de 2 parejas. cargar las parejas con qr
+las parejas las cargan ellas, con permiso admin.
+usuarios.
+
+Emparejados Padel: sistema de gestión de jugadores, parejas, torneos y partidos
+1. Objetivo
+
+Una plataforma web para organizar competencias de pádel. Permite registrar jugadores, formar parejas, inscribirlas en torneos y programar y registrar partidos. Las parejas se arman de forma autónoma mediante QR, pero nada queda activo hasta que un administrador lo aprueba.
+
+2. Usuarios y roles
+Administrador: gestiona todo el sistema. Aprueba o rechaza parejas, crea torneos, programa partidos, carga resultados y administra usuarios.
+Jugador: tiene cuenta propia. Edita sus datos, ve su QR, arma parejas, consulta sus torneos y partidos.
+Visitante (opcional): ve fixtures y resultados públicos sin iniciar sesión.
+
+Cada usuario tiene email, contraseña (con hash), rol y estado (activo, inactivo, bloqueado). El login usa sesión o JWT, y las rutas se protegen por rol.
+
+3. Sección de jugadores (carga de datos personales)
+
+Datos a registrar:
+
+Nombre y apellido, DNI (único), fecha de nacimiento, género.
+Email y teléfono/WhatsApp.
+Ciudad o club de origen.
+Categoría (por ejemplo 1ª a 8ª), mano hábil y posición preferida (drive o revés).
+Foto (opcional).
+Consentimiento de tratamiento de datos personales, obligatorio por la Ley 25.326.
+
+Funciones:
+
+Alta, edición y baja lógica. No se borra físicamente si el jugador tiene historial.
+Búsqueda y filtro por nombre, DNI, categoría y club.
+Perfil con historial de parejas, torneos y partidos jugados.
+Cada jugador tiene un código QR único, generado a partir de un token. Nunca se pone el DNI en el QR.
+4. Parejas
+
+Flujo de creación:
+
+El jugador A abre "Armar pareja" y escanea el QR del jugador B, o B escanea el de A.
+El sistema crea una pareja en estado pendiente.
+El otro jugador confirma desde su cuenta.
+Un administrador la aprueba o la rechaza, con motivo. Recién ahí pasa a activa.
+
+Reglas:
+
+Dos jugadores distintos por pareja.
+Una misma combinación no puede duplicarse en el mismo torneo.
+Un jugador puede pertenecer a varias parejas históricas, pero solo a una activa por torneo, salvo que el reglamento diga otra cosa.
+Se valida la categoría según la configuración del torneo.
+Estados: pendiente, confirmada por jugadores, activa, rechazada, disuelta.
+5. Torneos
+
+Datos: nombre, fechas de inicio y fin, sede, categoría, rama (masculino, femenino, mixto), formato, cupo máximo de parejas, fecha límite de inscripción, estado y reglamento.
+
+Formatos soportados:
+
+Eliminación directa.
+Zonas más llaves.
+Round robin (todos contra todos).
+
+Funciones:
+
+Inscripción de parejas activas al torneo, hecha por el admin o por la propia pareja, con aprobación del admin.
+Lista de espera si se supera el cupo.
+Sorteo o siembra de parejas.
+Generación automática del fixture.
+Estados: borrador, inscripción abierta, en curso, finalizado, cancelado.
+6. Partidos
+
+Cada partido enfrenta a 2 parejas dentro de un torneo.
+
+Datos: torneo, instancia (zona, octavos, cuartos, semi, final), pareja 1, pareja 2, cancha, fecha y hora, estado, resultado por sets, pareja ganadora.
+
+Funciones:
+
+Programación manual o automática, evitando choques de cancha y de jugadores.
+Carga de resultado por set (ej. 6-4, 3-6, 7-5), con validación del formato.
+Al cargar el resultado, el ganador avanza solo a la siguiente llave.
+Tabla de posiciones y puntos en las fases de zona.
+Estados: programado, en juego, finalizado, suspendido, W.O.
+Opcional: check-in del partido escaneando el QR de las parejas.
+7. Permisos del administrador
+
+Todo lo que cambia el estado del torneo pasa por el admin:
+
+Aprobar o rechazar parejas.
+Aprobar inscripciones.
+Cargar o corregir resultados.
+Gestionar usuarios (alta, baja, reset de contraseña, cambio de rol).
+Registro de auditoría: quién hizo qué y cuándo.
+8. Modelo de datos (resumen)
+usuarios (id, email, password_hash, rol, estado)
+jugadores (id, usuario_id, datos personales, categoría, qr_token)
+parejas (id, jugador1_id, jugador2_id, estado, aprobada_por, fecha)
+torneos (id, nombre, categoría, formato, cupo, fechas, estado)
+inscripciones (id, torneo_id, pareja_id, estado)
+partidos (id, torneo_id, instancia, pareja1_id, pareja2_id, cancha, fecha_hora, estado, ganador_id)
+sets (id, partido_id, nro_set, games_p1, games_p2)
+auditoria (id, usuario_id, acción, entidad, fecha)
+9. Pantallas principales
+
+Login, panel del jugador (mi QR, mis parejas, mis partidos), alta y listado de jugadores, escáner QR, bandeja de aprobaciones (admin), ABM de torneos, fixture y llaves, carga de resultados, gestión de usuarios.
+
+10. Requisitos no funcionales
+
+Responsive (se usa desde el celular en la cancha), HTTPS, contraseñas hasheadas, QR con tokens revocables, cumplimiento de protección de datos personales y backups periódicos.

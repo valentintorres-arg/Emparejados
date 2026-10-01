@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.next/
+*.tsbuildinfo
+
+# Variables de entorno: nunca al repositorio. Los .env.example sí.
+.env
+.env.*
+!.env.example
+
+# Cliente de Prisma: se genera con "npm install" (postinstall).
+apps/api/src/generated/
