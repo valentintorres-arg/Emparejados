@@ -1,3 +1,5 @@
+# Desarrollo: "docker compose up -d db" levanta solo la base.
+# Servidor:   "docker compose up -d --build" levanta base, API y web.
 services:
   db:
     image: postgres:17-alpine
@@ -17,6 +19,32 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  api:
+    build: ./apps/api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
+      JWT_SECRET: ${JWT_SECRET:-}
+      COOKIE_SECURE: "true"
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      PORT: "4000"
+
+  web:
+    build:
+      context: ./apps/web
+      args:
+        NEXT_PUBLIC_DEMO: ${NEXT_PUBLIC_DEMO:-}
+    restart: unless-stopped
+    depends_on:
+      - api
+    # El túnel de Cloudflare apunta a este puerto; no se expone a internet.
+    ports:
+      - "127.0.0.1:${WEB_PORT:-8084}:3000"
 
 volumes:
   db_data:
