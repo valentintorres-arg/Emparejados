@@ -34,7 +34,7 @@ export type NombreDeIcono = keyof typeof ICONOS;
 
 export function Icono({ nombre, className = "size-5" }: { nombre: NombreDeIcono; className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
       <path d={ICONOS[nombre]} />
     </svg>
   );
@@ -42,15 +42,32 @@ export function Icono({ nombre, className = "size-5" }: { nombre: NombreDeIcono;
 
 // ─── Botones ─────────────────────────────────────────────────────────────────
 
+// Todo botón se tiene que reconocer como botón: fondo o borde marcado, nunca solo texto.
 const VARIANTES = {
-  primario: "bg-pista text-white hover:bg-pista-700 active:bg-pista-900",
-  secundario: "bg-white text-tinta border border-linea hover:border-pista hover:text-pista",
-  peligro: "bg-white text-mal border border-mal/40 hover:bg-mal-50",
-  fantasma: "text-pista hover:bg-pista-50",
+  primario: "bg-pista text-white shadow-boton hover:bg-pista-700 active:bg-pista-900",
+  secundario: "bg-white text-pista border-2 border-pista/30 hover:border-pista hover:bg-pista-50",
+  peligro: "bg-white text-mal border-2 border-mal/40 hover:border-mal hover:bg-mal-50",
+  fantasma: "bg-pista-50 text-pista hover:bg-pista-100",
   claro: "bg-white text-pista hover:bg-pista-50",
 } as const;
 
-const TAMANOS = { normal: "min-h-11 px-4 text-[0.95rem]", chico: "min-h-9 px-3 text-sm" } as const;
+// Hasta el botón chico supera los 44 px de alto: se acierta con el dedo sin apuntar.
+const TAMANOS = { normal: "min-h-13 px-5 text-base", chico: "min-h-11 px-4 text-[0.95rem]" } as const;
+
+function Giro({ className = "size-[1.15em]" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className={`girando shrink-0 ${className}`} aria-hidden="true">
+      <path d="M12 3a9 9 0 1 0 9 9" />
+    </svg>
+  );
+}
+
+/** Enlace de texto: siempre subrayado, para que se note que se puede tocar. */
+export const ENLACE = "font-semibold text-pista underline decoration-pista/40 decoration-2 underline-offset-4 hover:decoration-pista";
+
+/** Tarjeta entera que lleva a otra pantalla. */
+export const TARJETA_ENLACE =
+  "rounded-2xl border border-linea bg-white shadow-tarjeta transition-colors hover:border-pista hover:bg-pista-50/40 active:bg-pista-50";
 
 interface PropsDeBoton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variante?: keyof typeof VARIANTES;
@@ -61,10 +78,10 @@ interface PropsDeBoton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function Boton({ variante = "primario", tamano = "normal", icono, cargando, href, className = "", children, disabled, ...resto }: PropsDeBoton) {
-  const clases = `inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-colors disabled:opacity-50 disabled:pointer-events-none ${VARIANTES[variante]} ${TAMANOS[tamano]} ${className}`;
+  const clases = `inline-flex items-center justify-center gap-2 rounded-xl text-center font-semibold leading-tight transition-colors disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ${VARIANTES[variante]} ${TAMANOS[tamano]} ${className}`;
   const contenido = (
     <>
-      {icono && <Icono nombre={icono} className="size-[1.15em] shrink-0" />}
+      {cargando ? <Giro /> : icono && <Icono nombre={icono} className="size-[1.25em] shrink-0" />}
       {children}
     </>
   );
@@ -84,8 +101,10 @@ export function Boton({ variante = "primario", tamano = "normal", icono, cargand
 
 // ─── Formularios ─────────────────────────────────────────────────────────────
 
-const CONTROL =
-  "w-full min-h-11 rounded-md border border-linea bg-white px-3 text-base text-tinta placeholder:text-gris/70 focus:border-pista";
+export const CONTROL =
+  "w-full min-h-13 rounded-xl border-2 border-borde bg-white px-4 text-base text-tinta placeholder:text-gris/80 focus:border-pista disabled:bg-fondo disabled:text-gris";
+
+const ETIQUETA = "mb-1.5 block font-semibold";
 
 interface PropsDeCampo extends React.InputHTMLAttributes<HTMLInputElement> {
   etiqueta: string;
@@ -96,12 +115,12 @@ export function Campo({ etiqueta, ayuda, className = "", ...resto }: PropsDeCamp
   const id = useId();
   return (
     <div className={className}>
-      <label htmlFor={id} className="mb-1 block text-sm font-semibold">
+      <label htmlFor={id} className={ETIQUETA}>
         {etiqueta}
       </label>
       <input id={id} className={CONTROL} aria-describedby={ayuda ? `${id}-ayuda` : undefined} {...resto} />
       {ayuda && (
-        <p id={`${id}-ayuda`} className="mt-1 text-sm text-gris">
+        <p id={`${id}-ayuda`} className="mt-1.5 text-sm text-gris">
           {ayuda}
         </p>
       )}
@@ -119,7 +138,7 @@ export function Selector({ etiqueta, opciones, vacio, className = "", ...resto }
   const id = useId();
   return (
     <div className={className}>
-      <label htmlFor={id} className="mb-1 block text-sm font-semibold">
+      <label htmlFor={id} className={ETIQUETA}>
         {etiqueta}
       </label>
       <select id={id} className={CONTROL} {...resto}>
@@ -138,10 +157,10 @@ export function AreaDeTexto({ etiqueta, className = "", ...resto }: React.Textar
   const id = useId();
   return (
     <div className={className}>
-      <label htmlFor={id} className="mb-1 block text-sm font-semibold">
+      <label htmlFor={id} className={ETIQUETA}>
         {etiqueta}
       </label>
-      <textarea id={id} className={`${CONTROL} py-2`} rows={4} {...resto} />
+      <textarea id={id} className={`${CONTROL} py-3`} rows={4} {...resto} />
     </div>
   );
 }
@@ -149,7 +168,7 @@ export function AreaDeTexto({ etiqueta, className = "", ...resto }: React.Textar
 export function ErrorDeFormulario({ mensaje }: { mensaje: string | null }) {
   if (!mensaje) return null;
   return (
-    <p role="alert" className="rounded-md border border-mal/30 bg-mal-50 px-3 py-2 text-sm font-medium text-mal">
+    <p role="alert" className="rounded-xl border-2 border-mal/30 bg-mal-50 px-4 py-3 font-semibold text-mal">
       {mensaje}
     </p>
   );
@@ -170,19 +189,19 @@ const TONOS: Record<Tono, string> = {
 export function Estado({ valor }: { valor: readonly [string, Tono] }) {
   const [texto, tono] = valor;
   return (
-    <span className={`inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold ${TONOS[tono]}`}>
+    <span className={`inline-flex items-center whitespace-nowrap rounded-full border px-3 py-1 text-sm font-semibold ${TONOS[tono]}`}>
       {texto}
     </span>
   );
 }
 
 export function Tarjeta({ className = "", children }: { className?: string; children: React.ReactNode }) {
-  return <div className={`rounded-lg border border-linea bg-white ${className}`}>{children}</div>;
+  return <div className={`rounded-2xl border border-linea bg-white shadow-tarjeta ${className}`}>{children}</div>;
 }
 
-export function Avatar({ jugador, className = "size-10 text-sm" }: { jugador: { nombre: string; apellido: string }; className?: string }) {
+export function Avatar({ jugador, className = "size-12 text-base" }: { jugador: { nombre: string; apellido: string }; className?: string }) {
   return (
-    <span aria-hidden="true" className={`titulo inline-flex shrink-0 items-center justify-center rounded-full bg-pista-50 text-pista ${className}`}>
+    <span aria-hidden="true" className={`inline-flex shrink-0 items-center justify-center rounded-full bg-pista-50 font-bold text-pista ring-1 ring-pista/15 ${className}`}>
       {iniciales(jugador)}
     </span>
   );
@@ -190,16 +209,19 @@ export function Avatar({ jugador, className = "size-10 text-sm" }: { jugador: { 
 
 export function Encabezado({ titulo, detalle, volver, children }: { titulo: string; detalle?: React.ReactNode; volver?: string; children?: React.ReactNode }) {
   return (
-    <header className="mb-5 flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
+    <header className="mb-6 flex flex-wrap items-end justify-between gap-x-4 gap-y-4">
       <div className="min-w-0">
         {volver && (
-          <Link href={volver} className="mb-1 inline-flex items-center gap-1 text-sm font-semibold text-pista hover:underline">
-            <Icono nombre="atras" className="size-4" />
+          <Link
+            href={volver}
+            className="mb-3 inline-flex min-h-11 items-center gap-1.5 rounded-full border-2 border-pista/30 bg-white py-1 pl-3 pr-4 font-semibold text-pista hover:border-pista hover:bg-pista-50"
+          >
+            <Icono nombre="atras" />
             Volver
           </Link>
         )}
         <h1 className="titulo text-3xl sm:text-4xl">{titulo}</h1>
-        {detalle && <div className="mt-1 text-gris">{detalle}</div>}
+        {detalle && <div className="mt-1.5 text-gris">{detalle}</div>}
       </div>
       {children && <div className="flex flex-wrap gap-2">{children}</div>}
     </header>
@@ -208,9 +230,9 @@ export function Encabezado({ titulo, detalle, volver, children }: { titulo: stri
 
 export function Seccion({ titulo, accion, children }: { titulo: string; accion?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <section className="mb-7">
-      <div className="mb-2 flex items-center justify-between gap-3">
-        <h2 className="titulo text-xl">{titulo}</h2>
+    <section className="mb-9">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+        <h2 className="titulo text-2xl">{titulo}</h2>
         {accion}
       </div>
       {children}
@@ -220,16 +242,17 @@ export function Seccion({ titulo, accion, children }: { titulo: string; accion?:
 
 export function Vacio({ titulo, children }: { titulo: string; children?: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-dashed border-linea bg-white/60 px-5 py-8 text-center">
-      <p className="font-semibold">{titulo}</p>
-      {children && <div className="mx-auto mt-2 max-w-md text-sm text-gris">{children}</div>}
+    <div className="rounded-2xl border-2 border-dashed border-linea bg-white/70 px-5 py-9 text-center">
+      <p className="text-lg font-semibold">{titulo}</p>
+      {children && <div className="mx-auto mt-2 max-w-md text-gris">{children}</div>}
     </div>
   );
 }
 
 export function Cargando({ texto = "Cargando" }: { texto?: string }) {
   return (
-    <p role="status" className="py-10 text-center text-gris">
+    <p role="status" className="flex items-center justify-center gap-3 py-10 text-lg text-gris">
+      <Giro className="size-6 text-pista" />
       {texto}…
     </p>
   );
@@ -237,10 +260,10 @@ export function Cargando({ texto = "Cargando" }: { texto?: string }) {
 
 export function FalloDeCarga({ error, reintentar }: { error: unknown; reintentar?: () => void }) {
   return (
-    <div role="alert" className="rounded-lg border border-mal/30 bg-mal-50 px-5 py-6 text-center">
-      <p className="font-semibold text-mal">{mensajeDe(error)}</p>
+    <div role="alert" className="rounded-2xl border-2 border-mal/30 bg-mal-50 px-5 py-7 text-center">
+      <p className="text-lg font-semibold text-mal">{mensajeDe(error)}</p>
       {reintentar && (
-        <Boton variante="secundario" tamano="chico" className="mt-3" onClick={reintentar}>
+        <Boton variante="secundario" className="mt-4" onClick={reintentar}>
           Reintentar
         </Boton>
       )}
@@ -251,11 +274,11 @@ export function FalloDeCarga({ error, reintentar }: { error: unknown; reintentar
 export function Paginador({ pagina, paginas, cambiar }: { pagina: number; paginas: number; cambiar: (pagina: number) => void }) {
   if (paginas <= 1) return null;
   return (
-    <nav aria-label="Páginas" className="mt-4 flex items-center justify-center gap-3">
+    <nav aria-label="Páginas" className="mt-5 flex flex-wrap items-center justify-center gap-3">
       <Boton variante="secundario" tamano="chico" disabled={pagina <= 1} onClick={() => cambiar(pagina - 1)}>
         Anterior
       </Boton>
-      <span className="text-sm text-gris">
+      <span className="font-semibold text-gris">
         Página {pagina} de {paginas}
       </span>
       <Boton variante="secundario" tamano="chico" disabled={pagina >= paginas} onClick={() => cambiar(pagina + 1)}>
@@ -266,6 +289,9 @@ export function Paginador({ pagina, paginas, cambiar }: { pagina: number; pagina
 }
 
 // ─── Diálogo ─────────────────────────────────────────────────────────────────
+
+/** Fila de botones al pie de un diálogo: apilados en el celular, con la acción principal arriba. */
+export const PIE_DE_DIALOGO = "mt-6 flex flex-col-reverse gap-2.5 sm:flex-row sm:justify-end";
 
 export function Dialogo({ abierto, cerrar, titulo, children }: { abierto: boolean; cerrar: () => void; titulo: string; children: React.ReactNode }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -281,14 +307,14 @@ export function Dialogo({ abierto, cerrar, titulo, children }: { abierto: boolea
       ref={ref}
       onClose={cerrar}
       onClick={(e) => e.target === ref.current && cerrar()}
-      className="m-auto w-[min(34rem,calc(100vw-1.5rem))] rounded-lg bg-white p-0 text-tinta shadow-2xl"
+      className="m-auto w-[min(34rem,calc(100vw-1.5rem))] rounded-3xl bg-white p-0 text-tinta shadow-flotante max-sm:mb-0 max-sm:max-h-[92dvh] max-sm:w-full max-sm:max-w-none max-sm:rounded-b-none"
     >
       {abierto && (
-        <div className="p-5">
+        <div className="p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:p-6">
           <div className="mb-4 flex items-start justify-between gap-4">
-            <h2 className="titulo text-2xl">{titulo}</h2>
-            <button type="button" onClick={cerrar} aria-label="Cerrar" className="rounded-md p-1 text-gris hover:bg-fondo">
-              <Icono nombre="cerrar" />
+            <h2 className="titulo pt-1.5 text-2xl">{titulo}</h2>
+            <button type="button" onClick={cerrar} aria-label="Cerrar" className="-mr-1 flex size-11 shrink-0 items-center justify-center rounded-full bg-fondo text-tinta hover:bg-pista-50">
+              <Icono nombre="cerrar" className="size-6" />
             </button>
           </div>
           {children}
@@ -313,18 +339,23 @@ export function ProveedorDeAvisos({ children }: { children: React.ReactNode }) {
   const avisar = useCallback((texto: string, tono: Aviso["tono"] = "ok") => {
     const id = Date.now() + Math.random();
     setAvisos((actuales) => [...actuales.slice(-2), { id, texto, tono }]);
-    setTimeout(() => setAvisos((actuales) => actuales.filter((a) => a.id !== id)), tono === "mal" ? 7000 : 4000);
+    setTimeout(() => setAvisos((actuales) => actuales.filter((a) => a.id !== id)), tono === "mal" ? 10000 : 6000);
   }, []);
 
   return (
     <ContextoDeAvisos.Provider value={avisar}>
       {children}
-      <div aria-live="polite" className="pointer-events-none fixed inset-x-0 bottom-20 z-50 flex flex-col items-center gap-2 px-4 lg:bottom-6">
+      <div aria-live="polite" className="pointer-events-none fixed inset-x-0 bottom-28 z-50 flex flex-col items-center gap-2 px-4 lg:bottom-8">
         {avisos.map((aviso) => (
           <p
             key={aviso.id}
-            className={`pointer-events-auto max-w-md rounded-md px-4 py-3 text-sm font-semibold shadow-lg ${aviso.tono === "ok" ? "bg-tinta text-white" : "bg-mal text-white"}`}
+            className={`pointer-events-auto flex max-w-md items-center gap-3 rounded-2xl px-5 py-4 font-semibold shadow-flotante ${aviso.tono === "ok" ? "bg-tinta text-white" : "bg-mal text-white"}`}
           >
+            {aviso.tono === "ok" && (
+              <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-pelota text-tinta">
+                <Icono nombre="ok" className="size-4" />
+              </span>
+            )}
             {aviso.texto}
           </p>
         ))}
@@ -359,8 +390,8 @@ export function ProveedorDeConfirmacion({ children }: { children: React.ReactNod
     <ContextoDeConfirmacion.Provider value={preguntar}>
       {children}
       <Dialogo abierto={pregunta !== null} cerrar={() => responder(false)} titulo={pregunta?.titulo ?? ""}>
-        {pregunta?.texto && <p className="text-gris">{pregunta.texto}</p>}
-        <div className="mt-5 flex justify-end gap-2">
+        {pregunta?.texto && <p className="text-lg text-gris">{pregunta.texto}</p>}
+        <div className={PIE_DE_DIALOGO}>
           <Boton variante="secundario" onClick={() => responder(false)}>
             Volver
           </Boton>

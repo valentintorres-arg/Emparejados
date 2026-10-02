@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import useSWR from "swr";
-import { Boton, Campo, Cargando, Dialogo, Encabezado, ErrorDeFormulario, FalloDeCarga, Selector, Tarjeta, useAccion, useAviso, Vacio } from "@/components/ui";
+import { Boton, Campo, Cargando, Dialogo, Encabezado, ErrorDeFormulario, FalloDeCarga, PIE_DE_DIALOGO, Selector, Tarjeta, useAccion, useAviso, Vacio } from "@/components/ui";
 import { api, mensajeDe, traer } from "@/lib/api";
 import type { Catalogos, Club } from "@/lib/tipos";
 
@@ -39,7 +39,7 @@ function NuevaSede({ catalogos, abierto, cerrar, alTerminar }: { catalogos: Cata
         <Campo etiqueta="Nombre del club" name="nombre" minLength={2} maxLength={100} required />
         <Campo etiqueta="Dirección" name="direccion" maxLength={160} />
         {otraLocalidad ? (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Campo etiqueta="Ciudad" name="localidad" required />
             <Campo etiqueta="Provincia" name="provincia" required />
           </div>
@@ -47,13 +47,13 @@ function NuevaSede({ catalogos, abierto, cerrar, alTerminar }: { catalogos: Cata
           <Selector etiqueta="Ciudad" name="localidadId" vacio="Elegí" required opciones={catalogos.localidades.map((l) => [l.id, `${l.nombre}, ${l.provincia}`] as const)} />
         )}
         {catalogos.localidades.length > 0 && (
-          <button type="button" className="text-sm font-semibold text-pista hover:underline" onClick={() => setOtraLocalidad((v) => !v)}>
+          <button type="button" className="min-h-11 text-left font-semibold text-pista underline decoration-pista/40 decoration-2 underline-offset-4 hover:decoration-pista" onClick={() => setOtraLocalidad((v) => !v)}>
             {otraLocalidad ? "Elegir una ciudad ya cargada" : "La ciudad no está en la lista"}
           </button>
         )}
         <Campo etiqueta="Cantidad de canchas" name="canchas" type="number" min={1} max={30} defaultValue={2} required ayuda="Se crean como Cancha 1, Cancha 2, y así." />
         <ErrorDeFormulario mensaje={error} />
-        <div className="flex justify-end gap-2">
+        <div className={PIE_DE_DIALOGO}>
           <Boton variante="secundario" onClick={cerrar}>
             Cancelar
           </Boton>
@@ -70,15 +70,15 @@ function Sede({ club, recargar }: { club: Club; recargar: () => void }) {
   const { ejecutar, enCurso } = useAccion();
   const [agregando, setAgregando] = useState(false);
   return (
-    <Tarjeta className="p-4">
+    <Tarjeta className="p-5">
       <h2 className="titulo text-2xl">{club.nombre}</h2>
-      <p className="text-sm text-gris">
+      <p className="mt-1 text-gris">
         {club.direccion ? `${club.direccion}, ` : ""}
         {club.localidad.nombre}, {club.localidad.provincia}
       </p>
-      <ul className="mt-3 flex flex-wrap gap-2">
+      <ul className="mt-4 flex flex-wrap items-center gap-2">
         {club.canchas.map((cancha) => (
-          <li key={cancha.id} className="rounded-md border border-linea bg-fondo/60 px-2.5 py-1 text-sm font-semibold">
+          <li key={cancha.id} className="rounded-full border border-linea bg-fondo px-3.5 py-1.5 font-semibold">
             {cancha.nombre}
           </li>
         ))}
@@ -106,7 +106,7 @@ function Sede({ club, recargar }: { club: Club; recargar: () => void }) {
           }}
         >
           <Campo etiqueta="Nombre de la cancha" name="nombre" defaultValue={`Cancha ${club.canchas.length + 1}`} maxLength={40} required />
-          <div className="flex justify-end gap-2">
+          <div className={PIE_DE_DIALOGO}>
             <Boton variante="secundario" onClick={() => setAgregando(false)}>
               Cancelar
             </Boton>
@@ -137,7 +137,7 @@ export default function Sedes() {
       {catalogos.clubes.length === 0 ? (
         <Vacio titulo="Todavía no cargaste ninguna sede">Hace falta al menos una para crear un torneo.</Vacio>
       ) : (
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {catalogos.clubes.map((club) => (
             <Sede key={club.id} club={club} recargar={() => mutate()} />
           ))}

@@ -78,10 +78,10 @@ export function FormularioJugador({ modo, inicial, esAdmin = false, textoDelBoto
   };
 
   return (
-    <form onSubmit={enviar} className="space-y-6">
+    <form onSubmit={enviar} className="space-y-8">
       {conCuenta && (
-        <fieldset className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <legend className="titulo mb-3 text-xl">Cuenta</legend>
+        <fieldset className="grid grid-cols-1 gap-x-4 gap-y-5 sm:grid-cols-2">
+          <legend className="titulo mb-4 text-2xl">Cuenta</legend>
           <Campo etiqueta="Email" name="email" type="email" autoComplete="email" required className={modo === "alta" ? "sm:col-span-2" : ""} />
           {modo === "registro" && (
             <Campo etiqueta="Contraseña" name="password" type="password" autoComplete="new-password" minLength={8} required ayuda="Al menos 8 caracteres." />
@@ -89,8 +89,8 @@ export function FormularioJugador({ modo, inicial, esAdmin = false, textoDelBoto
         </fieldset>
       )}
 
-      <fieldset className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <legend className="titulo mb-3 text-xl">Datos personales</legend>
+      <fieldset className="grid grid-cols-1 gap-x-4 gap-y-5 sm:grid-cols-2">
+        <legend className="titulo mb-4 text-2xl">Datos personales</legend>
         <Campo etiqueta="Nombre" name="nombre" autoComplete="given-name" defaultValue={inicial?.nombre} maxLength={60} required />
         <Campo etiqueta="Apellido" name="apellido" autoComplete="family-name" defaultValue={inicial?.apellido} maxLength={60} required />
         <Campo
@@ -115,8 +115,8 @@ export function FormularioJugador({ modo, inicial, esAdmin = false, textoDelBoto
         <Campo etiqueta="Teléfono o WhatsApp" name="telefono" type="tel" autoComplete="tel" defaultValue={inicial?.telefono} required ayuda="Con código de área, por ejemplo 341 555 1234." />
       </fieldset>
 
-      <fieldset className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <legend className="titulo mb-3 text-xl">Datos de juego</legend>
+      <fieldset className="grid grid-cols-1 gap-x-4 gap-y-5 sm:grid-cols-2">
+        <legend className="titulo mb-4 text-2xl">Datos de juego</legend>
         <Selector
           key={`categoria-${catalogos ? "lista" : "espera"}`}
           etiqueta="Categoría"
@@ -158,8 +158,8 @@ export function FormularioJugador({ modo, inicial, esAdmin = false, textoDelBoto
       </fieldset>
 
       {conCuenta && (
-        <label className="flex items-start gap-3 rounded-md border border-linea bg-white p-4 text-sm">
-          <input type="checkbox" name="consentimiento" required className="mt-0.5 size-5 shrink-0 accent-pista" />
+        <label className="flex items-start gap-3.5 rounded-xl border-2 border-borde bg-white p-4 has-checked:border-pista has-checked:bg-pista-50">
+          <input type="checkbox" name="consentimiento" required className="mt-0.5 size-6 shrink-0 accent-pista" />
           <span>
             {modo === "registro"
               ? "Acepto que Emparejados guarde y use mis datos personales para organizar torneos de pádel, según la Ley 25.326 de Protección de Datos Personales. Puedo pedir que los corrijan o los den de baja cuando quiera."

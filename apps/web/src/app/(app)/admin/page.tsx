@@ -3,7 +3,7 @@
 import Link from "next/link";
 import useSWR from "swr";
 import { InstalarApp } from "@/components/pwa";
-import { Cargando, Encabezado, Estado, Icono, type NombreDeIcono, Seccion, Tarjeta } from "@/components/ui";
+import { Boton, Cargando, Encabezado, Estado, Icono, type NombreDeIcono, Seccion, Tarjeta, TARJETA_ENLACE } from "@/components/ui";
 import { traer } from "@/lib/api";
 import { ESTADOS_TORNEO, RAMAS, rangoDeFechas } from "@/lib/formato";
 import type { ResumenAdmin, TorneoResumen } from "@/lib/tipos";
@@ -13,10 +13,13 @@ function Pendiente({ href, cantidad, singular, plural }: { href: string; cantida
   return (
     <Link
       href={href}
-      className={`flex items-center gap-4 rounded-lg border p-4 ${hay ? "border-pista bg-white shadow-[inset_4px_0_0_var(--color-pista)] hover:bg-pista-50" : "border-linea bg-white/60"}`}
+      className={`flex items-center gap-4 rounded-2xl border p-5 ${hay ? "border-pista bg-white shadow-tarjeta ring-2 ring-pista hover:bg-pista-50" : "border-linea bg-white/70"}`}
     >
-      <span className={`marcador text-5xl ${hay ? "text-pista" : "text-gris/50"}`}>{cantidad}</span>
-      <span className="font-semibold">{cantidad === 1 ? singular : plural}</span>
+      <span className={`marcador flex size-16 shrink-0 items-center justify-center rounded-2xl text-5xl ${hay ? "bg-pelota text-tinta" : "bg-fondo text-gris"}`}>{cantidad}</span>
+      <span>
+        <span className="block text-lg font-bold leading-tight">{cantidad === 1 ? singular : plural}</span>
+        <span className="mt-0.5 block text-gris">{hay ? "Tocá para revisar" : "Nada por resolver"}</span>
+      </span>
     </Link>
   );
 }
@@ -54,9 +57,9 @@ export default function InicioDeLaOrganizacion() {
       <Seccion
         titulo="Torneos abiertos"
         accion={
-          <Link href="/admin/torneos/nuevo" className="text-sm font-semibold text-pista hover:underline">
+          <Boton href="/admin/torneos/nuevo" tamano="chico" variante="secundario" icono="mas">
             Nuevo torneo
-          </Link>
+          </Boton>
         }
       >
         {!vigentes ? (
@@ -66,10 +69,10 @@ export default function InicioDeLaOrganizacion() {
             <ul className="divide-y divide-linea">
               {vigentes.map((torneo) => (
                 <li key={torneo.id}>
-                  <Link href={`/torneos/${torneo.id}`} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-3 hover:bg-fondo/60">
+                  <Link href={`/torneos/${torneo.id}`} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-4 hover:bg-pista-50/50 sm:px-5">
                     <span>
-                      <span className="titulo text-lg">{torneo.nombre}</span>
-                      <span className="ml-2 text-sm text-gris">
+                      <span className="block text-lg font-bold leading-tight">{torneo.nombre}</span>
+                      <span className="mt-0.5 block text-gris">
                         {torneo.categoria.nombre} {RAMAS[torneo.rama]}, {rangoDeFechas(torneo.fechaInicio, torneo.fechaFin)}
                       </span>
                     </span>
@@ -87,13 +90,13 @@ export default function InicioDeLaOrganizacion() {
         <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {ACCESOS.map((acceso) => (
             <li key={acceso.href}>
-              <Link href={acceso.href} className="flex items-center gap-3 rounded-lg border border-linea bg-white p-4 hover:border-pista">
-                <span className="rounded-md bg-pista-50 p-2 text-pista">
-                  <Icono nombre={acceso.icono} className="size-6" />
+              <Link href={acceso.href} className={`flex h-full items-center gap-4 p-4 ${TARJETA_ENLACE}`}>
+                <span className="rounded-xl bg-pista-50 p-3 text-pista">
+                  <Icono nombre={acceso.icono} className="size-7" />
                 </span>
                 <span>
-                  <span className="block font-bold">{acceso.texto}</span>
-                  <span className="text-sm text-gris">{acceso.detalle}</span>
+                  <span className="block text-lg font-bold leading-tight">{acceso.texto}</span>
+                  <span className="mt-0.5 block text-gris">{acceso.detalle}</span>
                 </span>
               </Link>
             </li>

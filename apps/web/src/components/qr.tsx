@@ -98,7 +98,7 @@ export function EscanerQr({ alLeer }: { alLeer: (token: string) => void }) {
   }, []);
 
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-lg bg-tinta">
+    <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-3xl bg-tinta shadow-tarjeta">
       <video ref={video} muted playsInline className="size-full object-cover" aria-label="Vista de la cámara" />
       {estado === "activa" ? (
         // Marco de encuadre: cuatro esquinas, como las líneas de la cancha.
@@ -109,7 +109,7 @@ export function EscanerQr({ alLeer }: { alLeer: (token: string) => void }) {
           <span className="absolute bottom-0 right-0 size-9 rounded-br-md border-b-4 border-r-4 border-pelota" />
         </div>
       ) : (
-        <p className="absolute inset-0 flex items-center justify-center p-6 text-center text-white">
+        <p className="absolute inset-0 flex items-center justify-center p-6 text-center text-lg text-white">
           {estado === "pidiendo" && "Abriendo la cámara…"}
           {estado === "sin-permiso" && "La cámara está bloqueada. Habilitala en los permisos del navegador o pegá el código más abajo."}
           {estado === "sin-camara" && "Este dispositivo no tiene una cámara disponible. Pegá el código más abajo."}

@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Portada } from "@/components/portada";
 import { InstalarApp } from "@/components/pwa";
-import { Boton, Campo, ErrorDeFormulario } from "@/components/ui";
+import { Boton, Campo, ENLACE, ErrorDeFormulario } from "@/components/ui";
 import { api, mensajeDe } from "@/lib/api";
 import { useSesion } from "@/lib/sesion";
 
@@ -48,7 +48,7 @@ function Ingreso() {
   return (
     <Portada titulo="Ingresar" bajada="Entrá con tu email y tu contraseña.">
       <form
-        className="space-y-4"
+        className="space-y-5"
         onSubmit={(evento) => {
           evento.preventDefault();
           const f = new FormData(evento.currentTarget);
@@ -64,8 +64,8 @@ function Ingreso() {
       </form>
 
       {DEMO && (
-        <div className="mt-6 rounded-lg border border-dashed border-pista/40 bg-pista-50/60 p-4">
-          <p className="text-sm font-semibold">Probá la app con datos de ejemplo</p>
+        <div className="mt-6 rounded-2xl border-2 border-dashed border-pista/40 bg-pista-50/60 p-4">
+          <p className="font-semibold">Probá la app con datos de ejemplo</p>
           <div className="mt-3 flex flex-wrap gap-2">
             {CUENTAS_DEMO.map((cuenta) => (
               <Boton key={cuenta.rol} variante="secundario" tamano="chico" disabled={enviando} onClick={() => ingresar(cuenta.email, cuenta.password)}>
@@ -76,15 +76,15 @@ function Ingreso() {
         </div>
       )}
 
-      <div className="mt-6 space-y-3 border-t border-linea pt-5 text-sm">
+      <div className="mt-7 space-y-4 border-t border-linea pt-6">
         <p>
           ¿Todavía no tenés cuenta?{" "}
-          <Link href="/registro" className="font-semibold text-pista underline-offset-2 hover:underline">
+          <Link href="/registro" className={ENLACE}>
             Registrate como jugador
           </Link>
         </p>
         <p>
-          <Link href="/torneos" className="font-semibold text-pista underline-offset-2 hover:underline">
+          <Link href="/torneos" className={ENLACE}>
             Ver torneos y resultados sin ingresar
           </Link>
         </p>

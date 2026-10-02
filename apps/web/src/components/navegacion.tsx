@@ -69,47 +69,51 @@ export function Navegacion({ children }: { children: React.ReactNode }) {
   const pendientes = resumen ? resumen.parejasPorAprobar + resumen.inscripcionesPorAprobar : 0;
   const globo = (href: string) =>
     href === "/admin/aprobaciones" && pendientes > 0 ? (
-      <span className="marcador rounded-full bg-pelota px-1.5 py-0.5 text-xs text-tinta" aria-label={`${pendientes} por resolver`}>
+      <span className="marcador inline-flex min-w-6 items-center justify-center rounded-full bg-pelota px-1.5 py-1 text-base text-tinta ring-2 ring-white" aria-label={`${pendientes} por resolver`}>
         {pendientes}
       </span>
     ) : null;
 
   return (
-    <div className="min-h-dvh lg:pl-60">
+    <div className="min-h-dvh lg:pl-64">
       {/* Escritorio: barra lateral */}
-      <aside className="fixed inset-y-0 left-0 hidden w-60 flex-col bg-pista text-white lg:flex">
-        <Link href="/" className="px-5 py-5">
+      <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col bg-pista text-white lg:flex">
+        <Link href="/" className="px-5 py-6">
           <Marca />
         </Link>
-        <nav aria-label="Principal" className="flex-1 space-y-0.5 px-3">
+        <nav aria-label="Principal" className="flex-1 space-y-1 overflow-y-auto px-3">
           {destinos.map((d) => (
             <Link
               key={d.href}
               href={d.href}
               aria-current={estaActivo(pathname, d.href) ? "page" : undefined}
-              className="flex items-center gap-3 rounded-md px-3 py-2.5 font-semibold text-white/80 hover:bg-white/10 hover:text-white aria-[current=page]:bg-white aria-[current=page]:text-pista"
+              className="flex min-h-12 items-center gap-3 rounded-xl px-3.5 text-lg font-semibold text-white/90 hover:bg-white/10 hover:text-white aria-[current=page]:bg-white aria-[current=page]:text-pista"
             >
-              <Icono nombre={d.icono} />
+              <Icono nombre={d.icono} className="size-6" />
               <span className="flex-1">{d.texto}</span>
               {globo(d.href)}
             </Link>
           ))}
           {usuario === null && (
-            <Link href="/torneos" aria-current="page" className="flex items-center gap-3 rounded-md bg-white px-3 py-2.5 font-semibold text-pista">
-              <Icono nombre="trofeo" />
+            <Link href="/torneos" aria-current="page" className="flex min-h-12 items-center gap-3 rounded-xl bg-white px-3.5 text-lg font-semibold text-pista">
+              <Icono nombre="trofeo" className="size-6" />
               Torneos
             </Link>
           )}
         </nav>
-        <div className="space-y-3 border-t border-white/15 p-4">
-          <InstalarApp claro />
+        <div className="space-y-3 border-t border-white/20 p-4">
+          <InstalarApp claro className="w-full" />
           {usuario ? (
             <>
-              <p className="truncate text-sm text-white/75" title={usuario.email}>
+              <p className="break-words text-white/90" title={usuario.email}>
                 {usuario.jugador ? nombreCompleto(usuario.jugador) : usuario.email}
               </p>
-              <button type="button" onClick={salir} className="flex items-center gap-2 text-sm font-semibold text-white/85 hover:text-white">
-                <Icono nombre="salir" className="size-4" />
+              <button
+                type="button"
+                onClick={salir}
+                className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border-2 border-white/40 px-4 font-semibold text-white hover:bg-white/10"
+              >
+                <Icono nombre="salir" />
                 Cerrar sesión
               </button>
             </>
@@ -124,7 +128,7 @@ export function Navegacion({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Celular: barra superior */}
-      <header className="sticky top-0 z-30 flex items-center justify-between bg-pista px-4 py-2.5 text-white lg:hidden">
+      <header className="sticky top-0 z-30 flex min-h-14 items-center justify-between gap-3 bg-pista px-4 py-2 text-white lg:hidden">
         <Link href="/">
           <Marca />
         </Link>
@@ -133,20 +137,25 @@ export function Navegacion({ children }: { children: React.ReactNode }) {
             Ingresar
           </Boton>
         )}
+        {/* Con texto: un ícono solo no dice que cierra la sesión. */}
         {usuario && esAdmin && (
-          <button type="button" onClick={salir} aria-label="Cerrar sesión" className="rounded-md p-2 hover:bg-white/10">
+          <button type="button" onClick={salir} className="flex min-h-11 items-center gap-2 rounded-xl border-2 border-white/40 px-3 font-semibold hover:bg-white/10">
             <Icono nombre="salir" />
+            Salir
           </button>
         )}
       </header>
 
-      <main className="mx-auto w-full max-w-5xl px-4 pb-28 pt-5 sm:px-6 lg:pb-12 lg:pt-8">
+      <main className="mx-auto w-full max-w-5xl px-4 pb-32 pt-6 sm:px-6 lg:pb-14 lg:pt-9">
         {usuario === undefined || destino ? <Cargando /> : children}
       </main>
 
-      {/* Celular: barra inferior */}
+      {/* Celular: barra inferior. El destino activo se marca con forma y peso, no solo con color. */}
       {usuario && (
-        <nav aria-label="Principal" className="fixed inset-x-0 bottom-0 z-30 flex border-t border-linea bg-white pb-[env(safe-area-inset-bottom)] lg:hidden">
+        <nav
+          aria-label="Principal"
+          className="fixed inset-x-0 bottom-0 z-30 flex border-t border-linea bg-white px-1 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_-16px_rgb(14_27_61/0.35)] lg:hidden"
+        >
           {destinos
             .filter((d) => !d.soloEscritorio)
             .map((d) => (
@@ -154,11 +163,13 @@ export function Navegacion({ children }: { children: React.ReactNode }) {
                 key={d.href}
                 href={d.href}
                 aria-current={estaActivo(pathname, d.href) ? "page" : undefined}
-                className="relative flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[0.7rem] font-semibold text-gris aria-[current=page]:text-pista"
+                className="group relative flex min-h-[4.25rem] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-[0.78rem] font-semibold leading-tight text-gris aria-[current=page]:font-bold aria-[current=page]:text-pista"
               >
-                <Icono nombre={d.icono} className="size-6" />
+                <span className="flex h-8 w-14 items-center justify-center rounded-full group-aria-[current=page]:bg-pista group-aria-[current=page]:text-white">
+                  <Icono nombre={d.icono} className="size-6" />
+                </span>
                 {d.texto}
-                <span className="absolute right-[calc(50%-1.4rem)] top-1">{globo(d.href)}</span>
+                <span className="absolute right-[calc(50%-2rem)] top-0.5">{globo(d.href)}</span>
               </Link>
             ))}
         </nav>

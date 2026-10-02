@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormularioJugador } from "@/components/form-jugador";
 import { Portada } from "@/components/portada";
+import { ENLACE } from "@/components/ui";
 import { api } from "@/lib/api";
 import { useSesion } from "@/lib/sesion";
 
@@ -22,9 +23,9 @@ export default function PaginaDeRegistro() {
           router.replace("/panel");
         }}
       />
-      <p className="mt-6 border-t border-linea pt-5 text-sm">
+      <p className="mt-7 border-t border-linea pt-6">
         ¿Ya tenés cuenta?{" "}
-        <Link href="/login" className="font-semibold text-pista underline-offset-2 hover:underline">
+        <Link href="/login" className={ENLACE}>
           Ingresar
         </Link>
       </p>

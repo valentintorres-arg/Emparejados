@@ -6,7 +6,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import { Llave, TablaPosiciones, TarjetaPartido } from "@/components/competencia";
 import { DialogoAgenda, DialogoHorario, DialogoInscribirPareja, DialogoMotivo, DialogoResultado } from "@/components/dialogos";
-import { Boton, Cargando, Encabezado, Estado, FalloDeCarga, Seccion, Tarjeta, useAccion, useConfirmar, Vacio } from "@/components/ui";
+import { Boton, Cargando, Encabezado, ENLACE, Estado, FalloDeCarga, Seccion, Tarjeta, useAccion, useConfirmar, Vacio } from "@/components/ui";
 import { api, traer } from "@/lib/api";
 import { dia, ESTADOS_INSCRIPCION, ESTADOS_TORNEO, fechaYHora, FORMATOS, nombreCompleto, nombreDePareja, RAMAS, rangoDeFechas } from "@/lib/formato";
 import { useSesion } from "@/lib/sesion";
@@ -67,10 +67,10 @@ function Gestion({ torneo, recargar }: { torneo: TorneoDetalle; recargar: () => 
   }
 
   return (
-    <Tarjeta className="mb-6 border-pista/30 bg-pista-50/50 p-4">
-      <h2 className="titulo text-lg">Gestión del torneo</h2>
-      <p className="mt-0.5 text-sm text-gris">{guia}</p>
-      <div className="mt-3 flex flex-wrap gap-2">
+    <Tarjeta className="mb-7 border-pista/30 bg-pista-50 p-5">
+      <h2 className="titulo text-xl">Gestión del torneo</h2>
+      <p className="mt-1 text-lg">{guia}</p>
+      <div className="mt-4 flex flex-wrap gap-2.5">
         {torneo.estado === "BORRADOR" && (
           <Boton tamano="chico" cargando={enCurso === "INSCRIPCION_ABIERTA"} onClick={() => cambiarEstado("INSCRIPCION_ABIERTA", "Inscripción abierta. El torneo ya es público.")}>
             Abrir inscripción
@@ -231,9 +231,9 @@ function Fixture({ torneo, esAdmin, recargar }: { torneo: TorneoDetalle; esAdmin
   return (
     <>
       {[...grupos].map(([titulo, partidos]) => (
-        <section key={titulo} className="mb-6">
-          <h3 className="titulo mb-2 text-lg first-letter:uppercase">{titulo}</h3>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <section key={titulo} className="mb-8">
+          <h3 className="titulo mb-3 text-xl first-letter:uppercase">{titulo}</h3>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {partidos.map((partido) => (
               <TarjetaPartido key={partido.id} partido={partido} acciones={acciones(partido)} />
             ))}
@@ -259,17 +259,17 @@ function FilaDeInscripcion({ inscripcion, torneo, esAdmin, recargar }: { inscrip
     ejecutar(accion, () => api.post(`${ruta}/${accion}`, cuerpo), exito).then((ok) => ok && recargar());
 
   return (
-    <li className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3">
+    <li className="flex flex-wrap items-center gap-x-3 gap-y-2.5 px-4 py-4 sm:px-5">
       {inscripcion.siembra !== null && (
-        <span className="marcador flex size-7 items-center justify-center rounded-full bg-pista text-sm text-white" title="Cabeza de serie">
+        <span className="marcador flex size-9 shrink-0 items-center justify-center rounded-full bg-pista text-xl text-white" title="Cabeza de serie">
           {inscripcion.siembra}
         </span>
       )}
       <span className="min-w-0 flex-1">
-        <span className="block truncate font-semibold">
+        <span className="block break-words text-lg font-semibold leading-snug">
           {nombreCompleto(pareja.jugador1)} y {nombreCompleto(pareja.jugador2)}
         </span>
-        <span className="text-sm text-gris">
+        <span className="text-gris">
           {pareja.jugador1.categoria.nombre} y {pareja.jugador2.categoria.nombre}
           {inscripcion.motivoRechazo && `. Motivo: ${inscripcion.motivoRechazo}`}
         </span>
@@ -283,7 +283,7 @@ function FilaDeInscripcion({ inscripcion, torneo, esAdmin, recargar }: { inscrip
             </Boton>
           )}
           {inscripcion.estado === "APROBADA" && (
-            <label className="flex items-center gap-1.5 text-sm text-gris">
+            <label className="flex items-center gap-2 font-semibold text-gris">
               Siembra
               <input
                 type="number"
@@ -291,7 +291,7 @@ function FilaDeInscripcion({ inscripcion, torneo, esAdmin, recargar }: { inscrip
                 max={64}
                 defaultValue={inscripcion.siembra ?? ""}
                 aria-label={`Siembra de ${nombreDePareja(pareja)}`}
-                className="marcador h-9 w-14 rounded-md border border-linea bg-white text-center text-base text-tinta"
+                className="marcador h-11 w-16 rounded-xl border-2 border-borde bg-white text-center text-2xl text-tinta"
                 onBlur={(e) => {
                   const siembra = e.target.value === "" ? null : Number(e.target.value);
                   if (siembra !== inscripcion.siembra) hacer("siembra", { siembra }, "Siembra guardada.");
@@ -331,13 +331,13 @@ function MiInscripcion({ torneo, miId }: { torneo: TorneoDetalle; miId: number }
   const activas = parejas.filter((p) => p.estado === "ACTIVA");
 
   return (
-    <Tarjeta className="mb-5 border-pista/30 bg-pista-50/50 p-4">
+    <Tarjeta className="mb-6 border-pista/30 bg-pista-50 p-5">
       {vigente ? (
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p>
+          <p className="text-lg">
             Estás anotado con <strong>{nombreDePareja(vigente.pareja)}</strong>.
           </p>
-          <span className="flex items-center gap-2">
+          <span className="flex flex-wrap items-center gap-2.5">
             <Estado valor={ESTADOS_INSCRIPCION[vigente.estado]} />
             <Boton
               tamano="chico"
@@ -354,21 +354,20 @@ function MiInscripcion({ torneo, miId }: { torneo: TorneoDetalle; miId: number }
           </span>
         </div>
       ) : activas.length === 0 ? (
-        <p>
+        <p className="text-lg">
           Para anotarte necesitás una pareja activa.{" "}
-          <Link href="/parejas" className="font-semibold text-pista hover:underline">
+          <Link href="/parejas" className={ENLACE}>
             Armá tu pareja
           </Link>
         </p>
       ) : (
         <>
-          <p className="font-semibold">Anotate en este torneo</p>
-          <p className="text-sm text-gris">La inscripción cierra el {fechaYHora(torneo.fechaLimiteInscripcion)}. La organización tiene que aprobarla.</p>
-          <div className="mt-3 flex flex-wrap gap-2">
+          <p className="titulo text-xl">Anotate en este torneo</p>
+          <p className="mt-1 text-gris">La inscripción cierra el {fechaYHora(torneo.fechaLimiteInscripcion)}. La organización tiene que aprobarla.</p>
+          <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
             {activas.map((pareja) => (
               <Boton
                 key={pareja.id}
-                tamano="chico"
                 cargando={enCurso === `p${pareja.id}`}
                 onClick={() => ejecutar(`p${pareja.id}`, () => api.post(`/torneos/${torneo.id}/inscripciones`, { parejaId: pareja.id }), "Solicitud enviada.").then((ok) => void (ok && mutate()))}
               >
@@ -462,10 +461,10 @@ export default function PaginaDeTorneo() {
       </Encabezado>
 
       {campeona && (
-        <div className="mb-6 flex items-center gap-4 rounded-lg bg-pista px-5 py-4 text-white">
-          <span aria-hidden="true" className="size-5 shrink-0 rounded-full bg-pelota" />
+        <div className="mb-7 flex items-center gap-4 rounded-2xl bg-pista px-5 py-5 text-white shadow-tarjeta">
+          <span aria-hidden="true" className="size-7 shrink-0 rounded-full bg-pelota ring-4 ring-white/20" />
           <div>
-            <p className="text-sm text-white/80">Campeones</p>
+            <p className="font-semibold text-white/90">Campeones</p>
             <p className="titulo text-2xl sm:text-3xl">
               {nombreCompleto(campeona.jugador1)} y {nombreCompleto(campeona.jugador2)}
             </p>
@@ -475,7 +474,7 @@ export default function PaginaDeTorneo() {
 
       {esAdmin && <Gestion torneo={torneo} recargar={recargar} />}
 
-      <div role="tablist" aria-label="Secciones del torneo" className="mb-5 flex gap-1 overflow-x-auto overflow-y-hidden border-b border-linea [scrollbar-width:none]">
+      <div role="tablist" aria-label="Secciones del torneo" className="mb-6 flex flex-wrap gap-2">
         {pestanas.map(([clave, texto]) => (
           <button
             key={clave}
@@ -483,7 +482,7 @@ export default function PaginaDeTorneo() {
             role="tab"
             aria-selected={pestana === clave}
             onClick={() => setElegida(clave)}
-            className="titulo whitespace-nowrap border-b-[3px] border-transparent px-3 py-2.5 text-lg text-gris hover:text-tinta aria-selected:border-pista aria-selected:text-pista"
+            className="min-h-12 whitespace-nowrap rounded-full border-2 border-pista/30 bg-white px-5 text-lg font-semibold text-pista hover:border-pista hover:bg-pista-50 aria-selected:border-pista aria-selected:bg-pista aria-selected:text-white"
           >
             {texto}
           </button>
@@ -502,12 +501,12 @@ export default function PaginaDeTorneo() {
 
         {pestana === "posiciones" && (
           <>
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               {torneo.zonas.map((zona) => (
                 <TablaPosiciones key={zona.id} nombre={zona.nombre} filas={zona.posiciones} clasifican={torneo.formato === "ZONAS_Y_LLAVES" ? 2 : 0} />
               ))}
             </div>
-            <p className="mt-3 text-sm text-gris">
+            <p className="mt-4 text-gris">
               Partido ganado suma 2 puntos; perdido, 1; no presentarse, 0. Si hay empate se define por diferencia de sets y después de games.
               {torneo.formato === "ZONAS_Y_LLAVES" && " Los dos primeros de cada zona pasan a la llave."}
             </p>
@@ -518,8 +517,8 @@ export default function PaginaDeTorneo() {
           <>
             {inscripcionAbierta && usuario?.jugador && !esAdmin && <MiInscripcion torneo={torneo} miId={usuario.jugador.id} />}
             {inscripcionAbierta && usuario === null && (
-              <Tarjeta className="mb-5 border-pista/30 bg-pista-50/50 p-4">
-                <Link href={`/login?volver=/torneos/${torneo.id}`} className="font-semibold text-pista hover:underline">
+              <Tarjeta className="mb-6 border-pista/30 bg-pista-50 p-5 text-lg">
+                <Link href={`/login?volver=/torneos/${torneo.id}`} className={ENLACE}>
                   Ingresá para inscribir a tu pareja
                 </Link>
               </Tarjeta>
@@ -529,8 +528,8 @@ export default function PaginaDeTorneo() {
         )}
 
         {pestana === "reglamento" && (
-          <Tarjeta className="p-5">
-            <p className="max-w-prose whitespace-pre-line leading-relaxed">{torneo.reglamento}</p>
+          <Tarjeta className="p-5 sm:p-6">
+            <p className="max-w-prose whitespace-pre-line text-lg leading-relaxed">{torneo.reglamento}</p>
           </Tarjeta>
         )}
       </div>

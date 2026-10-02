@@ -199,10 +199,24 @@ mismo wifi.
 Tema claro (se usa al aire libre). Paleta tomada de la cancha: azul del césped
 sintético (pista #1846a3), blanco de las líneas y amarillo de la pelota
 (#d9f03f), que se reserva para marcar al ganador y lo que está en juego.
-Tipografía Archivo de ancho variable: títulos y marcador condensados (clases
-.titulo y .marcador en globals.css), texto en ancho normal.
+Tipografía Archivo de ancho variable: títulos en ancho normal (.titulo), y lo
+condensado queda para el marcador y la marca (.marcador y .marca en globals.css).
 Celular: barra superior azul y barra inferior de navegación. Escritorio: menú
 lateral azul. Textos en castellano rioplatense, en voz activa.
+
+Pensado para que lo use sin esfuerzo gente de 50 años o más:
+- Texto base de 18 px (html al 112,5 %; como las medidas van en rem, todo
+  crece en proporción y se respeta el tamaño de letra del navegador).
+- Ningún botón mide menos de 44 px de alto y todos tienen fondo o borde: no
+  hay acciones que sean solo texto. Los enlaces van siempre subrayados (ENLACE
+  en ui.tsx).
+- Campos con borde de 2 px (--color-borde) y etiqueta arriba, en tamaño normal.
+- Los nombres no se cortan con puntos suspensivos: bajan a otro renglón.
+- En el celular los diálogos suben desde abajo, con los botones apilados y la
+  acción principal arriba (PIE_DE_DIALOGO en ui.tsx).
+- Los avisos duran 6 segundos (10 si son de error) y los botones muestran un
+  indicador mientras la acción está en curso.
+- Tarjetas con esquinas bien redondeadas y sombra suave (--shadow-tarjeta).
 Las confirmaciones usan un diálogo propio (useConfirmar en ui.tsx), no
 window.confirm.
 

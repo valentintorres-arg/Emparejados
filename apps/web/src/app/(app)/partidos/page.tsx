@@ -3,20 +3,20 @@
 import Link from "next/link";
 import useSWR from "swr";
 import { TarjetaPartido } from "@/components/competencia";
-import { Cargando, Encabezado, FalloDeCarga, Seccion, Vacio } from "@/components/ui";
+import { Cargando, Encabezado, ENLACE, FalloDeCarga, Seccion, Vacio } from "@/components/ui";
 import { traer } from "@/lib/api";
 import type { Partido } from "@/lib/tipos";
 
 function Lista({ partidos }: { partidos: Partido[] }) {
   return (
-    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {partidos.map((partido) => (
         <TarjetaPartido
           key={partido.id}
           partido={partido}
           contexto={
             partido.torneo && (
-              <Link href={`/torneos/${partido.torneo.id}`} className="font-semibold text-pista hover:underline">
+              <Link href={`/torneos/${partido.torneo.id}`} className={ENLACE}>
                 {partido.torneo.nombre}
               </Link>
             )

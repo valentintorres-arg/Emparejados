@@ -6,7 +6,7 @@ import useSWR, { useSWRConfig } from "swr";
 import { api, traer } from "@/lib/api";
 import { companero, ESTADOS_PAREJA, FORMATOS, nombreCompleto, RAMAS, rangoDeFechas } from "@/lib/formato";
 import type { Pareja, TorneoResumen } from "@/lib/tipos";
-import { Avatar, Boton, Cargando, Dialogo, Estado, Tarjeta, useAccion, useConfirmar, Vacio } from "./ui";
+import { Avatar, Boton, Cargando, Dialogo, ENLACE, Estado, Tarjeta, useAccion, useConfirmar, Vacio } from "./ui";
 
 /** Qué falta para que la pareja quede activa, dicho desde el punto de vista del jugador. */
 function situacion(pareja: Pareja, miId: number, nombreDelOtro: string): string | null {
@@ -36,20 +36,22 @@ export function TarjetaDePareja({ pareja, miId }: { pareja: Pareja; miId: number
     ejecutar(nombre, () => api.post(`/parejas/${pareja.id}/${nombre}`), exito).then((ok) => ok && mutate("/parejas/mias"));
 
   return (
-    <Tarjeta className={`p-4 ${meToca ? "border-pista shadow-[inset_4px_0_0_var(--color-pista)]" : ""}`}>
+    <Tarjeta className={`p-4 sm:p-5 ${meToca ? "border-pista ring-2 ring-pista" : ""}`}>
       <div className="flex items-center gap-3">
-        <Avatar jugador={otro} className="size-12 text-base" />
+        <Avatar jugador={otro} className="size-14 text-lg" />
         <div className="min-w-0 flex-1">
-          <p className="truncate text-lg font-bold">{nombreCompleto(otro)}</p>
-          <p className="truncate text-sm text-gris">
+          <p className="break-words text-xl font-bold leading-tight">{nombreCompleto(otro)}</p>
+          <p className="mt-0.5 text-gris">
             {otro.categoria.nombre} categoría{otro.club ? `, ${otro.club.nombre}` : ""}
           </p>
         </div>
-        <Estado valor={ESTADOS_PAREJA[pareja.estado]} />
       </div>
-      {detalle && <p className="mt-3 text-sm text-gris">{detalle}</p>}
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+        <Estado valor={ESTADOS_PAREJA[pareja.estado]} />
+        {detalle && <p className="text-gris">{detalle}</p>}
+      </div>
 
-      <div className="mt-3 flex flex-wrap gap-2 empty:hidden">
+      <div className="mt-4 flex flex-wrap gap-2 empty:hidden">
         {meToca && (
           <>
             <Boton tamano="chico" icono="ok" cargando={enCurso === "confirmar"} onClick={() => accion("confirmar", "Pareja confirmada. Ahora la aprueba la organización.")}>
@@ -121,13 +123,13 @@ function DialogoInscribir({ pareja, abierto, cerrar }: { pareja: Pareja; abierto
       ) : (
         <ul className="space-y-2">
           {abiertos.map((torneo) => (
-            <li key={torneo.id} className="flex items-center justify-between gap-3 rounded-md border border-linea p-3">
+            <li key={torneo.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-linea p-4">
               <div className="min-w-0">
-                <p className="truncate font-bold">{torneo.nombre}</p>
-                <p className="text-sm text-gris">
+                <p className="break-words text-lg font-bold leading-tight">{torneo.nombre}</p>
+                <p className="mt-0.5 text-gris">
                   {torneo.categoria.nombre} {RAMAS[torneo.rama]}, {FORMATOS[torneo.formato].toLowerCase()}
                 </p>
-                <p className="text-sm text-gris">{rangoDeFechas(torneo.fechaInicio, torneo.fechaFin)}</p>
+                <p className="text-gris">{rangoDeFechas(torneo.fechaInicio, torneo.fechaFin)}</p>
               </div>
               <Boton tamano="chico" cargando={enCurso === `t${torneo.id}`} onClick={() => inscribir(torneo)}>
                 Inscribir
@@ -136,9 +138,9 @@ function DialogoInscribir({ pareja, abierto, cerrar }: { pareja: Pareja; abierto
           ))}
         </ul>
       )}
-      <p className="mt-4 text-sm text-gris">
+      <p className="mt-5 text-gris">
         ¿Querés ver el detalle antes?{" "}
-        <Link href="/torneos" className="font-semibold text-pista hover:underline">
+        <Link href="/torneos" className={ENLACE}>
           Ir a torneos
         </Link>
       </p>

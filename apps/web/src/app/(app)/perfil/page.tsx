@@ -68,7 +68,7 @@ export default function MisDatos() {
         <Cargando />
       ) : (
         <>
-          <Tarjeta className="mb-7 p-5">
+          <Tarjeta className="mb-9 p-5 sm:p-6">
             <FormularioJugador
               modo="edicion"
               inicial={ficha}
@@ -82,12 +82,12 @@ export default function MisDatos() {
           </Tarjeta>
 
           <Seccion titulo="Contraseña">
-            <Tarjeta className="p-5">
+            <Tarjeta className="p-5 sm:p-6">
               <CambiarPassword />
             </Tarjeta>
           </Seccion>
 
-          <p className="text-sm text-gris">
+          <p className="text-gris">
             Aceptaste el tratamiento de tus datos personales (Ley 25.326) el {fechaYHora(ficha.consentimientoAceptadoEn)}. Para pedir la baja de
             tu cuenta, escribile a la organización.
           </p>

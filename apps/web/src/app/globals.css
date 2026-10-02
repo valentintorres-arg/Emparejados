@@ -7,11 +7,15 @@
   --color-pista: #1846a3;
   --color-pista-700: #123680;
   --color-pista-900: #0c2357;
+  --color-pista-100: #d3dff7;
   --color-pista-50: #e8eefb;
   --color-tinta: #0e1b3d;
-  --color-gris: #55627d;
-  --color-fondo: #eef2f8;
+  /* Texto secundario: contraste 8 a 1 sobre blanco, para leer sin esfuerzo. */
+  --color-gris: #44506a;
+  --color-fondo: #f2f5fa;
   --color-linea: #d3dbe9;
+  /* Borde de campos y botones: se tiene que ver dónde se toca (3 a 1 sobre blanco). */
+  --color-borde: #8391ab;
   --color-pelota: #d9f03f;
   --color-ok: #146c48;
   --color-ok-50: #e0f3ea;
@@ -20,31 +24,51 @@
   --color-aviso: #7d4a00;
   --color-aviso-50: #fcefd8;
   --font-sans: var(--font-archivo), system-ui, sans-serif;
+  /* Sombras teñidas del azul de la tinta: las tarjetas se despegan del fondo sin bordes duros. */
+  --shadow-tarjeta: 0 1px 2px rgb(14 27 61 / 0.06), 0 12px 28px -18px rgb(14 27 61 / 0.3);
+  --shadow-flotante: 0 2px 6px rgb(14 27 61 / 0.1), 0 24px 48px -20px rgb(14 27 61 / 0.45);
+  --shadow-boton: 0 1px 2px rgb(12 35 87 / 0.25), 0 6px 14px -8px rgb(24 70 163 / 0.7);
 }
 
 :root {
   color-scheme: light;
 }
 
+/* Todo un paso más grande: texto base de 18 px y, como las medidas están en
+   rem, botones, campos y espacios crecen en la misma proporción. Es un
+   porcentaje para respetar el tamaño de letra que la persona eligió en su
+   navegador. */
+html {
+  font-size: 112.5%;
+}
+
 body {
   background: var(--color-fondo);
   color: var(--color-tinta);
   font-family: var(--font-sans);
+  line-height: 1.55;
 }
 
-/* Archivo es de ancho variable: los títulos y el marcador van condensados,
-   como un tablero de resultados; el texto corrido, en ancho normal. */
+/* Archivo es de ancho variable. Los títulos van en ancho normal, que se lee
+   mejor; lo condensado queda para el marcador y la marca, como en un tablero
+   de resultados. */
 .titulo {
-  font-stretch: 78%;
-  font-weight: 700;
-  letter-spacing: -0.005em;
-  line-height: 1.1;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 
 .marcador {
-  font-stretch: 70%;
+  font-stretch: 72%;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.marca {
+  font-stretch: 78%;
+  font-weight: 700;
+  letter-spacing: -0.005em;
   line-height: 1;
 }
 
@@ -52,11 +76,42 @@ body {
   outline: 3px solid var(--color-pelota);
   outline-offset: 2px;
   box-shadow: 0 0 0 5px var(--color-tinta);
-  border-radius: 4px;
+  border-radius: 6px;
+}
+
+/* Las listas desplegables nativas, con una flecha que se ve. */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230e1b3d' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.25rem;
+  padding-right: 2.75rem;
 }
 
 dialog::backdrop {
-  background: rgb(14 27 61 / 0.55);
+  background: rgb(14 27 61 / 0.6);
+}
+
+dialog[open] {
+  animation: aparecer 180ms ease-out;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.girando {
+  animation: girar 0.8s linear infinite;
 }
 
 /* ─── Llave de eliminación ─────────────────────────────────────────────────
@@ -72,7 +127,7 @@ dialog::backdrop {
   right: 0;
   top: 50%;
   width: 20px;
-  border-top: 2px solid var(--color-linea);
+  border-top: 2px solid var(--color-borde);
 }
 .rama-arriba::before,
 .rama-abajo::before {
@@ -80,7 +135,7 @@ dialog::backdrop {
   position: absolute;
   right: 0;
   height: 50%;
-  border-right: 2px solid var(--color-linea);
+  border-right: 2px solid var(--color-borde);
 }
 .rama-arriba::before {
   top: 50%;
@@ -98,12 +153,18 @@ dialog::backdrop {
   left: 0;
   top: 50%;
   width: 20px;
-  border-top: 2px solid var(--color-linea);
+  border-top: 2px solid var(--color-borde);
 }
 
 @media (prefers-reduced-motion: reduce) {
   * {
-    animation: none !important;
     transition: none !important;
+  }
+  dialog[open] {
+    animation: none;
+  }
+  /* El indicador de carga sigue girando, más lento: sin él no se sabe si la app respondió. */
+  .girando {
+    animation-duration: 2s;
   }
 }

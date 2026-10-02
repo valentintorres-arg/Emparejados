@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { Boton, Campo, Cargando, Dialogo, Encabezado, ErrorDeFormulario, FalloDeCarga, Icono, Paginador, Tarjeta, useAccion, useConfirmar, Vacio } from "@/components/ui";
+import { Boton, Campo, Cargando, CONTROL, Dialogo, Encabezado, ErrorDeFormulario, FalloDeCarga, Icono, Paginador, PIE_DE_DIALOGO, Tarjeta, useAccion, useConfirmar, Vacio } from "@/components/ui";
 import { api, mensajeDe, traer } from "@/lib/api";
 import { fechaYHora, nombreCompleto } from "@/lib/formato";
 import { useSesion } from "@/lib/sesion";
 import type { EstadoUsuario, Pagina, Rol, UsuarioAdmin } from "@/lib/tipos";
 
-const CONTROL = "min-h-9 rounded-md border border-linea bg-white px-2 text-sm";
+const LISTA = "min-h-11 rounded-xl border-2 border-borde bg-white px-3 text-base disabled:bg-fondo disabled:text-gris";
 
 interface Credencial {
   email: string;
@@ -23,15 +23,15 @@ function Fila({ usuario, soyYo, recargar, mostrar }: { usuario: UsuarioAdmin; so
     ejecutar("cambio", () => api.patch(`/usuarios/${usuario.id}`, cambios), "Usuario actualizado.").then((ok) => ok && recargar());
 
   return (
-    <li className="grid items-center gap-x-4 gap-y-2 px-4 py-3 md:grid-cols-[minmax(0,1fr)_auto]">
+    <li className="grid items-center gap-x-4 gap-y-3 px-4 py-4 sm:px-5 xl:grid-cols-[minmax(0,1fr)_auto]">
       <div className="min-w-0">
-        <p className="truncate font-bold">
+        <p className="break-all text-lg font-bold leading-tight">
           {usuario.email}
-          {soyYo && <span className="ml-2 text-sm font-normal text-gris">(vos)</span>}
+          {soyYo && <span className="ml-2 text-base font-normal text-gris">(vos)</span>}
         </p>
-        <p className="truncate text-sm text-gris">
+        <p className="mt-0.5 text-gris">
           {usuario.jugador ? (
-            <Link href={`/admin/jugadores/${usuario.jugador.id}`} className="text-pista hover:underline">
+            <Link href={`/admin/jugadores/${usuario.jugador.id}`} className="font-semibold text-pista underline decoration-pista/40 decoration-2 underline-offset-4 hover:decoration-pista">
               {nombreCompleto(usuario.jugador)}
             </Link>
           ) : (
@@ -41,13 +41,13 @@ function Fila({ usuario, soyYo, recargar, mostrar }: { usuario: UsuarioAdmin; so
         </p>
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        <select aria-label={`Rol de ${usuario.email}`} className={CONTROL} value={usuario.rol} disabled={soyYo || enCurso !== null} onChange={(e) => cambiar({ rol: e.target.value as Rol })}>
+        <select aria-label={`Rol de ${usuario.email}`} className={LISTA} value={usuario.rol} disabled={soyYo || enCurso !== null} onChange={(e) => cambiar({ rol: e.target.value as Rol })}>
           <option value="JUGADOR">Jugador</option>
           <option value="ADMIN">Administrador</option>
         </select>
         <select
           aria-label={`Estado de ${usuario.email}`}
-          className={CONTROL}
+          className={LISTA}
           value={usuario.estado}
           disabled={soyYo || enCurso !== null}
           onChange={(e) => cambiar({ estado: e.target.value as EstadoUsuario })}
@@ -109,10 +109,10 @@ export default function Usuarios() {
         </Boton>
       </Encabezado>
 
-      <label className="relative mb-4 block max-w-md">
+      <label className="relative mb-5 block max-w-md">
         <span className="sr-only">Buscar por email</span>
-        <Icono nombre="buscar" className="pointer-events-none absolute left-3 top-3 size-5 text-gris" />
-        <input type="search" value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Buscar por email" className="min-h-11 w-full rounded-md border border-linea bg-white pl-10 pr-3 text-base" />
+        <Icono nombre="buscar" className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-gris" />
+        <input type="search" value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Buscar por email" className={`${CONTROL} pl-12`} />
       </label>
 
       {fallo ? (
@@ -136,11 +136,11 @@ export default function Usuarios() {
         {credencial && (
           <>
             <p>Pasásela ahora a quien corresponde: no se vuelve a mostrar.</p>
-            <dl className="mt-4 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 rounded-md bg-fondo p-4">
+            <dl className="mt-4 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 rounded-xl bg-fondo p-4">
               <dt className="text-gris">Email</dt>
               <dd className="break-all font-semibold">{credencial.email}</dd>
               <dt className="text-gris">Contraseña</dt>
-              <dd className="select-all font-mono text-lg font-bold tracking-wide">{credencial.password}</dd>
+              <dd className="select-all font-mono text-2xl font-bold tracking-wide">{credencial.password}</dd>
             </dl>
             <Boton className="mt-5 w-full" onClick={() => setCredencial(null)}>
               Listo, ya la anoté
@@ -165,10 +165,10 @@ export default function Usuarios() {
             }
           }}
         >
-          <p className="text-sm text-gris">Va a poder aprobar parejas, crear torneos, cargar resultados y administrar usuarios.</p>
+          <p className="text-gris">Va a poder aprobar parejas, crear torneos, cargar resultados y administrar usuarios.</p>
           <Campo etiqueta="Email" name="email" type="email" required />
           <ErrorDeFormulario mensaje={error} />
-          <div className="flex justify-end gap-2">
+          <div className={PIE_DE_DIALOGO}>
             <Boton variante="secundario" onClick={() => setCreando(false)}>
               Cancelar
             </Boton>

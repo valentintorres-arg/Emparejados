@@ -58,19 +58,19 @@ function ArmarPareja() {
   if (paso.nombre === "listo") {
     return (
       <Tarjeta className="mx-auto max-w-md p-6 text-center">
-        <Avatar jugador={paso.jugador} className="mx-auto size-16 text-xl" />
+        <Avatar jugador={paso.jugador} className="mx-auto size-20 text-2xl" />
         <h2 className="titulo mt-4 text-3xl">Propuesta enviada</h2>
-        <ol className="mx-auto mt-4 max-w-xs space-y-2 text-left text-sm">
-          <li className="flex gap-2.5">
-            <span className="marcador mt-0.5 text-base text-pista">1</span>
+        <ol className="mx-auto mt-5 max-w-xs space-y-3 text-left">
+          <li className="flex items-start gap-3">
+            <span className="marcador flex size-7 shrink-0 items-center justify-center rounded-full bg-pista-50 text-lg text-pista">1</span>
             {paso.jugador.nombre} la confirma desde su cuenta.
           </li>
-          <li className="flex gap-2.5">
-            <span className="marcador mt-0.5 text-base text-pista">2</span>
+          <li className="flex items-start gap-3">
+            <span className="marcador flex size-7 shrink-0 items-center justify-center rounded-full bg-pista-50 text-lg text-pista">2</span>
             La organización la aprueba.
           </li>
-          <li className="flex gap-2.5">
-            <span className="marcador mt-0.5 text-base text-pista">3</span>
+          <li className="flex items-start gap-3">
+            <span className="marcador flex size-7 shrink-0 items-center justify-center rounded-full bg-pista-50 text-lg text-pista">3</span>
             Ya pueden inscribirse juntos en un torneo.
           </li>
         </ol>
@@ -85,9 +85,9 @@ function ArmarPareja() {
     const { jugador, token } = paso;
     return (
       <Tarjeta className="mx-auto max-w-md p-6 text-center">
-        <Avatar jugador={jugador} className="mx-auto size-16 text-xl" />
+        <Avatar jugador={jugador} className="mx-auto size-20 text-2xl" />
         <h2 className="titulo mt-4 text-3xl">{nombreCompleto(jugador)}</h2>
-        <p className="mt-1 text-gris">
+        <p className="mt-1.5 text-lg text-gris">
           {jugador.categoria.nombre} categoría{jugador.club ? `, ${jugador.club.nombre}` : ""}
         </p>
         <div className="mt-5 space-y-3">
@@ -113,10 +113,10 @@ function ArmarPareja() {
   return (
     <div className="mx-auto max-w-md space-y-5">
       <EscanerQr alLeer={buscar} />
-      <p className="text-center text-gris">Apuntá al código QR que tu compañero tiene en la pantalla de inicio de su cuenta.</p>
+      <p className="text-center text-lg">Apuntá al código QR que tu compañero tiene en la pantalla de inicio de su cuenta.</p>
       <ErrorDeFormulario mensaje={error} />
       <form
-        className="flex items-end gap-2 border-t border-linea pt-5"
+        className="flex flex-col gap-3 border-t border-linea pt-6 sm:flex-row sm:items-end"
         onSubmit={(evento) => {
           evento.preventDefault();
           const token = tokenDeTexto(String(new FormData(evento.currentTarget).get("codigo") ?? ""));

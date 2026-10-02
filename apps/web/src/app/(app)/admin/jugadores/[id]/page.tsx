@@ -6,7 +6,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import { TarjetaPartido } from "@/components/competencia";
 import { FormularioJugador } from "@/components/form-jugador";
-import { Avatar, Boton, Cargando, Encabezado, Estado, FalloDeCarga, Seccion, Tarjeta, useAccion, useAviso, useConfirmar, Vacio } from "@/components/ui";
+import { Avatar, Boton, Cargando, Encabezado, ENLACE, Estado, FalloDeCarga, Seccion, Tarjeta, useAccion, useAviso, useConfirmar, Vacio } from "@/components/ui";
 import { api, traer } from "@/lib/api";
 import { ESTADOS_INSCRIPCION, ESTADOS_PAREJA, ESTADOS_USUARIO, fecha, nombreCompleto, rangoDeFechas } from "@/lib/formato";
 import type { FichaJugador } from "@/lib/tipos";
@@ -64,7 +64,7 @@ export default function FichaDeJugador() {
       </Encabezado>
 
       {editando ? (
-        <Tarjeta className="mb-7 p-5">
+        <Tarjeta className="mb-9 p-5 sm:p-6">
           <FormularioJugador
             modo="edicion"
             esAdmin
@@ -79,14 +79,14 @@ export default function FichaDeJugador() {
           />
         </Tarjeta>
       ) : (
-        <Tarjeta className="mb-7 flex flex-col gap-5 p-5 sm:flex-row">
+        <Tarjeta className="mb-9 flex flex-col gap-5 p-5 sm:flex-row sm:p-6">
           <Avatar jugador={ficha} className="size-20 text-2xl" />
-          <dl className="grid flex-1 grid-cols-2 gap-x-6 gap-y-4 lg:grid-cols-3">
+          <dl className="grid flex-1 grid-cols-1 gap-x-6 gap-y-4 min-[26rem]:grid-cols-2 xl:grid-cols-3">
             <Dato etiqueta="DNI">{ficha.dni}</Dato>
             <Dato etiqueta="Nacimiento">{fecha(ficha.fechaNacimiento)}</Dato>
             <Dato etiqueta="Género">{ficha.genero.charAt(0) + ficha.genero.slice(1).toLowerCase()}</Dato>
             <Dato etiqueta="Teléfono">
-              <a href={`https://wa.me/${ficha.telefono.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" className="text-pista hover:underline">
+              <a href={`https://wa.me/${ficha.telefono.replace(/\D/g, "")}`} target="_blank" rel="noreferrer" className={ENLACE}>
                 {ficha.telefono}
               </a>
             </Dato>
@@ -110,13 +110,13 @@ export default function FichaDeJugador() {
           <Tarjeta>
             <ul className="divide-y divide-linea">
               {ficha.parejas.map((pareja) => (
-                <li key={pareja.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3">
+                <li key={pareja.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-4 sm:px-5">
                   <span>
                     Con{" "}
-                    <Link href={`/admin/jugadores/${otro(pareja).id}`} className="font-semibold text-pista hover:underline">
+                    <Link href={`/admin/jugadores/${otro(pareja).id}`} className={ENLACE}>
                       {nombreCompleto(otro(pareja))}
                     </Link>
-                    {pareja.motivoRechazo && <span className="block text-sm text-gris">{pareja.motivoRechazo}</span>}
+                    {pareja.motivoRechazo && <span className="block text-gris">{pareja.motivoRechazo}</span>}
                   </span>
                   <Estado valor={ESTADOS_PAREJA[pareja.estado]} />
                 </li>
@@ -133,12 +133,12 @@ export default function FichaDeJugador() {
           <Tarjeta>
             <ul className="divide-y divide-linea">
               {ficha.inscripciones.map((inscripcion) => (
-                <li key={inscripcion.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3">
+                <li key={inscripcion.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-4 sm:px-5">
                   <span>
-                    <Link href={`/torneos/${inscripcion.torneo.id}`} className="font-semibold text-pista hover:underline">
+                    <Link href={`/torneos/${inscripcion.torneo.id}`} className={ENLACE}>
                       {inscripcion.torneo.nombre}
                     </Link>
-                    <span className="block text-sm text-gris">{rangoDeFechas(inscripcion.torneo.fechaInicio, inscripcion.torneo.fechaFin)}</span>
+                    <span className="block text-gris">{rangoDeFechas(inscripcion.torneo.fechaInicio, inscripcion.torneo.fechaFin)}</span>
                   </span>
                   <Estado valor={ESTADOS_INSCRIPCION[inscripcion.estado]} />
                 </li>
@@ -152,7 +152,7 @@ export default function FichaDeJugador() {
         {ficha.partidos.length === 0 ? (
           <Vacio titulo="Todavía no jugó ningún partido" />
         ) : (
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {ficha.partidos.map((partido) => (
               <TarjetaPartido key={partido.id} partido={partido} contexto={partido.torneo?.nombre} />
             ))}

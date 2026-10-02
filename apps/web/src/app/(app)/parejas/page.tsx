@@ -20,7 +20,7 @@ export default function MisParejas() {
     <>
       <Encabezado titulo="Parejas" detalle="Podés tener varias, pero una sola por torneo.">
         <Boton href="/parejas/escanear" icono="camara">
-          Armar pareja
+          Armar una pareja nueva
         </Boton>
       </Encabezado>
 
@@ -36,7 +36,7 @@ export default function MisParejas() {
         <>
           {enTramite.length > 0 && (
             <Seccion titulo="En trámite">
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {enTramite.map((p) => (
                   <TarjetaDePareja key={p.id} pareja={p} miId={miId} />
                 ))}
@@ -45,7 +45,7 @@ export default function MisParejas() {
           )}
           {activas.length > 0 && (
             <Seccion titulo="Activas">
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {activas.map((p) => (
                   <TarjetaDePareja key={p.id} pareja={p} miId={miId} />
                 ))}
@@ -54,7 +54,7 @@ export default function MisParejas() {
           )}
           {historial.length > 0 && (
             <Seccion titulo="Historial">
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {historial.map((p) => (
                   <TarjetaDePareja key={p.id} pareja={p} miId={miId} />
                 ))}

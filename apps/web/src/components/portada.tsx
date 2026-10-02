@@ -12,17 +12,17 @@ export function Portada({ titulo, bajada, children, ancho = "max-w-sm" }: { titu
         </Link>
         <div className="relative hidden lg:block">
           <p className="titulo max-w-md text-6xl">Tu pareja, tu torneo, tu próximo partido.</p>
-          <p className="mt-5 max-w-sm text-lg text-white/80">
+          <p className="mt-5 max-w-sm text-xl text-white/90">
             Armá pareja escaneando un QR, anotate en los torneos del club y seguí el fixture desde el celular.
           </p>
         </div>
-        <p className="relative hidden text-sm text-white/60 lg:block">Emparejados Pádel</p>
+        <p className="relative hidden text-white/75 lg:block">Emparejados Pádel</p>
       </div>
 
-      <main className="flex items-start justify-center px-5 py-8 lg:items-center lg:py-12">
+      <main className="flex items-start justify-center px-5 py-9 lg:items-center lg:py-12">
         <div className={`w-full ${ancho}`}>
           <h1 className="titulo text-4xl">{titulo}</h1>
-          <p className="mb-6 mt-1.5 text-gris">{bajada}</p>
+          <p className="mb-7 mt-2 text-lg text-gris">{bajada}</p>
           {children}
         </div>
       </main>

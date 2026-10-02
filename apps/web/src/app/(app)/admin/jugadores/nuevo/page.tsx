@@ -24,7 +24,7 @@ export default function NuevoJugador() {
             <strong>{nombreCompleto(alta.jugador)}</strong> ya puede ingresar con estos datos. Pasáselos ahora: la contraseña no se vuelve a
             mostrar.
           </p>
-          <dl className="mt-4 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 rounded-md bg-fondo p-4">
+          <dl className="mt-4 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 rounded-xl bg-fondo p-4">
             <dt className="text-gris">Email</dt>
             <dd className="break-all font-semibold">{alta.jugador.usuario.email}</dd>
             <dt className="text-gris">Contraseña</dt>

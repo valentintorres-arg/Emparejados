@@ -9,12 +9,12 @@ export default function SinConexion() {
     <main className="flex min-h-dvh flex-col items-center justify-center px-6 text-center">
       <Isotipo className="size-16" />
       <h1 className="titulo mt-6 text-4xl">No hay conexión</h1>
-      <p className="mt-2 max-w-sm text-gris">
+      <p className="mt-3 max-w-sm text-lg text-gris">
         Para ver parejas, partidos y resultados al día hace falta señal. Cuando vuelva, abrí la app de nuevo.
       </p>
       {/* Enlace común (no <Link>): fuerza un pedido a la red en lugar de navegar con lo guardado. */}
       {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-      <a href="/" className="mt-6 inline-flex min-h-11 items-center rounded-md bg-pista px-5 font-semibold text-white">
+      <a href="/" className="mt-7 inline-flex min-h-13 items-center rounded-xl bg-pista px-7 text-lg font-semibold text-white shadow-boton">
         Reintentar
       </a>
     </main>

@@ -6,7 +6,7 @@ import { api, mensajeDe, traer } from "@/lib/api";
 import { deInputLocal, nombreDePareja, paraInputLocal } from "@/lib/formato";
 import type { Cancha, Pagina, Pareja, Partido, TorneoDetalle } from "@/lib/tipos";
 import { descripcionDePartido } from "./competencia";
-import { AreaDeTexto, Boton, Campo, Cargando, Dialogo, ErrorDeFormulario, Paginador, Selector, useAviso, Vacio } from "./ui";
+import { AreaDeTexto, Boton, Campo, Cargando, Dialogo, ErrorDeFormulario, Paginador, PIE_DE_DIALOGO, Selector, useAviso, Vacio } from "./ui";
 
 // Diálogos de la organización: rechazar con motivo, cargar resultados y armar la agenda.
 
@@ -55,7 +55,7 @@ export function DialogoMotivo({ titulo, abierto, cerrar, alConfirmar }: { titulo
       >
         <AreaDeTexto etiqueta="Motivo del rechazo" name="motivo" required minLength={3} maxLength={300} placeholder="Los jugadores lo van a ver en su cuenta." />
         <ErrorDeFormulario mensaje={error} />
-        <div className="flex justify-end gap-2">
+        <div className={PIE_DE_DIALOGO}>
           <Boton variante="secundario" onClick={cerrar}>
             Volver
           </Boton>
@@ -103,22 +103,22 @@ function FormularioResultado({ partido, cerrar, alTerminar }: { partido: Partido
 
   return (
     <form onSubmit={guardar} className="space-y-5">
-      <p className="text-sm text-gris">
-        {descripcionDePartido(partido)}, partido {partido.numero}
+      <p className="text-gris">
+        {descripcionDePartido(partido)}, partido {partido.numero}. Escribí los games de cada pareja en cada set.
       </p>
 
       <fieldset disabled={wo !== ""} className="disabled:opacity-40">
         <legend className="sr-only">Games por set</legend>
-        <div className="grid grid-cols-[minmax(0,1fr)_repeat(3,3.25rem)] items-center gap-x-2 gap-y-2">
+        <div className="grid grid-cols-[minmax(0,1fr)_repeat(3,3.5rem)] items-center gap-x-2 gap-y-2.5">
           <span />
           {SETS.map((n) => (
-            <span key={n} className="text-center text-xs font-semibold text-gris">
+            <span key={n} className="text-center text-sm font-semibold text-gris">
               Set {n}
             </span>
           ))}
           {([1, 2] as const).map((lado) => (
             <div key={lado} className="contents">
-              <span className="truncate font-semibold">{nombres[lado - 1]}</span>
+              <span className="break-words font-semibold leading-snug">{nombres[lado - 1]}</span>
               {SETS.map((n) => {
                 const previo = partido.sets.find((s) => s.numero === n);
                 return (
@@ -131,15 +131,15 @@ function FormularioResultado({ partido, cerrar, alTerminar }: { partido: Partido
                     max={99}
                     defaultValue={previo ? (lado === 1 ? previo.gamesP1 : previo.gamesP2) : ""}
                     aria-label={`Set ${n}, ${nombres[lado - 1]}`}
-                    className="marcador h-12 w-full rounded-md border border-linea bg-white text-center text-2xl focus:border-pista"
+                    className="marcador h-14 w-full rounded-xl border-2 border-borde bg-white text-center text-3xl focus:border-pista"
                   />
                 );
               })}
             </div>
           ))}
         </div>
-        <label className="mt-3 flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={superTiebreak} onChange={(e) => setSuperTiebreak(e.target.checked)} className="size-5 accent-pista" />
+        <label className="mt-4 flex min-h-11 items-center gap-3">
+          <input type="checkbox" checked={superTiebreak} onChange={(e) => setSuperTiebreak(e.target.checked)} className="size-6 shrink-0 accent-pista" />
           El tercer set fue un super tie-break a 10
         </label>
       </fieldset>
@@ -156,7 +156,7 @@ function FormularioResultado({ partido, cerrar, alTerminar }: { partido: Partido
       />
 
       <ErrorDeFormulario mensaje={error} />
-      <div className="flex justify-end gap-2">
+      <div className={PIE_DE_DIALOGO}>
         <Boton variante="secundario" onClick={cerrar}>
           Cancelar
         </Boton>
@@ -199,31 +199,32 @@ function FormularioHorario({ partido, canchas, cerrar, alTerminar }: { partido: 
         );
       }}
     >
-      <p className="text-sm text-gris">
+      <p className="text-gris">
         {descripcionDePartido(partido)}, partido {partido.numero}
       </p>
       <Campo etiqueta="Día y hora de inicio" name="inicio" type="datetime-local" defaultValue={partido.inicio ? paraInputLocal(partido.inicio) : ""} required />
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Selector etiqueta="Cancha" name="canchaId" defaultValue={partido.canchaId ?? ""} vacio="Elegí" required opciones={canchas.map((c) => [c.id, c.nombre] as const)} />
         <Campo etiqueta="Duración (minutos)" name="duracionMin" type="number" min={30} max={240} step={15} defaultValue={duracionActual} required />
       </div>
       <ErrorDeFormulario mensaje={error} />
-      <div className="flex flex-wrap justify-between gap-2">
-        {partido.inicio ? (
-          <Boton variante="fantasma" disabled={enviando} onClick={() => enviar(() => api.put(`/partidos/${partido.id}/programacion`, { inicio: null, canchaId: null }), "Partido sin horario.")}>
+      <div className={PIE_DE_DIALOGO}>
+        {partido.inicio && (
+          <Boton
+            variante="fantasma"
+            className="sm:mr-auto"
+            disabled={enviando}
+            onClick={() => enviar(() => api.put(`/partidos/${partido.id}/programacion`, { inicio: null, canchaId: null }), "Partido sin horario.")}
+          >
             Quitar horario
           </Boton>
-        ) : (
-          <span />
         )}
-        <span className="flex gap-2">
-          <Boton variante="secundario" onClick={cerrar}>
-            Cancelar
-          </Boton>
-          <Boton type="submit" cargando={enviando}>
-            Guardar
-          </Boton>
-        </span>
+        <Boton variante="secundario" onClick={cerrar}>
+          Cancelar
+        </Boton>
+        <Boton type="submit" cargando={enviando}>
+          Guardar horario
+        </Boton>
       </div>
     </form>
   );
@@ -267,28 +268,28 @@ export function DialogoAgenda({ torneo, abierto, cerrar, alTerminar }: { torneo:
           }
         }}
       >
-        <p className="text-sm text-gris">
+        <p className="text-gris">
           Reparte los {sinHorario} partidos sin horario en turnos seguidos, sin poner a un jugador en dos canchas a la vez ni pisar canchas
           ocupadas. Después podés mover cualquier partido a mano.
         </p>
         <Campo etiqueta="Primer turno" name="desde" type="datetime-local" defaultValue={`${torneo.fechaInicio.slice(0, 10)}T18:00`} required />
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Campo etiqueta="Duración del turno (min)" name="duracionMin" type="number" min={30} max={240} step={15} defaultValue={90} required />
           <Campo etiqueta="Turnos por día" name="turnosPorDia" type="number" min={1} max={16} defaultValue={4} required />
         </div>
         <fieldset>
-          <legend className="mb-1 text-sm font-semibold">Canchas de {torneo.sede.nombre}</legend>
+          <legend className="mb-1.5 font-semibold">Canchas de {torneo.sede.nombre}</legend>
           <div className="flex flex-wrap gap-2">
             {torneo.sede.canchas.map((cancha) => (
-              <label key={cancha.id} className="flex items-center gap-2 rounded-md border border-linea px-3 py-2 text-sm has-checked:border-pista has-checked:bg-pista-50">
-                <input type="checkbox" name="canchas" value={cancha.id} defaultChecked className="size-4 accent-pista" />
+              <label key={cancha.id} className="flex min-h-12 items-center gap-2.5 rounded-xl border-2 border-borde px-4 font-semibold has-checked:border-pista has-checked:bg-pista-50">
+                <input type="checkbox" name="canchas" value={cancha.id} defaultChecked className="size-6 shrink-0 accent-pista" />
                 {cancha.nombre}
               </label>
             ))}
           </div>
         </fieldset>
         <ErrorDeFormulario mensaje={error} />
-        <div className="flex justify-end gap-2">
+        <div className={PIE_DE_DIALOGO}>
           <Boton variante="secundario" onClick={cerrar}>
             Cancelar
           </Boton>
@@ -333,15 +334,15 @@ export function DialogoInscribirPareja({ torneo, abierto, cerrar, alTerminar }: 
         <>
           <ul className="max-h-[55vh] space-y-2 overflow-y-auto">
             {data.items.map((pareja) => (
-              <li key={pareja.id} className="flex items-center justify-between gap-3 rounded-md border border-linea px-3 py-2">
+              <li key={pareja.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-linea px-4 py-3">
                 <span className="min-w-0">
-                  <span className="block truncate font-semibold">{nombreDePareja(pareja)}</span>
+                  <span className="block break-words font-semibold leading-snug">{nombreDePareja(pareja)}</span>
                   <span className="text-sm text-gris">
                     {pareja.jugador1.categoria.nombre} y {pareja.jugador2.categoria.nombre}
                   </span>
                 </span>
                 {yaAnotadas.has(pareja.id) ? (
-                  <span className="text-sm text-gris">Ya anotada</span>
+                  <span className="font-semibold text-gris">Ya anotada</span>
                 ) : (
                   <Boton tamano="chico" variante="secundario" cargando={enCurso === pareja.id} onClick={() => inscribir(pareja)}>
                     Inscribir

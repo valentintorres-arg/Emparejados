@@ -6,7 +6,7 @@ import { TarjetaPartido } from "@/components/competencia";
 import { TarjetaDePareja } from "@/components/parejas";
 import { InstalarApp } from "@/components/pwa";
 import { CodigoQr, enlaceDeQr } from "@/components/qr";
-import { Boton, Cargando, Encabezado, Estado, FalloDeCarga, Seccion, Tarjeta, useAccion, useAviso, useConfirmar, Vacio } from "@/components/ui";
+import { Boton, Cargando, Encabezado, Estado, FalloDeCarga, Seccion, Tarjeta, TARJETA_ENLACE, useAccion, useAviso, useConfirmar, Vacio } from "@/components/ui";
 import { api, traer } from "@/lib/api";
 import { ESTADOS_INSCRIPCION, nombreDePareja, rangoDeFechas } from "@/lib/formato";
 import { useSesion } from "@/lib/sesion";
@@ -37,24 +37,29 @@ function MiQr() {
 
   return (
     <Tarjeta className="overflow-hidden lg:flex">
-      <div className="flex flex-col items-center gap-3 bg-pista px-6 py-6 text-white lg:w-72">
-        <div className="w-full max-w-56 rounded-lg bg-white p-3">
+      <div className="flex flex-col items-center gap-3 bg-pista px-6 py-7 text-white lg:w-80">
+        <p className="text-center text-lg font-semibold">Tu código de jugador</p>
+        <div className="w-full max-w-64 rounded-2xl bg-white p-4">
           {qr ? <CodigoQr token={qr.token} /> : <div className="aspect-square" />}
         </div>
-        <p className="text-center text-sm text-white/85">Tu código de jugador</p>
+        <p className="text-center text-white/90">Mostráselo a tu compañero</p>
       </div>
-      <div className="flex flex-1 flex-col justify-center gap-4 p-5">
+      <div className="flex flex-1 flex-col justify-center gap-5 p-5 sm:p-6">
         <div>
-          <h2 className="titulo text-2xl">Armá pareja en dos pasos</h2>
-          <p className="mt-1 text-gris">
-            Mostrale este código a tu compañero para que lo escanee, o escaneá vos el suyo. Después confirma el otro y la organización
-            aprueba.
-          </p>
+          <h2 className="titulo text-2xl">Armá pareja en tres pasos</h2>
+          <ol className="mt-3 space-y-2.5">
+            {["Uno de los dos escanea el código del otro.", "El otro confirma desde su cuenta.", "La organización aprueba la pareja."].map((paso, i) => (
+              <li key={paso} className="flex items-start gap-3">
+                <span className="marcador flex size-7 shrink-0 items-center justify-center rounded-full bg-pista-50 text-lg text-pista">{i + 1}</span>
+                {paso}
+              </li>
+            ))}
+          </ol>
         </div>
         {error && <FalloDeCarga error={error} reintentar={() => mutate()} />}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
           <Boton href="/parejas/escanear" icono="camara">
-            Escanear un QR
+            Escanear el código de mi compañero
           </Boton>
           <Boton variante="secundario" disabled={!qr} onClick={copiar}>
             Copiar mi enlace
@@ -98,16 +103,16 @@ export default function PanelDelJugador() {
         </Seccion>
       )}
 
-      <section className="mb-7">
+      <section className="mb-9">
         <MiQr />
       </section>
 
       <Seccion
         titulo="Tus próximos partidos"
         accion={
-          <Link href="/partidos" className="text-sm font-semibold text-pista hover:underline">
+          <Boton href="/partidos" tamano="chico" variante="fantasma">
             Ver todos
-          </Link>
+          </Boton>
         }
       >
         {!proximos ? (
@@ -128,15 +133,13 @@ export default function PanelDelJugador() {
           <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
             {enTorneos.map((inscripcion) => (
               <li key={inscripcion.id}>
-                <Link href={`/torneos/${inscripcion.torneo.id}`} className="block rounded-lg border border-linea bg-white p-4 hover:border-pista">
-                  <span className="flex items-start justify-between gap-3">
-                    <span className="titulo text-xl">{inscripcion.torneo.nombre}</span>
-                    <Estado valor={ESTADOS_INSCRIPCION[inscripcion.estado]} />
-                  </span>
-                  <span className="mt-1 block text-sm text-gris">
+                <Link href={`/torneos/${inscripcion.torneo.id}`} className={`block h-full p-5 ${TARJETA_ENLACE}`}>
+                  <Estado valor={ESTADOS_INSCRIPCION[inscripcion.estado]} />
+                  <span className="titulo mt-2.5 block text-xl">{inscripcion.torneo.nombre}</span>
+                  <span className="mt-1.5 block text-gris">
                     {rangoDeFechas(inscripcion.torneo.fechaInicio, inscripcion.torneo.fechaFin)}, {inscripcion.torneo.sede.nombre}
                   </span>
-                  <span className="mt-1 block text-sm">Con {nombreDePareja(inscripcion.pareja)}</span>
+                  <span className="mt-1 block font-semibold">Con {nombreDePareja(inscripcion.pareja)}</span>
                 </Link>
               </li>
             ))}

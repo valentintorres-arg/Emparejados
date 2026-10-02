@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import useSWR from "swr";
-import { Cargando, Encabezado, FalloDeCarga, Paginador, Tarjeta, Vacio } from "@/components/ui";
+import { Cargando, CONTROL, Encabezado, FalloDeCarga, Paginador, Tarjeta, Vacio } from "@/components/ui";
 import { traer } from "@/lib/api";
 import { accionLegible, fechaYHora } from "@/lib/formato";
 import type { Pagina, RegistroAuditoria } from "@/lib/tipos";
@@ -34,7 +34,7 @@ export default function Auditoria() {
             setEntidad(e.target.value);
             setPagina(1);
           }}
-          className="min-h-11 rounded-md border border-linea bg-white px-3 text-base capitalize"
+          className={`${CONTROL} capitalize sm:w-auto`}
         >
           <option value="">Todo</option>
           {ENTIDADES.map((e) => (
@@ -53,28 +53,28 @@ export default function Auditoria() {
         <Vacio titulo="No hay registros de ese tipo" />
       ) : (
         <Tarjeta className="overflow-x-auto">
-          <table className="w-full min-w-[40rem] text-sm">
+          <table className="w-full min-w-[46rem]">
             <thead>
-              <tr className="border-b border-linea bg-fondo/60 text-left text-xs text-gris">
-                <th scope="col" className="px-4 py-2 font-semibold">Cuándo</th>
-                <th scope="col" className="px-4 py-2 font-semibold">Quién</th>
-                <th scope="col" className="px-4 py-2 font-semibold">Qué hizo</th>
-                <th scope="col" className="px-4 py-2 font-semibold">Detalle</th>
+              <tr className="border-b border-linea bg-fondo/70 text-left text-sm text-gris">
+                <th scope="col" className="px-4 py-3 font-semibold">Cuándo</th>
+                <th scope="col" className="px-4 py-3 font-semibold">Quién</th>
+                <th scope="col" className="px-4 py-3 font-semibold">Qué hizo</th>
+                <th scope="col" className="px-4 py-3 font-semibold">Detalle</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-linea">
               {data.items.map((registro) => (
                 <tr key={registro.id} className="align-top">
-                  <td className="whitespace-nowrap px-4 py-2.5 text-gris">{fechaYHora(registro.fecha)}</td>
-                  <td className="px-4 py-2.5">{registro.usuario.email}</td>
-                  <td className="px-4 py-2.5 font-semibold">
+                  <td className="whitespace-nowrap px-4 py-3.5 text-gris">{fechaYHora(registro.fecha)}</td>
+                  <td className="px-4 py-3.5">{registro.usuario.email}</td>
+                  <td className="px-4 py-3.5 font-semibold">
                     {accionLegible(registro.accion)}
                     <span className="ml-1 font-normal text-gris">
                       ({registro.entidad}
                       {registro.entidadId ? ` ${registro.entidadId}` : ""})
                     </span>
                   </td>
-                  <td className="px-4 py-2.5 text-gris">{detalleLegible(registro.detalle)}</td>
+                  <td className="px-4 py-3.5 text-gris">{detalleLegible(registro.detalle)}</td>
                 </tr>
               ))}
             </tbody>
