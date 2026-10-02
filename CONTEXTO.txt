@@ -1,0 +1,323 @@
+EMPAREJADOS PÁDEL — CONTEXTO DEL PROYECTO
+Estado al 1 de octubre de 2026
+
+Este archivo resume qué es el proyecto, cómo está construido, qué decisiones se
+tomaron y por qué, cómo quedó desplegado y qué falta. No contiene claves: dice
+dónde está cada una.
+
+
+1. QUÉ ES
+---------
+Sistema web para organizar competencias de pádel: jugadores, parejas, torneos y
+partidos. Es una PWA instalable en Android y en escritorio desde el navegador.
+
+Regla central: las parejas las arman los propios jugadores escaneando un QR,
+pero nada queda activo hasta que un administrador lo aprueba. Lo mismo vale
+para las inscripciones a torneos.
+
+Especificación original: "emparejados paddle seccion carga de.txt" (raíz del repo).
+
+Sitio publicado:  https://emparejados.onlineturnos.ar
+Repositorio:      https://github.com/valentintorres-arg/Emparejados  (rama main, público)
+Carpeta local:    C:\Users\vatul\Desktop\The only thing that has sense right now\Emparejados
+
+
+2. STACK (decisión del dueño del proyecto, no cambiar)
+------------------------------------------------------
+- Frontend: Next.js 16.3.8 (App Router), React 19, Tailwind 4, SWR.
+- API:      NestJS 12.1.2, class-validator, @nestjs/jwt, @nestjs/throttler.
+- ORM:      Prisma 7.10.0 con @prisma/adapter-pg.
+- Base:     PostgreSQL 17 en contenedor Docker.
+- Hosting:  VPS propio, publicado por un túnel de Cloudflare.
+
+Particularidades que conviene saber antes de tocar código:
+- Prisma está fijado en 7.10.0 a propósito: la etiqueta "latest" de npm
+  apuntaba a 8.0.0-rc (versión candidata).
+- Prisma 7 usa prisma.config.ts (la URL de la base no va en schema.prisma) y el
+  generador "prisma-client" escribe el cliente en apps/api/src/generated/prisma
+  (ignorado por git; se genera en el postinstall).
+- NestJS 12 es ESM. apps/api tiene "type": "module", los imports llevan
+  extensión .ts y se compila con tsc directo (no se usa @nestjs/cli).
+  tsconfig: module nodenext, rewriteRelativeImportExtensions, decoradores
+  experimentales con emitDecoratorMetadata.
+- TypeScript de la API: 7.0.2. El de la web lo trae create-next-app (5.x).
+- Next 16: apps/web/AGENTS.md pide leer node_modules/next/dist/docs antes de
+  escribir código, porque hay cambios respecto de versiones anteriores.
+- Hash de contraseñas: scrypt de node:crypto (sin dependencias nativas).
+
+
+3. ESTRUCTURA DEL REPOSITORIO
+-----------------------------
+/
+  docker-compose.yml        servicios db, api, web
+  .env.example              variables de docker-compose
+  README.md                 puesta en marcha
+  package.json              atajos (dev:api, dev:web, db:up, build)
+  apps/api/
+    prisma/schema.prisma    modelo de datos
+    prisma/migrations/      3 migraciones (ver punto 4)
+    prisma/seed.ts          categorías 1ª a 8ª y primer administrador
+    prisma.config.ts
+    src/main.ts, app.module.ts
+    src/comun/              auth.guard, sesion (decoradores), filtro-errores,
+                            password, paginacion, selecciones
+    src/auth/               login, registro, refresco, salir, yo, password
+    src/jugadores/          ABM, ficha con historial, QR
+    src/parejas/            crear por QR, confirmar, declinar, aprobar, rechazar, disolver
+    src/torneos/            torneos, inscripciones, sorteo, fixture.ts (funciones puras)
+    src/partidos/           agenda manual y automática, resultados
+    src/usuarios/           usuarios, auditoría (listado) y resumen del tablero
+    src/catalogos/          categorías, localidades, clubes, canchas
+    src/auditoria/          servicio de registro
+    src/demo/cargar-demo.ts datos de ejemplo
+    Dockerfile
+  apps/web/
+    src/app/                páginas (ver punto 7)
+    src/components/         ui, navegacion, competencia, parejas, dialogos,
+                            form-jugador, form-torneo, qr, pwa, marca, portada, proveedores
+    src/lib/                api (cliente), sesion, formato, tipos
+    public/sw.js            service worker
+    public/icons/           íconos de la PWA
+    scripts/generar-iconos.mjs
+    next.config.ts          rewrites /api -> API, cabeceras de sw.js
+    Dockerfile
+
+
+4. MODELO DE DATOS
+------------------
+Pedido explícito del dueño: bien normalizado, con todas las relaciones y
+restricciones en la base (no solo en la app) e índices pensados para búsqueda.
+
+Tablas (15): localidades, clubes, canchas, categorias, usuarios, sesiones,
+jugadores, qr_tokens, parejas, torneos, zonas, inscripciones, partidos, sets,
+auditoria. Claves primarias enteras autoincrementales. Modelos en PascalCase
+con @@map a nombres de tabla en snake_case y en castellano.
+
+Migraciones:
+  20261001000000_extensiones           citext, pg_trgm, unaccent, btree_gist
+  20261001183914_esquema_inicial       generada por Prisma
+  20261001190000_reglas_de_integridad  escrita a mano: CHECK, exclusión, triggers
+
+Reglas que garantiza la base:
+- DNI único; email único sin distinguir mayúsculas (citext).
+- Consentimiento Ley 25.326: columnas NOT NULL en jugadores.
+- QR: tabla qr_tokens, un solo token vigente por jugador (índice único parcial).
+- Pareja: orden canónico jugador1_id < jugador2_id (CHECK) y único parcial
+  sobre parejas "vivas" (pendiente, confirmada, activa). Las rechazadas y
+  disueltas quedan como historial y permiten rearmar la pareja.
+- Pareja activa e inscripción aprobada exigen quién y cuándo resolvió (CHECK).
+- Rechazo exige motivo (CHECK).
+- Inscripciones: trigger inscripciones_validar con advisory lock por torneo.
+  Valida pareja activa, que un jugador no esté en dos parejas del mismo torneo
+  y que las aprobadas no superen el cupo.
+- Partidos: FK compuesta (torneo_id, pareja_id) hacia inscripciones, así solo
+  juegan parejas inscriptas en ese torneo. Zona y partido siguiente también
+  con FK compuesta al mismo torneo.
+- Cancha sin superposición: EXCLUDE USING gist (cancha_id, tstzrange(inicio, fin)).
+- Ganador coherente: tiene que ser una de las dos parejas y existe si y solo
+  si el partido está FINALIZADO o WO.
+- Sets válidos: 6-0 a 6-4, 7-5, 7-6, o super tie-break a 10 solo en el tercero.
+- Auditoría de solo inserción: un trigger rechaza UPDATE y DELETE.
+- Baja lógica de jugadores (eliminado_en); con historial no se pueden borrar.
+
+Búsqueda de jugadores:
+- Columna jugadores.busqueda = "apellido nombre dni" en minúsculas y sin
+  acentos, mantenida por el trigger jugadores_busqueda. Índice GIN de trigramas.
+- La API parte el texto en palabras y exige que cada una aparezca (contains).
+- Índices parciales (solo vigentes) ordenados por apellido y nombre, también
+  por categoría y por club.
+
+Reglas que quedan en la API (dependen de la configuración o de varias filas):
+choque de horario de un mismo jugador, validación de categoría y rama del
+torneo, transiciones de estado, que el ganador coincida con los sets.
+
+Diferencias con la especificación:
+- Se agregaron localidades, clubes, canchas, categorias, zonas, qr_tokens y sesiones.
+- Un club sirve como club de origen del jugador y como sede de torneo.
+- En parejas, "aprobada_por" pasó a "resuelta_por" (aprueba o rechaza).
+- Todo jugador tiene usuario; el email vive solo en usuarios.
+
+CUIDADO con Prisma y los índices parciales (previewFeature "partialIndexes"):
+el predicado hay que escribirlo como lo guarda PostgreSQL
+(estado = ANY (ARRAY['A'::tipo, ...])), no con IN (...). Si no, Prisma detecta
+una diferencia falsa y regenera el índice en cada migración. Para verificar:
+  npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code
+
+
+5. API
+------
+Prefijo /api. Sesión en cookies httpOnly: emp_at (JWT de acceso, 15 minutos) y
+emp_rt (refresh de 30 días, solo viaja a /api/auth, se guarda hasheado en
+sesiones y rota en cada uso). Guard global: todo exige sesión salvo lo marcado
+@Publico(); @SoloAdmin() restringe a administradores. Los errores de
+restricciones de la base se traducen a mensajes en castellano por nombre de
+constraint (src/comun/filtro-errores.ts). Respuesta de error: { mensaje, errores? }.
+
+Roles: ADMIN y JUGADOR. El visitante no tiene cuenta.
+
+Rutas principales:
+  POST /auth/login | /auth/registro | /auth/refrescar | /auth/salir | /auth/password
+  GET  /auth/yo
+  GET  /catalogos (público)   POST /catalogos/localidades | /clubes | /clubes/:id/canchas
+  GET  /jugadores?q=&categoriaId=&clubId=&pagina=   POST /jugadores (alta por admin)
+  GET|PUT|DELETE /jugadores/:id
+  GET  /jugadores/yo/qr   POST /jugadores/yo/qr/regenerar   GET /jugadores/por-qr/:token
+  POST /parejas {token}   GET /parejas/mias   GET /parejas?estado=
+  POST /parejas/:id/confirmar | declinar | disolver | aprobar | rechazar
+  GET  /torneos (público)   GET /torneos/:id (público)   POST|PUT|DELETE torneos
+  POST /torneos/:id/estado | inscripciones | sorteo | llaves
+  GET  /inscripciones?estado=   GET /inscripciones/mias
+  POST /inscripciones/:id/aprobar | rechazar | baja | siembra
+  GET  /partidos/mios   PUT /partidos/:id/programacion
+  POST /partidos/programar-torneo/:torneoId   POST /partidos/:id/estado | resultado
+  GET  /usuarios   POST /usuarios   PATCH /usuarios/:id   POST /usuarios/:id/reset-password
+  GET  /auditoria   GET /admin/resumen
+
+Lógica de torneos (src/torneos/fixture.ts):
+- Eliminación directa: llave de 2 a 32 parejas, siembra estándar, los mejores
+  sembrados pasan la primera ronda sin jugar si no se llena la llave.
+- Zonas y llaves: zonas de 3 (las que sobran completan zonas de 4), reparto en
+  serpentina, todos contra todos por fechas. Con las zonas terminadas, "generar
+  llaves" clasifica a los dos primeros de cada zona.
+- Todos contra todos: una sola zona llamada "Única".
+- Posiciones: ganado 2 puntos, perdido 1, no presentarse 0. Desempate por
+  diferencia de sets y después de games.
+- Al cargar un resultado el ganador pasa solo al partido siguiente. El torneo
+  se finaliza solo con la final (o con el último partido en todos contra todos).
+- Categoría: orden 1 es la más alta; nadie juega un torneo de categoría
+  inferior a la suya. Rama: masculino, femenino o mixto (uno y una).
+- Si la organización inscribe una pareja, queda aprobada directamente; si el
+  cupo está completo, pasa a lista de espera.
+
+Límites por IP (throttler): 600 pedidos por minuto en general, 20 por minuto en
+login y en registro. Son holgados a propósito: en un club todos salen por el
+mismo wifi.
+
+
+6. DISEÑO
+---------
+Tema claro (se usa al aire libre). Paleta tomada de la cancha: azul del césped
+sintético (pista #1846a3), blanco de las líneas y amarillo de la pelota
+(#d9f03f), que se reserva para marcar al ganador y lo que está en juego.
+Tipografía Archivo de ancho variable: títulos y marcador condensados (clases
+.titulo y .marcador en globals.css), texto en ancho normal.
+Celular: barra superior azul y barra inferior de navegación. Escritorio: menú
+lateral azul. Textos en castellano rioplatense, en voz activa.
+Las confirmaciones usan un diálogo propio (useConfirmar en ui.tsx), no
+window.confirm.
+
+
+7. FRONTEND
+-----------
+Todas las pantallas son componentes de cliente que consultan /api con SWR.
+El navegador nunca habla con la API directamente: next.config.ts reescribe
+/api/* hacia la API (variable API_INTERNAL_URL, queda fija al compilar).
+
+Rutas:
+  /                      redirige según la sesión
+  /login  /registro      sin sesión
+  /sin-conexion          la sirve el service worker cuando no hay señal
+  /q/[token]             destino del QR; redirige a /parejas/escanear?codigo=
+  /torneos  /torneos/[id]   públicas (fixture, llave, posiciones, parejas, reglamento;
+                            con controles de gestión si entra un admin)
+  /panel  /parejas  /parejas/escanear  /partidos  /perfil      jugador
+  /admin  /admin/aprobaciones  /admin/jugadores (+ /nuevo, /[id])
+  /admin/torneos/nuevo  /admin/torneos/[id]/editar
+  /admin/sedes  /admin/usuarios  /admin/auditoria              organización
+
+QR: contiene el enlace https://<dominio>/q/<token>. El escáner usa la cámara
+con jsQR y tiene alternativa de pegar el código o el enlace.
+
+PWA: src/app/manifest.ts y public/sw.js. El service worker solo se registra en
+producción. Nunca guarda /api; las pantallas van a la red y, sin conexión, usa
+la última copia o /sin-conexion. Botón "Instalar la app" (components/pwa.tsx).
+La instalación y la cámara exigen HTTPS o localhost.
+
+Accesos de ejemplo en la pantalla de ingreso, según NEXT_PUBLIC_DEMO:
+  vacío = ninguno, "jugador" = solo el jugador, "1" = jugador y organización.
+
+
+8. DATOS DE EJEMPLO
+-------------------
+npm run db:demo (en apps/api). Con --reiniciar borra todo y recarga; en
+producción exige --forzar. Usa los mismos servicios que la API.
+Carga 40 jugadores, 20 parejas y 4 torneos:
+  Copa Primavera      6ª caballeros, eliminación directa, finalizado
+  Torneo Aniversario  5ª caballeros, zonas y llaves, en curso
+  Mixto de Verano     7ª mixto, todos contra todos, inscripción abierta
+  Clausura 4ª         borrador
+Jugador de ejemplo: jugador@emparejados.test (Bruno Acosta). Todos los
+jugadores de ejemplo comparten la contraseña jugador1234, que está en el
+repositorio: sirve solo para la muestra.
+
+
+9. DESARROLLO LOCAL
+-------------------
+Requisitos: Node 22 o superior y Docker (o un PostgreSQL propio).
+  cp .env.example .env ; docker compose up -d db
+  cd apps/api ; cp .env.example .env ; npm install ; npm run db:deploy ; npm run db:seed ; npm run dev
+  cd apps/web ; cp .env.example .env.local ; npm install ; npm run dev
+API en http://localhost:4000 y web en http://localhost:3000.
+En la PC de desarrollo hay un PostgreSQL 17 instalado en el puerto 5432; por eso
+el compose publica la base en el 5440. Docker Desktop está instalado pero hay
+que abrirlo a mano.
+
+
+10. DESPLIEGUE (VPS)
+--------------------
+Servidor: Ubuntu 26.04, 2 CPU, unos 3,8 GB de RAM, con Docker y Compose.
+Los datos de acceso SSH no están en este archivo.
+
+- Proyecto en /opt/emparejados (clon del repositorio).
+- docker compose levanta db, api y web. La web escucha en 127.0.0.1:8084 y la
+  base en 127.0.0.1:5440. La API no se publica: la web la alcanza por la red
+  interna de Docker (http://api:4000).
+- Al arrancar, el contenedor de la API aplica migraciones y la semilla.
+- Secretos generados en el servidor, solo en /opt/emparejados/.env (permisos
+  600): POSTGRES_PASSWORD, JWT_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD.
+- Administrador: admin@emparejados.onlineturnos.ar. Su clave se lee con
+    grep ADMIN_PASSWORD /opt/emparejados/.env
+- Túnel de Cloudflare: /etc/cloudflared/config.yml tiene la entrada
+  emparejados.onlineturnos.ar -> http://localhost:8084 y existe el registro
+  DNS. Respaldo previo: /etc/cloudflared/config.yml.bak-20261001201237.
+- El mismo servidor aloja otros sistemas (licencias, facturador, glitchtip,
+  cpmotos-updates) bajo onlineturnos.ar y por el mismo túnel. Reiniciar
+  cloudflared los corta unos segundos. Los puertos 5432, 5433, 8000 y 8081 a
+  8083 ya están ocupados.
+- Hoy corre en modo muestra: datos de ejemplo cargados y NEXT_PUBLIC_DEMO=jugador.
+
+Actualizar:
+  cd /opt/emparejados && git pull && docker compose up -d --build
+
+
+11. QUÉ SE VERIFICÓ
+-------------------
+- Base: 48 pruebas que intentan violar cada regla, todas rechazadas con la
+  restricción correcta; dos inscripciones simultáneas que comparten un jugador;
+  sin diferencias entre la base y schema.prisma; planes de consulta con 50.000
+  jugadores (búsqueda por texto entre 3 y 60 ms, listados y DNI en menos de 1 ms).
+- API: 60 pruebas de punta a punta contra el servidor levantado.
+- Web: compila, pasa tsc y eslint; revisada en Chrome en escritorio y a 375 px
+  de ancho; flujo de cargar resultado y de armar pareja por enlace de QR.
+- Clon limpio del repositorio: API y web instalan y compilan.
+- Publicado: página, manifest, service worker y API responden por HTTPS; login
+  del jugador de ejemplo funciona.
+Esas pruebas se corrieron desde carpetas temporales: no hay suite de tests en
+el repositorio.
+
+No se probó: instalación en un teléfono Android real ni el escáner con cámara.
+
+
+12. PENDIENTE
+-------------
+- Pasar de muestra a uso real: vaciar la base, dejar NEXT_PUBLIC_DEMO vacío y
+  reconstruir la web.
+- Cambiar la clave de root del VPS y la del administrador (quedaron escritas en
+  una conversación) y pasar el SSH a clave pública.
+- La cuenta de organización sin ficha de jugador no tiene pantalla para cambiar
+  su propia contraseña (la API sí: POST /auth/password).
+- Subida de fotos de jugadores (hoy se muestran iniciales; existe foto_url).
+- Check-in de partidos por QR (opcional en la especificación).
+- Suite de tests en el repositorio y respaldos periódicos de la base.
+- Aviso conocido: al usar transacciones aparece una advertencia de
+  obsolescencia de la librería pg; viene de adentro de Prisma y no afecta.
