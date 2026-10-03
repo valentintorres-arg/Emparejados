@@ -241,8 +241,14 @@ Rutas:
   /admin/torneos/nuevo  /admin/torneos/[id]/editar
   /admin/sedes  /admin/usuarios  /admin/auditoria              organización
 
-QR: contiene el enlace https://<dominio>/q/<token>. El escáner usa la cámara
-con jsQR y tiene alternativa de pegar el código o el enlace.
+QR: contiene el enlace https://<dominio>/q/<token>. El escáner usa el lector
+nativo del navegador (BarcodeDetector, en Chrome de Android) y, si no está,
+jsQR; tiene alternativa de pegar el código o el enlace. Sigue leyendo después
+de un código que no sirve (ajeno, revocado o el propio) y lo dice en pantalla.
+Si quien abre el enlace no tiene sesión, el ingreso y el registro conservan el
+código y lo devuelven a armar la pareja.
+El token es base64url: puede terminar en "-" o "_" (por eso tokenDeTexto no
+corta con \b; antes fallaba con el 1,5 % de los códigos).
 
 PWA: src/app/manifest.ts y public/sw.js. El service worker solo se registra en
 producción. Nunca guarda /api; las pantallas van a la red y, sin conexión, usa

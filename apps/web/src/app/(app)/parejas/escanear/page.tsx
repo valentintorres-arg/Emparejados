@@ -1,12 +1,13 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useSWRConfig } from "swr";
 import { EscanerQr, tokenDeTexto } from "@/components/qr";
 import { Avatar, Boton, Campo, Encabezado, ErrorDeFormulario, Tarjeta } from "@/components/ui";
 import { api, mensajeDe } from "@/lib/api";
 import { nombreCompleto } from "@/lib/formato";
+import { useSesion } from "@/lib/sesion";
 import type { JugadorBasico } from "@/lib/tipos";
 
 type Paso =
@@ -17,28 +18,40 @@ type Paso =
 function ArmarPareja() {
   const router = useRouter();
   const { mutate } = useSWRConfig();
+  const { usuario } = useSesion();
   // Si se llegó leyendo el QR con la cámara del teléfono, el código viene en la dirección.
   const codigoInicial = useSearchParams().get("codigo");
   const [paso, setPaso] = useState<Paso>({ nombre: "escanear" });
   const [error, setError] = useState<string | null>(null);
   const [ocupado, setOcupado] = useState(false);
+  // La cámara sigue leyendo mientras se consulta: una sola consulta a la vez.
+  const consultando = useRef(false);
 
   const buscar = async (token: string) => {
+    if (consultando.current) return;
+    consultando.current = true;
     setError(null);
     setOcupado(true);
     try {
       const jugador = await api.get<JugadorBasico>(`/jugadores/por-qr/${token}`);
-      setPaso({ nombre: "confirmar", token, jugador });
+      if (jugador.id === usuario?.jugador?.id) setError("Ese es tu propio código. Escaneá el de tu compañero.");
+      else setPaso({ nombre: "confirmar", token, jugador });
     } catch (e) {
       setError(mensajeDe(e));
     } finally {
+      consultando.current = false;
       setOcupado(false);
     }
   };
 
+  // El código de la dirección se busca una sola vez, con la versión vigente de buscar.
+  const buscarRef = useRef(buscar);
+  useEffect(() => {
+    buscarRef.current = buscar;
+  });
   useEffect(() => {
     // setState diferido: evita actualizar durante el montaje.
-    if (codigoInicial) queueMicrotask(() => buscar(codigoInicial));
+    if (codigoInicial) queueMicrotask(() => buscarRef.current(codigoInicial));
   }, [codigoInicial]);
 
   const crear = async (token: string, jugador: JugadorBasico) => {
@@ -112,8 +125,10 @@ function ArmarPareja() {
 
   return (
     <div className="mx-auto max-w-md space-y-5">
-      <EscanerQr alLeer={buscar} />
-      <p className="text-center text-lg">Apuntá al código QR que tu compañero tiene en la pantalla de inicio de su cuenta.</p>
+      <EscanerQr alLeer={buscar} alLeerAjeno={() => setError("Ese código QR no es de Emparejados. Pedile a tu compañero que abra la pantalla de inicio de su cuenta.")} />
+      <p className="text-center text-lg">
+        {ocupado ? "Código leído. Buscando al jugador…" : "Apuntá al código QR que tu compañero tiene en la pantalla de inicio de su cuenta."}
+      </p>
       <ErrorDeFormulario mensaje={error} />
       <form
         className="flex flex-col gap-3 border-t border-linea pt-6 sm:flex-row sm:items-end"

@@ -39,6 +39,9 @@ export function ProveedorDeSesion({ children }: { children: React.ReactNode }) {
   return <Contexto.Provider value={valor}>{children}</Contexto.Provider>;
 }
 
+/** A dónde volver después de ingresar: solo rutas internas, para que un enlace armado no mande a otro sitio. */
+export const rutaSegura = (ruta: string | null) => (ruta && ruta.startsWith("/") && !ruta.startsWith("//") && !ruta.startsWith("/\\") ? ruta : null);
+
 export function useSesion(): Sesion {
   const sesion = useContext(Contexto);
   if (!sesion) throw new Error("useSesion se usa dentro de ProveedorDeSesion");

@@ -10,7 +10,8 @@ export const enlaceDeQr = (token: string) => `${window.location.origin}/q/${toke
 /** Acepta el enlace completo o el token pelado y devuelve el token. */
 export function tokenDeTexto(texto: string): string | null {
   const limpio = texto.trim();
-  const enEnlace = /\/q\/([A-Za-z0-9_-]{16,64})\b/.exec(limpio)?.[1];
+  // El token es base64url y puede terminar en "-" o "_": el corte no puede ser \b, que lo recortaría.
+  const enEnlace = /\/q\/([A-Za-z0-9_-]{16,64})(?![A-Za-z0-9_-])/.exec(limpio)?.[1];
   if (enEnlace) return enEnlace;
   return /^[A-Za-z0-9_-]{16,64}$/.test(limpio) ? limpio : null;
 }
@@ -32,47 +33,101 @@ export function CodigoQr({ token, className = "" }: { token: string; className?:
 
 type EstadoDeCamara = "pidiendo" | "activa" | "sin-permiso" | "sin-camara";
 
-/** Cámara que busca un QR de Emparejados y avisa con el token leído. */
-export function EscanerQr({ alLeer }: { alLeer: (token: string) => void }) {
+// El lector nativo de códigos (Chrome en Android) todavía no figura en los tipos de TypeScript.
+interface LectorNativo {
+  detect(fuente: CanvasImageSource): Promise<{ rawValue: string }[]>;
+}
+interface ClaseDeLectorNativo {
+  new (opciones: { formats: string[] }): LectorNativo;
+  getSupportedFormats?: () => Promise<string[]>;
+}
+
+/** Usa el lector del sistema si lee QR: es más rápido y aguanta mejor reflejos y pantallas. */
+async function lectorNativo(): Promise<LectorNativo | null> {
+  const Clase = (window as unknown as { BarcodeDetector?: ClaseDeLectorNativo }).BarcodeDetector;
+  if (!Clase) return null;
+  try {
+    const formatos = await Clase.getSupportedFormats?.();
+    if (formatos && !formatos.includes("qr_code")) return null;
+    return new Clase({ formats: ["qr_code"] });
+  } catch {
+    return null;
+  }
+}
+
+/** Mientras el mismo código siga frente a la cámara, se avisa una sola vez cada este tiempo. */
+const ESPERA_ENTRE_AVISOS = 3000;
+
+/**
+ * Cámara que busca códigos QR. Avisa con el token cuando lee uno de Emparejados y
+ * con alLeerAjeno cuando lee cualquier otro. Sigue mirando hasta que se la saca de
+ * la pantalla: si el código leído no sirve, se puede probar con otro sin recargar.
+ */
+export function EscanerQr({ alLeer, alLeerAjeno }: { alLeer: (token: string) => void; alLeerAjeno?: () => void }) {
   const video = useRef<HTMLVideoElement>(null);
   const [estado, setEstado] = useState<EstadoDeCamara>("pidiendo");
-  const alLeerRef = useRef(alLeer);
+  const avisos = useRef({ alLeer, alLeerAjeno });
   useEffect(() => {
-    alLeerRef.current = alLeer;
-  }, [alLeer]);
+    avisos.current = { alLeer, alLeerAjeno };
+  }, [alLeer, alLeerAjeno]);
 
   useEffect(() => {
     let flujo: MediaStream | null = null;
     let cuadro = 0;
     let activo = true;
+    let nativo: LectorNativo | null = null;
+    let ultimo = { texto: "", cuando: 0 };
     const lienzo = document.createElement("canvas");
     const pincel = lienzo.getContext("2d", { willReadFrequently: true });
 
-    const buscar = () => {
-      if (!activo) return;
+    const leer = async (): Promise<string | null> => {
       const elemento = video.current;
-      if (elemento && pincel && elemento.readyState >= 2 && elemento.videoWidth > 0) {
-        // Con 480 px de ancho alcanza para leer el QR y no se traba el teléfono.
-        const escala = Math.min(1, 480 / elemento.videoWidth);
-        lienzo.width = Math.round(elemento.videoWidth * escala);
-        lienzo.height = Math.round(elemento.videoHeight * escala);
-        pincel.drawImage(elemento, 0, 0, lienzo.width, lienzo.height);
-        const imagen = pincel.getImageData(0, 0, lienzo.width, lienzo.height);
-        const leido = jsQR(imagen.data, imagen.width, imagen.height, { inversionAttempts: "dontInvert" });
-        const token = leido && tokenDeTexto(leido.data);
-        if (token) {
-          activo = false;
-          navigator.vibrate?.(80);
-          alLeerRef.current(token);
-          return;
+      if (!elemento || elemento.readyState < 2 || elemento.videoWidth === 0) return null;
+      if (nativo) {
+        try {
+          const [codigo] = await nativo.detect(elemento);
+          return codigo?.rawValue ?? null;
+        } catch {
+          nativo = null; // Si el lector del sistema falla, se sigue con jsQR.
         }
       }
-      cuadro = window.setTimeout(buscar, 180);
+      if (!pincel) return null;
+      // 720 px del lado mayor alcanzan para leer un QR en otra pantalla sin trabar el teléfono.
+      const escala = Math.min(1, 720 / Math.max(elemento.videoWidth, elemento.videoHeight));
+      lienzo.width = Math.round(elemento.videoWidth * escala);
+      lienzo.height = Math.round(elemento.videoHeight * escala);
+      pincel.drawImage(elemento, 0, 0, lienzo.width, lienzo.height);
+      const imagen = pincel.getImageData(0, 0, lienzo.width, lienzo.height);
+      return jsQR(imagen.data, imagen.width, imagen.height, { inversionAttempts: "dontInvert" })?.data ?? null;
+    };
+
+    const avisar = (texto: string) => {
+      const ahora = Date.now();
+      if (texto === ultimo.texto && ahora - ultimo.cuando < ESPERA_ENTRE_AVISOS) return;
+      ultimo = { texto, cuando: ahora };
+      const token = tokenDeTexto(texto);
+      if (token) {
+        navigator.vibrate?.(80);
+        avisos.current.alLeer(token);
+      } else {
+        avisos.current.alLeerAjeno?.();
+      }
+    };
+
+    const buscar = async () => {
+      if (!activo) return;
+      const texto = await leer();
+      if (!activo) return;
+      if (texto) avisar(texto);
+      cuadro = window.setTimeout(buscar, nativo ? 120 : 200);
     };
 
     // Sin HTTPS o en navegadores viejos no existe mediaDevices: se trata igual que "no hay cámara".
     const pedido = navigator.mediaDevices?.getUserMedia
-      ? navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio: false })
+      ? navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
+          audio: false,
+        })
       : Promise.reject(new DOMException("Sin acceso a la cámara", "NotFoundError"));
     pedido
       .then(async (stream) => {
@@ -81,10 +136,12 @@ export function EscanerQr({ alLeer }: { alLeer: (token: string) => void }) {
           return;
         }
         flujo = stream;
+        nativo = await lectorNativo();
         if (video.current) {
           video.current.srcObject = stream;
           await video.current.play().catch(() => {});
         }
+        if (!activo) return;
         setEstado("activa");
         buscar();
       })

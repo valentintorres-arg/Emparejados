@@ -57,13 +57,16 @@ export function Navegacion({ children }: { children: React.ReactNode }) {
 
   // A dónde mandar a quien no puede ver esta pantalla (null = puede verla).
   let destino: string | null = null;
-  if (usuario === null && !esPublica) destino = `/login?volver=${encodeURIComponent(pathname)}`;
+  if (usuario === null && !esPublica) destino = "/login";
   else if (usuario && requiereAdmin && !esAdmin) destino = "/panel";
   else if (usuario && requiereJugador && !usuario.jugador) destino = "/admin";
 
   useEffect(() => {
-    if (destino) router.replace(destino);
-  }, [destino, router]);
+    if (!destino) return;
+    // Al ingreso se le pasa también la consulta (el ?codigo= de un QR leído con la
+    // cámara del teléfono), para volver al mismo punto después de entrar.
+    router.replace(destino === "/login" ? `/login?volver=${encodeURIComponent(pathname + window.location.search)}` : destino);
+  }, [destino, pathname, router]);
 
   const destinos = usuario ? (esAdmin ? DE_ADMIN : DE_JUGADOR) : [];
   const pendientes = resumen ? resumen.parejasPorAprobar + resumen.inscripcionesPorAprobar : 0;

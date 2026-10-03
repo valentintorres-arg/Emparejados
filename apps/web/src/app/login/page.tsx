@@ -7,7 +7,7 @@ import { Portada } from "@/components/portada";
 import { InstalarApp } from "@/components/pwa";
 import { Boton, Campo, ENLACE, ErrorDeFormulario } from "@/components/ui";
 import { api, mensajeDe } from "@/lib/api";
-import { useSesion } from "@/lib/sesion";
+import { rutaSegura, useSesion } from "@/lib/sesion";
 
 // Accesos de un toque para recorrer la app con los datos de ejemplo.
 // NEXT_PUBLIC_DEMO=1 muestra los dos; "jugador", solo el del jugador (para un
@@ -18,9 +18,6 @@ const CUENTAS_DEMO = [
   { rol: "Jugador", email: "jugador@emparejados.test", password: "jugador1234" },
 ].filter((cuenta) => MODO_DEMO === "1" || (MODO_DEMO === "jugador" && cuenta.rol === "Jugador"));
 const DEMO = CUENTAS_DEMO.length > 0;
-
-/** Solo se vuelve a rutas internas: evita que un enlace armado mande a otro sitio. */
-const rutaSegura = (ruta: string | null) => (ruta && ruta.startsWith("/") && !ruta.startsWith("//") ? ruta : null);
 
 function Ingreso() {
   const router = useRouter();
@@ -79,7 +76,7 @@ function Ingreso() {
       <div className="mt-7 space-y-4 border-t border-linea pt-6">
         <p>
           ¿Todavía no tenés cuenta?{" "}
-          <Link href="/registro" className={ENLACE}>
+          <Link href={volver ? `/registro?volver=${encodeURIComponent(volver)}` : "/registro"} className={ENLACE}>
             Registrate como jugador
           </Link>
         </p>
