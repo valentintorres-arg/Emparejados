@@ -4,8 +4,10 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import useSWR from "swr";
+import { BotonCodigoPassword } from "@/components/codigo-password";
 import { TarjetaPartido } from "@/components/competencia";
 import { FormularioJugador } from "@/components/form-jugador";
+import { CambiarFoto } from "@/components/foto";
 import { Avatar, Boton, Cargando, Encabezado, ENLACE, Estado, FalloDeCarga, Seccion, Tarjeta, useAccion, useAviso, useConfirmar, Vacio } from "@/components/ui";
 import { api, traer } from "@/lib/api";
 import { ESTADOS_INSCRIPCION, ESTADOS_PAREJA, ESTADOS_USUARIO, fecha, nombreCompleto, rangoDeFechas } from "@/lib/formato";
@@ -45,6 +47,7 @@ export default function FichaDeJugador() {
             <Boton variante="secundario" icono="editar" onClick={() => setEditando((v) => !v)}>
               {editando ? "Cerrar edición" : "Editar"}
             </Boton>
+            {ficha.usuario.rol === "JUGADOR" && ficha.usuario.estado === "ACTIVO" && <BotonCodigoPassword usuarioId={ficha.usuarioId} quien={nombreCompleto(ficha)} />}
             <Boton
               variante="peligro"
               cargando={enCurso === "baja"}
@@ -80,7 +83,7 @@ export default function FichaDeJugador() {
         </Tarjeta>
       ) : (
         <Tarjeta className="mb-9 flex flex-col gap-5 p-5 sm:flex-row sm:p-6">
-          <Avatar jugador={ficha} className="size-20 text-2xl" />
+          {deBaja ? <Avatar jugador={ficha} className="size-28 text-3xl" /> : <CambiarFoto jugador={ficha} alCambiar={() => mutate()} />}
           <dl className="grid flex-1 grid-cols-1 gap-x-6 gap-y-4 min-[26rem]:grid-cols-2 xl:grid-cols-3">
             <Dato etiqueta="DNI">{ficha.dni}</Dato>
             <Dato etiqueta="Nacimiento">{fecha(ficha.fechaNacimiento)}</Dato>

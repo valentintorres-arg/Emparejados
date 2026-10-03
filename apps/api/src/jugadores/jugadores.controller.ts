@@ -9,9 +9,11 @@ import {
   Post,
   Put,
   Query,
+  Res,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { SesionActual, SoloAdmin, type Sesion } from '../comun/sesion.ts';
-import { AltaJugadorDto, DatosJugadorDto, FiltroJugadoresDto } from './jugador.dto.ts';
+import { AltaJugadorDto, DatosJugadorDto, FiltroJugadoresDto, FotoDto } from './jugador.dto.ts';
 import { JugadoresService } from './jugadores.service.ts';
 
 function exigirJugador(sesion: Sesion): number {
@@ -58,6 +60,24 @@ export class JugadoresController {
   @Put(':id')
   actualizar(@Param('id', ParseIntPipe) id: number, @Body() dto: DatosJugadorDto, @SesionActual() sesion: Sesion) {
     return this.jugadores.actualizar(id, dto, sesion);
+  }
+
+  /** La dirección cambia con cada foto nueva (?v=), así que se puede guardar para siempre. */
+  @Get(':id/foto')
+  async foto(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    const { contenido, tipo } = await this.jugadores.foto(id);
+    res.set({ 'Content-Type': tipo, 'Cache-Control': 'private, max-age=31536000, immutable', 'Content-Length': String(contenido.length) });
+    res.end(Buffer.from(contenido));
+  }
+
+  @Put(':id/foto')
+  guardarFoto(@Param('id', ParseIntPipe) id: number, @Body() dto: FotoDto, @SesionActual() sesion: Sesion) {
+    return this.jugadores.guardarFoto(id, dto.imagen, sesion);
+  }
+
+  @Delete(':id/foto')
+  quitarFoto(@Param('id', ParseIntPipe) id: number, @SesionActual() sesion: Sesion) {
+    return this.jugadores.quitarFoto(id, sesion);
   }
 
   @SoloAdmin()

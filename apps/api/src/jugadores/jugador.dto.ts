@@ -7,7 +7,6 @@ import {
   IsInt,
   IsOptional,
   IsString,
-  IsUrl,
   Length,
   Matches,
   MaxLength,
@@ -68,11 +67,13 @@ export class DatosJugadorDto {
   @IsEnum(PosicionJuego, { message: 'Elegí la posición preferida.' })
   posicion!: PosicionJuego;
 
-  @Transform(vacioANull)
-  @IsOptional()
-  @IsUrl({}, { message: 'La foto tiene que ser un enlace válido.' })
-  @MaxLength(500)
-  fotoUrl?: string | null;
+}
+
+/** Foto de perfil ya recortada y achicada por el navegador, en base64. */
+export class FotoDto {
+  @IsString()
+  @MaxLength(280_000, { message: 'La foto es demasiado grande.' })
+  imagen!: string;
 }
 
 export class RegistroDto extends DatosJugadorDto {

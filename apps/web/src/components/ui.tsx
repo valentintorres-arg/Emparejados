@@ -28,6 +28,7 @@ const ICONOS = {
   ok: "M5 12.5 10 17.5 19.5 7",
   reloj: "M12 20.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17ZM12 7.5V12l3 2",
   editar: "M5 19h3.5L19 8.5 15.5 5 5 15.5zM13.5 7l3.5 3.5",
+  llave: "M14.5 13.5a4.5 4.5 0 1 0-4.3-3.1L4 16.6V20h3.4v-2h2v-2h2l1.3-1.3c.6.5 1.1.8 1.8.8ZM16 8h.01",
   campana: "M6 16.5V11a6 6 0 1 1 12 0v5.5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0",
 } as const;
 
@@ -200,9 +201,24 @@ export function Tarjeta({ className = "", children }: { className?: string; chil
   return <div className={`rounded-2xl border border-linea bg-white shadow-tarjeta ${className}`}>{children}</div>;
 }
 
-export function Avatar({ jugador, className = "size-12 text-base" }: { jugador: { nombre: string; apellido: string }; className?: string }) {
+/** Foto de perfil si la hay; si no (o si no carga), las iniciales. Decorativa: el nombre siempre está al lado. */
+export function Avatar({
+  jugador,
+  className = "size-12 text-base",
+}: {
+  jugador: { nombre: string; apellido: string; fotoUrl?: string | null };
+  className?: string;
+}) {
+  const [fallida, setFallida] = useState<string | null>(null);
+  const clases = `inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-pista-50 font-bold text-pista ring-1 ring-pista/15 ${className}`;
+  if (jugador.fotoUrl && fallida !== jugador.fotoUrl) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element -- la sirve la API, ya achicada y con su propia caché
+      <img src={jugador.fotoUrl} alt="" loading="lazy" className={`${clases} object-cover`} onError={() => setFallida(jugador.fotoUrl ?? null)} />
+    );
+  }
   return (
-    <span aria-hidden="true" className={`inline-flex shrink-0 items-center justify-center rounded-full bg-pista-50 font-bold text-pista ring-1 ring-pista/15 ${className}`}>
+    <span aria-hidden="true" className={clases}>
       {iniciales(jugador)}
     </span>
   );

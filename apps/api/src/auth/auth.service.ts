@@ -7,6 +7,7 @@ import type { EstadoUsuario, RolUsuario } from '../generated/prisma/enums.ts';
 import type { RegistroDto } from '../jugadores/jugador.dto.ts';
 import { datosDeJugador, VERSION_CONSENTIMIENTO } from '../jugadores/jugadores.service.ts';
 import { PrismaService } from '../prisma/prisma.service.ts';
+import { CodigosService } from '../usuarios/codigos.service.ts';
 
 export const DURACION_ACCESO_SEG = 15 * 60;
 export const DURACION_REFRESCO_SEG = 30 * 24 * 60 * 60;
@@ -32,6 +33,7 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
+    private readonly codigos: CodigosService,
   ) {}
 
   async login(email: string, password: string, origen: Origen): Promise<Credenciales> {
@@ -127,6 +129,12 @@ export class AuthService {
       where: { id: usuario.id },
       data: { passwordHash: await hashearPassword(nueva) },
     });
+  }
+
+  /** "¿Olvidaste tu contraseña?": canjea el código, deja la contraseña nueva y abre sesión. */
+  async cambiarConCodigo(email: string, codigo: string, nueva: string, origen: Origen): Promise<Credenciales> {
+    const usuario = await this.codigos.canjear(email, codigo, nueva);
+    return this.abrirSesion(usuario.id, usuario.rol, usuario.jugador?.id ?? null, origen);
   }
 
   private exigirActivo(estado: EstadoUsuario) {

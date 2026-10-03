@@ -23,6 +23,9 @@ const MENSAJES: Record<string, string> = {
   localidades_provincia_nombre_key: 'Esa localidad ya existe.',
   clubes_localidad_id_nombre_key: 'Ya existe un club con ese nombre en la localidad.',
   canchas_club_id_nombre_key: 'El club ya tiene una cancha con ese nombre.',
+  codigos_password_usuario_id_key: 'Ya hay un código pendiente para ese usuario. Probá de nuevo.',
+  fotos_jugadores_tamano: 'La foto es demasiado grande.',
+  fotos_jugadores_tipo: 'La foto tiene que ser una imagen JPG o WebP.',
   suscripciones_push_endpoint_https: 'El navegador entregó una suscripción a avisos que no es válida.',
   suscripciones_push_claves_base64url: 'El navegador entregó una suscripción a avisos que no es válida.',
 };

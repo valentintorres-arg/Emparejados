@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpCode, Post, Req, Res } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { Transform } from 'class-transformer';
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 import type { CookieOptions, Request, Response } from 'express';
 import { COOKIE_ACCESO, COOKIE_REFRESCO } from '../comun/auth.guard.ts';
 import { Publico, SesionActual, type Sesion } from '../comun/sesion.ts';
@@ -16,6 +16,21 @@ class LoginDto {
   @IsString()
   @MaxLength(100)
   password!: string;
+}
+
+class PasswordConCodigoDto {
+  @Transform(normalizarEmail)
+  @IsEmail({}, { message: 'Escribí un email válido.' })
+  email!: string;
+
+  @IsString()
+  @Matches(/^[A-Za-z0-9s-]{8,12}$/, { message: 'El código tiene 8 letras y números, por ejemplo ABCD-2345.' })
+  codigo!: string;
+
+  @IsString()
+  @MinLength(8, { message: 'La contraseña nueva debe tener al menos 8 caracteres.' })
+  @MaxLength(100)
+  nueva!: string;
 }
 
 class CambiarPasswordDto {
@@ -66,6 +81,16 @@ export class AuthController {
   @Post('registro')
   async registro(@Body() dto: RegistroDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
     ponerCookies(res, await this.auth.registrar(dto, origenDe(req)));
+    return { ok: true };
+  }
+
+  /** Con el código de un solo uso que dio la organización (o el administrador general). */
+  @Publico()
+  @Throttle({ default: { limit: 20, ttl: 60_000 } })
+  @HttpCode(200)
+  @Post('password-con-codigo')
+  async passwordConCodigo(@Body() dto: PasswordConCodigoDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    ponerCookies(res, await this.auth.cambiarConCodigo(dto.email, dto.codigo, dto.nueva, origenDe(req)));
     return { ok: true };
   }
 

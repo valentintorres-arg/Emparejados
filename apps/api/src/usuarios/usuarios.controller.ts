@@ -1,9 +1,11 @@
 import {
   Body,
   ConflictException,
+  ForbiddenException,
   Controller,
   Get,
   HttpCode,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
@@ -14,12 +16,13 @@ import { Transform, Type } from 'class-transformer';
 import { IsEmail, IsEnum, IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
 import { AuditoriaService } from '../auditoria/auditoria.service.ts';
 import { PaginaDto, paginar, rango } from '../comun/paginacion.ts';
-import { generarPasswordTemporal, hashearPassword } from '../comun/password.ts';
+import { generarToken, hashearPassword } from '../comun/password.ts';
 import { SesionActual, SoloAdmin, type Sesion } from '../comun/sesion.ts';
 import type { Prisma } from '../generated/prisma/client.ts';
 import { EstadoUsuario, RolUsuario } from '../generated/prisma/enums.ts';
 import { normalizarEmail } from '../jugadores/jugador.dto.ts';
 import { PrismaService } from '../prisma/prisma.service.ts';
+import { CodigosService } from './codigos.service.ts';
 
 class FiltroUsuariosDto extends PaginaDto {
   @IsOptional()
@@ -80,6 +83,7 @@ export class UsuariosController {
   constructor(
     private readonly prisma: PrismaService,
     private readonly auditoria: AuditoriaService,
+    private readonly codigos: CodigosService,
   ) {}
 
   @Get('usuarios')
@@ -96,17 +100,20 @@ export class UsuariosController {
     return paginar(items, total, filtro.pagina);
   }
 
-  /** Alta de otra persona de la organización. La contraseña temporal se muestra una sola vez. */
+  /**
+   * Alta de otra persona de la organización. No recibe contraseña: entra por
+   * primera vez con un código de un solo uso y elige la suya.
+   */
   @Post('usuarios')
   async crearAdmin(@Body() dto: AltaAdminDto, @SesionActual() sesion: Sesion) {
-    const passwordTemporal = generarPasswordTemporal();
-    const passwordHash = await hashearPassword(passwordTemporal);
-    const usuario = await this.prisma.$transaction(async (tx) => {
-      const creado = await tx.usuario.create({ data: { email: dto.email, passwordHash, rol: 'ADMIN' }, select: usuarioEnLista });
-      await this.auditoria.registrar(tx, sesion.usuarioId, 'ALTA', 'usuario', creado.id, { email: dto.email, rol: 'ADMIN' });
-      return creado;
+    // Contraseña al azar que nadie conoce: la cuenta queda usable solo con el código.
+    const passwordHash = await hashearPassword(generarToken());
+    return this.prisma.$transaction(async (tx) => {
+      const usuario = await tx.usuario.create({ data: { email: dto.email, passwordHash, rol: 'ADMIN' }, select: usuarioEnLista });
+      await this.auditoria.registrar(tx, sesion.usuarioId, 'ALTA', 'usuario', usuario.id, { email: dto.email, rol: 'ADMIN' });
+      const { codigo, venceEn } = await this.codigos.generarEn(tx, usuario.id, { usuarioId: sesion.usuarioId });
+      return { usuario, codigo, venceEn };
     });
-    return { usuario, passwordTemporal };
   }
 
   @Patch('usuarios/:id')
@@ -123,17 +130,21 @@ export class UsuariosController {
     });
   }
 
+  /**
+   * Código de un solo uso para que un jugador elija una contraseña nueva.
+   * Los códigos de otras personas de la organización los genera solo el
+   * administrador general, desde el sistema de licencias: así un administrador
+   * no puede quedarse con la cuenta de otro.
+   */
   @HttpCode(200)
-  @Post('usuarios/:id/reset-password')
-  async resetPassword(@Param('id', ParseIntPipe) id: number, @SesionActual() sesion: Sesion) {
-    const passwordTemporal = generarPasswordTemporal();
-    const passwordHash = await hashearPassword(passwordTemporal);
-    await this.prisma.$transaction(async (tx) => {
-      await tx.usuario.update({ where: { id }, data: { passwordHash } });
-      await tx.sesion.updateMany({ where: { usuarioId: id, revocadaEn: null }, data: { revocadaEn: new Date() } });
-      await this.auditoria.registrar(tx, sesion.usuarioId, 'RESET_PASSWORD', 'usuario', id);
-    });
-    return { passwordTemporal };
+  @Post('usuarios/:id/codigo-password')
+  async codigoPassword(@Param('id', ParseIntPipe) id: number, @SesionActual() sesion: Sesion) {
+    const usuario = await this.prisma.usuario.findUnique({ where: { id }, select: { rol: true } });
+    if (!usuario) throw new NotFoundException('No encontramos ese usuario.');
+    if (usuario.rol !== 'JUGADOR') {
+      throw new ForbiddenException('El código para otra persona de la organización lo genera el administrador general.');
+    }
+    return this.codigos.generar(id, { usuarioId: sesion.usuarioId });
   }
 
   @Get('auditoria')

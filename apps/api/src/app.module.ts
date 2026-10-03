@@ -11,6 +11,7 @@ import { AuthService, DURACION_ACCESO_SEG } from './auth/auth.service.ts';
 import { CatalogosController } from './catalogos/catalogos.controller.ts';
 import { AuthGuard } from './comun/auth.guard.ts';
 import { FiltroErrores } from './comun/filtro-errores.ts';
+import { IntegracionController } from './integracion/integracion.controller.ts';
 import { JugadoresController } from './jugadores/jugadores.controller.ts';
 import { JugadoresService } from './jugadores/jugadores.service.ts';
 import { ParejasController } from './parejas/parejas.controller.ts';
@@ -20,6 +21,7 @@ import { PartidosService } from './partidos/partidos.service.ts';
 import { PrismaModule } from './prisma/prisma.module.ts';
 import { InscripcionesController, TorneosController } from './torneos/torneos.controller.ts';
 import { TorneosService } from './torneos/torneos.service.ts';
+import { CodigosService } from './usuarios/codigos.service.ts';
 import { UsuariosController } from './usuarios/usuarios.controller.ts';
 
 @Module({
@@ -43,8 +45,10 @@ import { UsuariosController } from './usuarios/usuarios.controller.ts';
     InscripcionesController,
     PartidosController,
     UsuariosController,
+    IntegracionController,
   ],
   providers: [
+    CodigosService,
     AuthService,
     JugadoresService,
     ParejasService,

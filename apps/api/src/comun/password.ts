@@ -32,12 +32,6 @@ export async function verificarPassword(password: string, hash: string): Promise
   return timingSafeEqual(esperada, obtenida);
 }
 
-/** Contraseña temporal legible, para que el admin se la pase al jugador. */
-export function generarPasswordTemporal(): string {
-  const letras = 'abcdefghjkmnpqrstuvwxyz23456789';
-  return Array.from(randomBytes(10), (b) => letras[b % letras.length]).join('');
-}
-
 export function generarToken(bytes = 24): string {
   return randomBytes(bytes).toString('base64url');
 }

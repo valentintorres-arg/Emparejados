@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { Boton, Campo, Cargando, CONTROL, Dialogo, Encabezado, ErrorDeFormulario, FalloDeCarga, Icono, Paginador, PIE_DE_DIALOGO, Tarjeta, useAccion, useConfirmar, Vacio } from "@/components/ui";
+import { BotonCodigoPassword, type CodigoGenerado, MostrarCodigo } from "@/components/codigo-password";
+import { Boton, Campo, Cargando, CONTROL, Dialogo, Encabezado, ErrorDeFormulario, FalloDeCarga, Icono, Paginador, PIE_DE_DIALOGO, Tarjeta, useAccion, Vacio } from "@/components/ui";
 import { api, mensajeDe, traer } from "@/lib/api";
 import { fechaYHora, nombreCompleto } from "@/lib/formato";
 import { useSesion } from "@/lib/sesion";
@@ -11,14 +12,8 @@ import type { EstadoUsuario, Pagina, Rol, UsuarioAdmin } from "@/lib/tipos";
 
 const LISTA = "min-h-11 rounded-xl border-2 border-borde bg-white px-3 text-base disabled:bg-fondo disabled:text-gris";
 
-interface Credencial {
-  email: string;
-  password: string;
-}
-
-function Fila({ usuario, soyYo, recargar, mostrar }: { usuario: UsuarioAdmin; soyYo: boolean; recargar: () => void; mostrar: (c: Credencial) => void }) {
+function Fila({ usuario, soyYo, recargar }: { usuario: UsuarioAdmin; soyYo: boolean; recargar: () => void }) {
   const { ejecutar, enCurso } = useAccion();
-  const confirmar = useConfirmar();
   const cambiar = (cambios: { rol?: Rol; estado?: EstadoUsuario }) =>
     ejecutar("cambio", () => api.patch(`/usuarios/${usuario.id}`, cambios), "Usuario actualizado.").then((ok) => ok && recargar());
 
@@ -56,26 +51,10 @@ function Fila({ usuario, soyYo, recargar, mostrar }: { usuario: UsuarioAdmin; so
           <option value="INACTIVO">Inactivo</option>
           <option value="BLOQUEADO">Bloqueado</option>
         </select>
-        <Boton
-          tamano="chico"
-          variante="secundario"
-          cargando={enCurso === "reset"}
-          onClick={async () => {
-            const seguro = await confirmar({
-              titulo: "¿Generar una contraseña nueva?",
-              texto: `La contraseña actual de ${usuario.email} deja de servir y se cierran sus sesiones.`,
-              confirmar: "Generar contraseña",
-            });
-            if (!seguro) return;
-            let password = "";
-            const ok = await ejecutar("reset", async () => {
-              password = (await api.post<{ passwordTemporal: string }>(`/usuarios/${usuario.id}/reset-password`)).passwordTemporal;
-            });
-            if (ok) mostrar({ email: usuario.email, password });
-          }}
-        >
-          Nueva contraseña
-        </Boton>
+        {/* Los códigos de otras personas de la organización los genera el administrador general, desde el sistema de licencias. */}
+        {!soyYo && usuario.rol === "JUGADOR" && usuario.estado === "ACTIVO" && (
+          <BotonCodigoPassword tamano="chico" usuarioId={usuario.id} quien={usuario.jugador ? nombreCompleto(usuario.jugador) : usuario.email} />
+        )}
       </div>
     </li>
   );
@@ -86,7 +65,7 @@ export default function Usuarios() {
   const [texto, setTexto] = useState("");
   const [q, setQ] = useState("");
   const [pagina, setPagina] = useState(1);
-  const [credencial, setCredencial] = useState<Credencial | null>(null);
+  const [alta, setAlta] = useState<CodigoGenerado | null>(null);
   const [creando, setCreando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -103,7 +82,11 @@ export default function Usuarios() {
 
   return (
     <>
-      <Encabezado titulo="Usuarios" volver="/admin" detalle="Roles, bloqueos y contraseñas.">
+      <Encabezado
+        titulo="Usuarios"
+        volver="/admin"
+        detalle="Roles, bloqueos y códigos para cambiar la contraseña. El código de otra persona de la organización lo genera el administrador general."
+      >
         <Boton icono="mas" onClick={() => setCreando(true)}>
           Nuevo administrador
         </Boton>
@@ -125,25 +108,20 @@ export default function Usuarios() {
         <Tarjeta>
           <ul className="divide-y divide-linea">
             {data.items.map((usuario) => (
-              <Fila key={usuario.id} usuario={usuario} soyYo={usuario.id === yo?.id} recargar={() => mutate()} mostrar={setCredencial} />
+              <Fila key={usuario.id} usuario={usuario} soyYo={usuario.id === yo?.id} recargar={() => mutate()} />
             ))}
           </ul>
         </Tarjeta>
       )}
       {data && <Paginador pagina={data.pagina} paginas={data.paginas} cambiar={setPagina} />}
 
-      <Dialogo abierto={credencial !== null} cerrar={() => setCredencial(null)} titulo="Contraseña temporal">
-        {credencial && (
+      <Dialogo abierto={alta !== null} cerrar={() => setAlta(null)} titulo="Administrador creado">
+        {alta && (
           <>
-            <p>Pasásela ahora a quien corresponde: no se vuelve a mostrar.</p>
-            <dl className="mt-4 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 rounded-xl bg-fondo p-4">
-              <dt className="text-gris">Email</dt>
-              <dd className="break-all font-semibold">{credencial.email}</dd>
-              <dt className="text-gris">Contraseña</dt>
-              <dd className="select-all font-mono text-2xl font-bold tracking-wide">{credencial.password}</dd>
-            </dl>
-            <Boton className="mt-5 w-full" onClick={() => setCredencial(null)}>
-              Listo, ya la anoté
+            <p className="mb-4">Para entrar por primera vez y elegir su contraseña, usa este código:</p>
+            <MostrarCodigo {...alta} />
+            <Boton className="mt-6 w-full" onClick={() => setAlta(null)}>
+              Listo, ya lo pasé
             </Boton>
           </>
         )}
@@ -156,9 +134,9 @@ export default function Usuarios() {
             evento.preventDefault();
             setError(null);
             try {
-              const r = await api.post<{ usuario: UsuarioAdmin; passwordTemporal: string }>("/usuarios", { email: new FormData(evento.currentTarget).get("email") });
+              const r = await api.post<{ usuario: UsuarioAdmin; codigo: string; venceEn: string }>("/usuarios", { email: new FormData(evento.currentTarget).get("email") });
               setCreando(false);
-              setCredencial({ email: r.usuario.email, password: r.passwordTemporal });
+              setAlta({ codigo: r.codigo, venceEn: r.venceEn, email: r.usuario.email });
               mutate();
             } catch (e) {
               setError(mensajeDe(e));

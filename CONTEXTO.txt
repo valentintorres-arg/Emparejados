@@ -88,9 +88,9 @@ Particularidades que conviene saber antes de tocar código:
 Pedido explícito del dueño: bien normalizado, con todas las relaciones y
 restricciones en la base (no solo en la app) e índices pensados para búsqueda.
 
-Tablas (16): localidades, clubes, canchas, categorias, usuarios, sesiones,
+Tablas (18): localidades, clubes, canchas, categorias, usuarios, sesiones,
 jugadores, qr_tokens, parejas, torneos, zonas, inscripciones, partidos, sets,
-auditoria, suscripciones_push. Claves primarias enteras autoincrementales. Modelos en PascalCase
+auditoria, suscripciones_push, codigos_password, fotos_jugadores. Claves primarias enteras autoincrementales. Modelos en PascalCase
 con @@map a nombres de tabla en snake_case y en castellano.
 
 Migraciones:
@@ -98,6 +98,7 @@ Migraciones:
   20261001183914_esquema_inicial       generada por Prisma
   20261001190000_reglas_de_integridad  escrita a mano: CHECK, exclusión, triggers
   20261003150000_avisos                suscripciones_push y el trigger auditoria_avisar
+  20261003200000_codigos_y_fotos       codigos_password, fotos_jugadores y CHECK de foto_url
 
 Reglas que garantiza la base:
 - DNI único; email único sin distinguir mayúsculas (citext).
@@ -163,6 +164,7 @@ Rutas principales:
   GET  /jugadores?q=&categoriaId=&clubId=&pagina=   POST /jugadores (alta por admin)
   GET|PUT|DELETE /jugadores/:id
   GET  /jugadores/yo/qr   POST /jugadores/yo/qr/regenerar   GET /jugadores/por-qr/:token
+  GET|PUT|DELETE /jugadores/:id/foto
   POST /parejas {token}   GET /parejas/mias   GET /parejas?estado=
   POST /parejas/:id/confirmar | declinar | disolver | aprobar | rechazar
   GET  /torneos (público)   GET /torneos/:id (público)   POST|PUT|DELETE torneos
@@ -171,7 +173,9 @@ Rutas principales:
   POST /inscripciones/:id/aprobar | rechazar | baja | siembra
   GET  /partidos/mios   PUT /partidos/:id/programacion
   POST /partidos/programar-torneo/:torneoId   POST /partidos/:id/estado | resultado
-  GET  /usuarios   POST /usuarios   PATCH /usuarios/:id   POST /usuarios/:id/reset-password
+  GET  /usuarios   POST /usuarios   PATCH /usuarios/:id   POST /usuarios/:id/codigo-password
+  POST /auth/password-con-codigo (público)
+  GET  /integracion/usuarios   POST /integracion/usuarios/:id/codigo-password  (clave de integración)
   GET  /auditoria   GET /admin/resumen
   GET  /avisos/en-vivo (público, SSE)   GET /avisos/clave (público)
   POST /avisos/suscripcion | suscripcion/baja
@@ -212,6 +216,29 @@ reconecta sola) y de ahí salen dos cosas:
   recibir avisos hasta volver a activarlos. Las suscripciones que el navegador
   anula (404/410) se borran solas. Al cerrar sesión se da de baja la del
   dispositivo.
+
+Contraseñas: nadie elige ni ve la contraseña de otro. Para entrar por primera
+vez o si alguien se la olvidó, se genera un código de un solo uso (XXXX-XXXX,
+mismo formato que el sistema de licencias; 24 h; 5 intentos; en la base queda
+solo su sha256) y la persona elige la suya en /recuperar ("¿Olvidaste tu
+contraseña?"), que además le abre la sesión y cierra las otras.
+- El administrador general (Valentín) genera códigos para cualquiera, sobre
+  todo para la organización, desde el panel de licencias
+  (licenses.onlineturnos.ar/admin, pestaña Emparejados). El panel llama a
+  /api/integracion/... con "Authorization: Bearer <CLAVE_INTEGRACION>".
+- La organización genera códigos solo para jugadores (Usuarios y la ficha del
+  jugador): un administrador no puede quedarse con la cuenta de otro.
+- Altas de jugadores y de administradores: la cuenta nace con una contraseña
+  al azar que nadie conoce y el alta devuelve el código.
+Ya no existen las contraseñas temporales (reset-password).
+
+Fotos de perfil: el navegador recorta el centro y la achica a 320 px en WebP
+(o JPG si no puede); una foto de teléfono queda en unos 10 a 30 KB. La API
+mira los primeros bytes (solo JPG o WebP), acepta hasta 200 KB y la guarda en
+fotos_jugadores (bytea, aparte de jugadores para que los listados no carguen
+imágenes). jugadores.foto_url pasa a ser /api/jugadores/<id>/foto?v=<versión>,
+con caché de un año porque cada foto nueva cambia la dirección. La ven solo
+usuarios con sesión. La sube el jugador (Mis datos) o la organización (ficha).
 
 Límites por IP (throttler): 600 pedidos por minuto en general, 20 por minuto en
 login y en registro. Son holgados a propósito: en un club todos salen por el
@@ -326,7 +353,8 @@ Los datos de acceso SSH no están en este archivo.
 - Al arrancar, el contenedor de la API aplica migraciones y la semilla.
 - Secretos generados en el servidor, solo en /opt/emparejados/.env (permisos
   600): POSTGRES_PASSWORD, JWT_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD,
-  VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY.
+  VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, CLAVE_INTEGRACION (la misma va como
+  EMPAREJADOS_CLAVE en /opt/licencias/.env).
 - Administrador: admin@emparejados.onlineturnos.ar. Su clave se lee con
     grep ADMIN_PASSWORD /opt/emparejados/.env
 - Túnel de Cloudflare: /etc/cloudflared/config.yml tiene la entrada
@@ -362,7 +390,13 @@ el repositorio.
   teléfonos simulados, a los destinatarios correctos y sin avisarle al autor.
 - Escáner QR: el dueño lo probó con teléfonos reales sobre el sitio publicado.
 
-No se probó: notificaciones en teléfonos reales (Android e iPhone).
+- Notificaciones: el dueño las probó en teléfonos reales y funcionan.
+- Códigos y fotos (local): canje con código en minúsculas y sin guion, uso
+  único, anulación al quinto intento, la organización no puede generar para
+  otro administrador, la conexión rechaza otra clave; foto de 3000x2000 px
+  (356 KB) guardada en 7,6 KB, permisos, formato y tamaño, y que guardar el
+  perfil no la borre. Pestaña Emparejados del panel de licencias probada en
+  local con Access simulado, más sus pruebas automáticas.
 
 
 12. PENDIENTE
@@ -372,8 +406,8 @@ No se probó: notificaciones en teléfonos reales (Android e iPhone).
 - Cambiar la clave de root del VPS y la del administrador (quedaron escritas en
   una conversación) y pasar el SSH a clave pública.
 - La cuenta de organización sin ficha de jugador no tiene pantalla para cambiar
-  su propia contraseña (la API sí: POST /auth/password).
-- Subida de fotos de jugadores (hoy se muestran iniciales; existe foto_url).
+  su propia contraseña (la API sí: POST /auth/password). Mientras tanto, el
+  administrador general le genera un código desde el panel de licencias.
 - Check-in de partidos por QR (opcional en la especificación).
 - Suite de tests en el repositorio y respaldos periódicos de la base.
 - Aviso conocido: al usar transacciones aparece una advertencia de

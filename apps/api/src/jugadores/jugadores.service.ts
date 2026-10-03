@@ -1,12 +1,23 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { AuditoriaService } from '../auditoria/auditoria.service.ts';
 import { normalizarBusqueda, paginar, rango } from '../comun/paginacion.ts';
-import { generarPasswordTemporal, generarToken, hashearPassword } from '../comun/password.ts';
+import { generarToken, hashearPassword } from '../comun/password.ts';
 import { jugadorBasico, parejaConJugadores, partidoCompleto, aplanarPartido } from '../comun/selecciones.ts';
 import { esAdmin, type Sesion } from '../comun/sesion.ts';
 import type { Prisma } from '../generated/prisma/client.ts';
 import { PrismaService } from '../prisma/prisma.service.ts';
+import { CodigosService } from '../usuarios/codigos.service.ts';
 import type { AltaJugadorDto, DatosJugadorDto, FiltroJugadoresDto } from './jugador.dto.ts';
+
+/** Techo de la foto de perfil (igual que el CHECK fotos_jugadores_tamano). El navegador la manda de unos 20 KB. */
+const TAMANO_MAXIMO_FOTO = 200 * 1024;
+
+/** Se mira el contenido, no lo que dice el navegador: solo JPG y WebP. */
+function tipoDeImagen(datos: Buffer): 'image/jpeg' | 'image/webp' | null {
+  if (datos.length >= 3 && datos[0] === 0xff && datos[1] === 0xd8 && datos[2] === 0xff) return 'image/jpeg';
+  if (datos.length >= 12 && datos.toString('ascii', 0, 4) === 'RIFF' && datos.toString('ascii', 8, 12) === 'WEBP') return 'image/webp';
+  return null;
+}
 
 /** Versión del texto de consentimiento (Ley 25.326) que acepta el jugador. */
 export const VERSION_CONSENTIMIENTO = '2026-10';
@@ -45,7 +56,6 @@ export function datosDeJugador(dto: DatosJugadorDto) {
     categoriaId: dto.categoriaId,
     manoHabil: dto.manoHabil,
     posicion: dto.posicion,
-    fotoUrl: dto.fotoUrl ?? null,
   };
 }
 
@@ -54,6 +64,7 @@ export class JugadoresService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly auditoria: AuditoriaService,
+    private readonly codigos: CodigosService,
   ) {}
 
   async listar(filtro: FiltroJugadoresDto) {
@@ -76,10 +87,11 @@ export class JugadoresService {
     return paginar(items, total, filtro.pagina);
   }
 
+  /** Alta por la organización. El jugador entra por primera vez con un código de un solo uso y elige su contraseña. */
   async crear(dto: AltaJugadorDto, sesion: Sesion) {
-    const passwordTemporal = generarPasswordTemporal();
-    const passwordHash = await hashearPassword(passwordTemporal);
-    const jugador = await this.prisma.$transaction(async (tx) => {
+    // Contraseña al azar que nadie conoce: la cuenta queda usable solo con el código.
+    const passwordHash = await hashearPassword(generarToken());
+    return this.prisma.$transaction(async (tx) => {
       const usuario = await tx.usuario.create({
         data: {
           email: dto.email,
@@ -98,9 +110,9 @@ export class JugadoresService {
       await this.auditoria.registrar(tx, sesion.usuarioId, 'ALTA', 'jugador', usuario.jugador!.id, {
         email: dto.email,
       });
-      return usuario.jugador!;
+      const { codigo, venceEn } = await this.codigos.generarEn(tx, usuario.jugador!.usuarioId, { usuarioId: sesion.usuarioId });
+      return { jugador: usuario.jugador!, codigo, venceEn };
     });
-    return { jugador, passwordTemporal };
   }
 
   /** Ficha con historial de parejas, torneos y partidos. */
@@ -196,9 +208,45 @@ export class JugadoresService {
     return qr.jugador;
   }
 
-  private exigirAccesoAFicha(jugadorId: number, sesion: Sesion) {
-    if (!esAdmin(sesion) && sesion.jugadorId !== jugadorId) {
-      throw new ForbiddenException('Solo podés ver tu propia ficha.');
-    }
+  // ─── Foto de perfil ────────────────────────────────────────────────────────
+
+  async foto(id: number) {
+    const foto = await this.prisma.fotoJugador.findUnique({ where: { jugadorId: id }, select: { contenido: true, tipo: true } });
+    if (!foto) throw new NotFoundException('Ese jugador no tiene foto.');
+    return foto;
+  }
+
+  /** La sube el propio jugador o la organización. Cada versión tiene su propia dirección, así el navegador la guarda sin preguntar. */
+  async guardarFoto(id: number, base64: string, sesion: Sesion) {
+    this.exigirAccesoAFicha(id, sesion, 'Solo podés cambiar tu propia foto.');
+    const contenido = Buffer.from(base64, 'base64');
+    const tipo = tipoDeImagen(contenido);
+    if (!tipo) throw new BadRequestException('La foto tiene que ser una imagen JPG o WebP.');
+    if (contenido.length > TAMANO_MAXIMO_FOTO) throw new BadRequestException('La foto es demasiado grande.');
+    const fotoUrl = `/api/jugadores/${id}/foto?v=${Date.now()}`;
+    return this.prisma.$transaction(async (tx) => {
+      await tx.fotoJugador.upsert({
+        where: { jugadorId: id },
+        create: { jugadorId: id, contenido, tipo },
+        update: { contenido, tipo, actualizadaEn: new Date() },
+      });
+      await tx.jugador.update({ where: { id }, data: { fotoUrl } });
+      await this.auditoria.registrar(tx, sesion.usuarioId, 'CAMBIAR_FOTO', 'jugador', id, { bytes: contenido.length });
+      return { fotoUrl };
+    });
+  }
+
+  async quitarFoto(id: number, sesion: Sesion) {
+    this.exigirAccesoAFicha(id, sesion, 'Solo podés cambiar tu propia foto.');
+    await this.prisma.$transaction(async (tx) => {
+      await tx.fotoJugador.deleteMany({ where: { jugadorId: id } });
+      await tx.jugador.update({ where: { id }, data: { fotoUrl: null } });
+      await this.auditoria.registrar(tx, sesion.usuarioId, 'QUITAR_FOTO', 'jugador', id);
+    });
+    return { fotoUrl: null };
+  }
+
+  private exigirAccesoAFicha(jugadorId: number, sesion: Sesion, mensaje = 'Solo podés ver tu propia ficha.') {
+    if (!esAdmin(sesion) && sesion.jugadorId !== jugadorId) throw new ForbiddenException(mensaje);
   }
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import useSWR from "swr";
+import { CambiarFoto } from "@/components/foto";
 import { FormularioJugador } from "@/components/form-jugador";
 import { ActivarNotificaciones } from "@/components/notificaciones";
 import { InstalarApp } from "@/components/pwa";
@@ -69,6 +70,11 @@ export default function MisDatos() {
         <Cargando />
       ) : (
         <>
+          <Tarjeta className="mb-9 flex flex-col items-center gap-3 p-5 sm:flex-row sm:gap-6 sm:p-6">
+            <CambiarFoto jugador={ficha} alCambiar={() => void Promise.all([mutate(), recargar()])} />
+            <p className="max-w-sm text-center text-gris sm:text-left">Tu foto la ven tu compañero y la organización. Elegí una donde se te vea bien la cara.</p>
+          </Tarjeta>
+
           <Tarjeta className="mb-9 p-5 sm:p-6">
             <FormularioJugador
               modo="edicion"

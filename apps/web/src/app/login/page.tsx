@@ -58,6 +58,11 @@ function Ingreso() {
         <Boton type="submit" cargando={enviando} className="w-full">
           Ingresar
         </Boton>
+        <p className="text-center">
+          <Link href={volver ? `/recuperar?volver=${encodeURIComponent(volver)}` : "/recuperar"} className={ENLACE}>
+            ¿Olvidaste tu contraseña?
+          </Link>
+        </p>
       </form>
 
       {DEMO && (

@@ -36,6 +36,8 @@ services:
       VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
       VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
       VAPID_SUBJECT: ${VAPID_SUBJECT:-https://emparejados.onlineturnos.ar}
+      # Conexión con el panel de licencias (códigos de contraseña para la organización).
+      CLAVE_INTEGRACION: ${CLAVE_INTEGRACION:-}
       PORT: "4000"
 
   web:

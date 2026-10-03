@@ -196,9 +196,37 @@ model Usuario {
   inscripcionesResueltas   Inscripcion[]     @relation("InscripcionResueltaPor")
   resultadosCargados       Partido[]         @relation("ResultadoCargadoPor")
   suscripcionesPush        SuscripcionPush[]
+  codigosPassword          CodigoPassword[]  @relation("CodigosDelUsuario")
+  codigosGenerados         CodigoPassword[]  @relation("CodigosGenerados")
 
   @@index([rol, estado])
   @@map("usuarios")
+}
+
+// Código de un solo uso para elegir una contraseña nueva desde "¿Olvidaste tu
+// contraseña?". Lo genera la organización (para un jugador) o el administrador
+// general desde el sistema de licencias (para cualquier usuario). En la base
+// queda solo el hash; el código se ve una vez, al generarlo.
+model CodigoPassword {
+  id                 Int       @id @default(autoincrement())
+  usuarioId          Int       @map("usuario_id")
+  // sha256 (hex) del código en mayúsculas y sin guiones.
+  codigoHash         String    @map("codigo_hash") @db.Char(64)
+  // Quién lo generó: un usuario de la app, o el email del administrador general.
+  generadoPorId      Int?      @map("generado_por_id")
+  generadoPorExterno String?   @map("generado_por_externo") @db.VarChar(200)
+  creadoEn           DateTime  @default(now()) @map("creado_en") @db.Timestamptz(3)
+  venceEn            DateTime  @map("vence_en") @db.Timestamptz(3)
+  usadoEn            DateTime? @map("usado_en") @db.Timestamptz(3)
+  intentosFallidos   Int       @default(0) @map("intentos_fallidos") @db.SmallInt
+
+  usuario     Usuario  @relation("CodigosDelUsuario", fields: [usuarioId], references: [id], onDelete: Cascade)
+  generadoPor Usuario? @relation("CodigosGenerados", fields: [generadoPorId], references: [id], onDelete: Restrict)
+
+  // A lo sumo un código sin usar por usuario: uno nuevo reemplaza al anterior.
+  @@unique([usuarioId], where: raw("usado_en IS NULL"))
+  @@index([usuarioId])
+  @@map("codigos_password")
 }
 
 // Un navegador o teléfono donde el usuario aceptó recibir notificaciones.
@@ -270,14 +298,15 @@ model Jugador {
   // Baja lógica: un jugador con historial nunca se borra físicamente.
   eliminadoEn   DateTime? @map("eliminado_en") @db.Timestamptz(3)
 
-  usuario          Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
-  localidad        Localidad? @relation(fields: [localidadId], references: [id], onDelete: Restrict)
-  club             Club?      @relation(fields: [clubId], references: [id], onDelete: Restrict)
-  categoria        Categoria  @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
+  usuario          Usuario      @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+  localidad        Localidad?   @relation(fields: [localidadId], references: [id], onDelete: Restrict)
+  club             Club?        @relation(fields: [clubId], references: [id], onDelete: Restrict)
+  categoria        Categoria    @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
   qrTokens         QrToken[]
-  parejasComoJ1    Pareja[]   @relation("ParejaJugador1")
-  parejasComoJ2    Pareja[]   @relation("ParejaJugador2")
-  parejasIniciadas Pareja[]   @relation("ParejaCreadaPor")
+  parejasComoJ1    Pareja[]     @relation("ParejaJugador1")
+  parejasComoJ2    Pareja[]     @relation("ParejaJugador2")
+  parejasIniciadas Pareja[]     @relation("ParejaCreadaPor")
+  foto             FotoJugador?
 
   // Búsqueda por texto parcial (nombre, apellido o DNI) con trigramas.
   @@index([busqueda(ops: raw("gin_trgm_ops"))], type: Gin)
@@ -291,6 +320,21 @@ model Jugador {
 
 // El QR contiene solo este token aleatorio, nunca el DNI. Revocar = marcar
 // revocado_en y emitir uno nuevo.
+// Foto de perfil. El navegador la recorta y la achica (unos 20 KB) antes de
+// subirla; acá se guarda tal cual, en una tabla aparte para que los listados
+// de jugadores no carguen imágenes. jugadores.foto_url apunta a
+// /api/jugadores/<id>/foto?v=<versión> mientras haya foto.
+model FotoJugador {
+  jugadorId     Int      @id @map("jugador_id")
+  contenido     Bytes
+  tipo          String   @db.VarChar(20)
+  actualizadaEn DateTime @default(now()) @map("actualizada_en") @db.Timestamptz(3)
+
+  jugador Jugador @relation(fields: [jugadorId], references: [id], onDelete: Cascade)
+
+  @@map("fotos_jugadores")
+}
+
 model QrToken {
   id         Int       @id @default(autoincrement())
   jugadorId  Int       @map("jugador_id")

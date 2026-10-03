@@ -19,6 +19,8 @@ app.setGlobalPrefix('api');
 app.set('trust proxy', true);
 app.use(helmet());
 app.use(cookieParser());
+// Las fotos de perfil viajan en base64 (unos 30 KB); el techo deja margen.
+app.useBodyParser('json', { limit: '400kb' });
 app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: true }));
 app.enableShutdownHooks();
 
