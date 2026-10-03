@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { TarjetaPartido } from "@/components/competencia";
 import { TarjetaDePareja } from "@/components/parejas";
 import { InstalarApp } from "@/components/pwa";
+import { ActivarNotificaciones } from "@/components/notificaciones";
 import { CodigoQr, enlaceDeQr } from "@/components/qr";
 import { Boton, Cargando, Encabezado, Estado, FalloDeCarga, Seccion, Tarjeta, TARJETA_ENLACE, useAccion, useAviso, useConfirmar, Vacio } from "@/components/ui";
 import { api, traer } from "@/lib/api";
@@ -92,6 +93,8 @@ export default function PanelDelJugador() {
       >
         <InstalarApp className="lg:hidden" />
       </Encabezado>
+
+      <ActivarNotificaciones soloSiFaltan className="mb-8" />
 
       {invitaciones.length > 0 && (
         <Seccion titulo="Te propusieron armar pareja">

@@ -2,6 +2,7 @@
 
 import { SWRConfig } from "swr";
 import { ErrorApi } from "@/lib/api";
+import { EnVivo } from "@/lib/en-vivo";
 import { ProveedorDeSesion } from "@/lib/sesion";
 import { ProveedorDeAvisos, ProveedorDeConfirmacion } from "./ui";
 
@@ -15,6 +16,7 @@ export function Proveedores({ children }: { children: React.ReactNode }) {
         errorRetryCount: 2,
       }}
     >
+      <EnVivo />
       <ProveedorDeSesion>
         <ProveedorDeAvisos>
           <ProveedorDeConfirmacion>{children}</ProveedorDeConfirmacion>

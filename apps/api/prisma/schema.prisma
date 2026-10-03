@@ -191,13 +191,33 @@ model Usuario {
   sesiones                 Sesion[]
   auditorias               Auditoria[]
   torneosCreados           Torneo[]
-  parejasResueltas         Pareja[]      @relation("ParejaResueltaPor")
-  inscripcionesSolicitadas Inscripcion[] @relation("InscripcionSolicitadaPor")
-  inscripcionesResueltas   Inscripcion[] @relation("InscripcionResueltaPor")
-  resultadosCargados       Partido[]     @relation("ResultadoCargadoPor")
+  parejasResueltas         Pareja[]          @relation("ParejaResueltaPor")
+  inscripcionesSolicitadas Inscripcion[]     @relation("InscripcionSolicitadaPor")
+  inscripcionesResueltas   Inscripcion[]     @relation("InscripcionResueltaPor")
+  resultadosCargados       Partido[]         @relation("ResultadoCargadoPor")
+  suscripcionesPush        SuscripcionPush[]
 
   @@index([rol, estado])
   @@map("usuarios")
+}
+
+// Un navegador o teléfono donde el usuario aceptó recibir notificaciones.
+// El endpoint lo da el servicio de avisos del navegador (Google, Apple, Mozilla)
+// e identifica al dispositivo: si otra persona ingresa en el mismo, la fila
+// pasa a ser suya.
+model SuscripcionPush {
+  id        Int      @id @default(autoincrement())
+  usuarioId Int      @map("usuario_id")
+  endpoint  String   @unique @db.VarChar(1000)
+  // Claves con las que se cifra cada aviso para ese dispositivo.
+  p256dh    String   @db.VarChar(200)
+  auth      String   @db.VarChar(100)
+  creadaEn  DateTime @default(now()) @map("creada_en") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@map("suscripciones_push")
 }
 
 // Refresh tokens. Se guarda solo el hash (SHA-256) para que una fuga de la base
@@ -250,14 +270,14 @@ model Jugador {
   // Baja lógica: un jugador con historial nunca se borra físicamente.
   eliminadoEn   DateTime? @map("eliminado_en") @db.Timestamptz(3)
 
-  usuario           Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
-  localidad         Localidad? @relation(fields: [localidadId], references: [id], onDelete: Restrict)
-  club              Club?      @relation(fields: [clubId], references: [id], onDelete: Restrict)
-  categoria         Categoria  @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
-  qrTokens          QrToken[]
-  parejasComoJ1     Pareja[]   @relation("ParejaJugador1")
-  parejasComoJ2     Pareja[]   @relation("ParejaJugador2")
-  parejasIniciadas  Pareja[]   @relation("ParejaCreadaPor")
+  usuario          Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+  localidad        Localidad? @relation(fields: [localidadId], references: [id], onDelete: Restrict)
+  club             Club?      @relation(fields: [clubId], references: [id], onDelete: Restrict)
+  categoria        Categoria  @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
+  qrTokens         QrToken[]
+  parejasComoJ1    Pareja[]   @relation("ParejaJugador1")
+  parejasComoJ2    Pareja[]   @relation("ParejaJugador2")
+  parejasIniciadas Pareja[]   @relation("ParejaCreadaPor")
 
   // Búsqueda por texto parcial (nombre, apellido o DNI) con trigramas.
   @@index([busqueda(ops: raw("gin_trgm_ops"))], type: Gin)

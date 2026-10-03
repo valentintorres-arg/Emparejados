@@ -88,15 +88,16 @@ Particularidades que conviene saber antes de tocar código:
 Pedido explícito del dueño: bien normalizado, con todas las relaciones y
 restricciones en la base (no solo en la app) e índices pensados para búsqueda.
 
-Tablas (15): localidades, clubes, canchas, categorias, usuarios, sesiones,
+Tablas (16): localidades, clubes, canchas, categorias, usuarios, sesiones,
 jugadores, qr_tokens, parejas, torneos, zonas, inscripciones, partidos, sets,
-auditoria. Claves primarias enteras autoincrementales. Modelos en PascalCase
+auditoria, suscripciones_push. Claves primarias enteras autoincrementales. Modelos en PascalCase
 con @@map a nombres de tabla en snake_case y en castellano.
 
 Migraciones:
   20261001000000_extensiones           citext, pg_trgm, unaccent, btree_gist
   20261001183914_esquema_inicial       generada por Prisma
   20261001190000_reglas_de_integridad  escrita a mano: CHECK, exclusión, triggers
+  20261003150000_avisos                suscripciones_push y el trigger auditoria_avisar
 
 Reglas que garantiza la base:
 - DNI único; email único sin distinguir mayúsculas (citext).
@@ -172,6 +173,8 @@ Rutas principales:
   POST /partidos/programar-torneo/:torneoId   POST /partidos/:id/estado | resultado
   GET  /usuarios   POST /usuarios   PATCH /usuarios/:id   POST /usuarios/:id/reset-password
   GET  /auditoria   GET /admin/resumen
+  GET  /avisos/en-vivo (público, SSE)   GET /avisos/clave (público)
+  POST /avisos/suscripcion | suscripcion/baja
 
 Lógica de torneos (src/torneos/fixture.ts):
 - Eliminación directa: llave de 2 a 32 parejas, siembra estándar, los mejores
@@ -188,6 +191,27 @@ Lógica de torneos (src/torneos/fixture.ts):
   inferior a la suya. Rama: masculino, femenino o mixto (uno y una).
 - Si la organización inscribe una pareja, queda aprobada directamente; si el
   cupo está completo, pasa a lista de espera.
+
+Avisos (src/avisos/): toda acción de la app deja un registro de auditoría, y el
+trigger auditoria_avisar manda su id por pg_notify("auditoria") al confirmarse
+la transacción. CambiosService lo escucha con una conexión propia (LISTEN; se
+reconecta sola) y de ahí salen dos cosas:
+- Actualización en vivo: /avisos/en-vivo es un flujo SSE que solo dice qué tipo
+  de cosa cambió (entidad y acción, nunca datos). La web (lib/en-vivo.tsx)
+  vuelve a pedir lo que tiene en pantalla; con la app en segundo plano cierra la
+  conexión. Latido cada 25 s para que el túnel no la corte.
+- Notificaciones push (Web Push, librería web-push): AvisosService decide a
+  quién avisar según la acción y nunca le avisa a quien la hizo. Ejemplos:
+  propuesta de pareja al invitado; confirmación al que la propuso y a la
+  organización; aprobación, rechazo y disolución a los dos; inscripciones;
+  sorteo, llaves y agenda a los inscriptos; torneo nuevo con inscripción
+  abierta a los jugadores habilitados por categoría y rama; horario, suspensión
+  y resultado a los cuatro jugadores del partido.
+  Claves VAPID en VAPID_PUBLIC_KEY y VAPID_PRIVATE_KEY (sin ellas, la app anda
+  sin notificaciones). No cambiarlas: los teléfonos suscriptos dejarían de
+  recibir avisos hasta volver a activarlos. Las suscripciones que el navegador
+  anula (404/410) se borran solas. Al cerrar sesión se da de baja la del
+  dispositivo.
 
 Límites por IP (throttler): 600 pedidos por minuto en general, 20 por minuto en
 login y en registro. Son holgados a propósito: en un club todos salen por el
@@ -254,6 +278,11 @@ PWA: src/app/manifest.ts y public/sw.js. El service worker solo se registra en
 producción. Nunca guarda /api; las pantallas van a la red y, sin conexión, usa
 la última copia o /sin-conexion. Botón "Instalar la app" (components/pwa.tsx).
 La instalación y la cámara exigen HTTPS o localhost.
+Notificaciones: tarjeta "Activar notificaciones" (components/notificaciones.tsx)
+en el inicio del jugador, en el de la organización y en Mis datos. El service
+worker las muestra y al tocarlas abre la pantalla que corresponde. En iPhone
+solo funcionan con la app instalada (iOS 16.4 o más). En desarrollo no hay
+service worker, así que tampoco notificaciones.
 
 Accesos de ejemplo en la pantalla de ingreso, según NEXT_PUBLIC_DEMO:
   vacío = ninguno, "jugador" = solo el jugador, "1" = jugador y organización.
@@ -296,7 +325,8 @@ Los datos de acceso SSH no están en este archivo.
   interna de Docker (http://api:4000).
 - Al arrancar, el contenedor de la API aplica migraciones y la semilla.
 - Secretos generados en el servidor, solo en /opt/emparejados/.env (permisos
-  600): POSTGRES_PASSWORD, JWT_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD.
+  600): POSTGRES_PASSWORD, JWT_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD,
+  VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY.
 - Administrador: admin@emparejados.onlineturnos.ar. Su clave se lee con
     grep ADMIN_PASSWORD /opt/emparejados/.env
 - Túnel de Cloudflare: /etc/cloudflared/config.yml tiene la entrada
@@ -327,7 +357,12 @@ Actualizar:
 Esas pruebas se corrieron desde carpetas temporales: no hay suite de tests en
 el repositorio.
 
-No se probó: instalación en un teléfono Android real ni el escáner con cámara.
+- Avisos (local): eventos en vivo a través del proxy de Next y una pantalla de
+  parejas que se actualizó sola; notificaciones descifradas con las claves de
+  teléfonos simulados, a los destinatarios correctos y sin avisarle al autor.
+- Escáner QR: el dueño lo probó con teléfonos reales sobre el sitio publicado.
+
+No se probó: notificaciones en teléfonos reales (Android e iPhone).
 
 
 12. PENDIENTE

@@ -28,6 +28,7 @@ const ICONOS = {
   ok: "M5 12.5 10 17.5 19.5 7",
   reloj: "M12 20.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17ZM12 7.5V12l3 2",
   editar: "M5 19h3.5L19 8.5 15.5 5 5 15.5zM13.5 7l3.5 3.5",
+  campana: "M6 16.5V11a6 6 0 1 1 12 0v5.5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0",
 } as const;
 
 export type NombreDeIcono = keyof typeof ICONOS;

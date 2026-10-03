@@ -13,9 +13,9 @@ export function Isotipo({ className = "size-8" }: { className?: string }) {
 
 export function Marca({ className = "" }: { className?: string }) {
   return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      <Isotipo className="size-9 rounded-xl ring-1 ring-white/25" />
-      <span className="marca text-[1.7rem]">Emparejados</span>
+    <span className={`inline-flex items-center gap-2 ${className}`}>
+      <Isotipo className="size-7 rounded-lg ring-1 ring-white/25" />
+      <span className="marca text-[1.3rem]">Emparejados</span>
     </span>
   );
 }

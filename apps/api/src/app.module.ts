@@ -3,6 +3,10 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthController } from './auth/auth.controller.ts';
+import { AvisosController } from './avisos/avisos.controller.ts';
+import { AvisosService } from './avisos/avisos.service.ts';
+import { CambiosService } from './avisos/cambios.service.ts';
+import { PushService } from './avisos/push.service.ts';
 import { AuthService, DURACION_ACCESO_SEG } from './auth/auth.service.ts';
 import { CatalogosController } from './catalogos/catalogos.controller.ts';
 import { AuthGuard } from './comun/auth.guard.ts';
@@ -31,6 +35,7 @@ import { UsuariosController } from './usuarios/usuarios.controller.ts';
   ],
   controllers: [
     AuthController,
+    AvisosController,
     CatalogosController,
     JugadoresController,
     ParejasController,
@@ -45,6 +50,9 @@ import { UsuariosController } from './usuarios/usuarios.controller.ts';
     ParejasService,
     TorneosService,
     PartidosService,
+    CambiosService,
+    PushService,
+    AvisosService,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_FILTER, useClass: FiltroErrores },

@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useMemo } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import { api, traer } from "./api";
+import { desactivarNotificaciones } from "./notificaciones";
 import type { Yo } from "./tipos";
 
 interface Sesion {
@@ -23,6 +24,8 @@ export function ProveedorDeSesion({ children }: { children: React.ReactNode }) {
   const { mutate: limpiar } = useSWRConfig();
 
   const salir = useCallback(async () => {
+    // Las notificaciones de este dispositivo no le llegan a la próxima persona que entre.
+    await desactivarNotificaciones();
     await api.post("/auth/salir");
     // Vacía todo lo guardado: la próxima persona no ve datos de la anterior.
     await limpiar(() => true, undefined, { revalidate: false });

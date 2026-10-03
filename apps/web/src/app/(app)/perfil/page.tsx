@@ -3,6 +3,7 @@
 import { useState } from "react";
 import useSWR from "swr";
 import { FormularioJugador } from "@/components/form-jugador";
+import { ActivarNotificaciones } from "@/components/notificaciones";
 import { InstalarApp } from "@/components/pwa";
 import { Boton, Campo, Cargando, Encabezado, ErrorDeFormulario, FalloDeCarga, Seccion, Tarjeta, useAviso } from "@/components/ui";
 import { api, mensajeDe, traer } from "@/lib/api";
@@ -80,6 +81,8 @@ export default function MisDatos() {
               }}
             />
           </Tarjeta>
+
+          <ActivarNotificaciones className="mb-9" />
 
           <Seccion titulo="Contraseña">
             <Tarjeta className="p-5 sm:p-6">

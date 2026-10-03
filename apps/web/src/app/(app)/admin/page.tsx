@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import useSWR from "swr";
+import { ActivarNotificaciones } from "@/components/notificaciones";
 import { InstalarApp } from "@/components/pwa";
 import { Boton, Cargando, Encabezado, Estado, Icono, type NombreDeIcono, Seccion, Tarjeta, TARJETA_ENLACE } from "@/components/ui";
 import { traer } from "@/lib/api";
@@ -42,6 +43,8 @@ export default function InicioDeLaOrganizacion() {
       <Encabezado titulo="Organización" detalle={resumen ? `${resumen.jugadores} jugadores registrados` : undefined}>
         <InstalarApp className="lg:hidden" />
       </Encabezado>
+
+      <ActivarNotificaciones className="mb-8" />
 
       <Seccion titulo="Esperan tu decisión">
         {!resumen ? (

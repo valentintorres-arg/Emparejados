@@ -23,6 +23,8 @@ const MENSAJES: Record<string, string> = {
   localidades_provincia_nombre_key: 'Esa localidad ya existe.',
   clubes_localidad_id_nombre_key: 'Ya existe un club con ese nombre en la localidad.',
   canchas_club_id_nombre_key: 'El club ya tiene una cancha con ese nombre.',
+  suscripciones_push_endpoint_https: 'El navegador entregó una suscripción a avisos que no es válida.',
+  suscripciones_push_claves_base64url: 'El navegador entregó una suscripción a avisos que no es válida.',
 };
 
 interface ErrorPg {

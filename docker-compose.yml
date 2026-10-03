@@ -32,6 +32,10 @@ services:
       COOKIE_SECURE: "true"
       ADMIN_EMAIL: ${ADMIN_EMAIL:-}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      # Notificaciones push. Sin estas claves la app funciona igual, sin notificaciones.
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-https://emparejados.onlineturnos.ar}
       PORT: "4000"
 
   web:
