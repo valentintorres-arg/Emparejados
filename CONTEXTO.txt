@@ -205,8 +205,10 @@ Celular: barra superior azul y barra inferior de navegación. Escritorio: menú
 lateral azul. Textos en castellano rioplatense, en voz activa.
 
 Pensado para que lo use sin esfuerzo gente de 50 años o más:
-- Texto base de 18 px (html al 112,5 %; como las medidas van en rem, todo
-  crece en proporción y se respeta el tamaño de letra del navegador).
+- Texto base de 15 px (html al 93,75 %; como las medidas van en rem, todo
+  guarda la proporción y se respeta el tamaño de letra del navegador). Se
+  probó con 18 px y al dueño le pareció demasiado grande. El texto secundario
+  (text-sm) no baja de 14 px.
 - Ningún botón mide menos de 44 px de alto y todos tienen fondo o borde: no
   hay acciones que sean solo texto. Los enlaces van siempre subrayados (ENLACE
   en ui.tsx).

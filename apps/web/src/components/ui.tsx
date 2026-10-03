@@ -52,7 +52,7 @@ const VARIANTES = {
 } as const;
 
 // Hasta el botón chico supera los 44 px de alto: se acierta con el dedo sin apuntar.
-const TAMANOS = { normal: "min-h-13 px-5 text-base", chico: "min-h-11 px-4 text-[0.95rem]" } as const;
+const TAMANOS = { normal: "min-h-13 px-5 text-base", chico: "min-h-12 px-4 text-[0.95rem]" } as const;
 
 function Giro({ className = "size-[1.15em]" }: { className?: string }) {
   return (

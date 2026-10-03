@@ -28,18 +28,20 @@
   --shadow-tarjeta: 0 1px 2px rgb(14 27 61 / 0.06), 0 12px 28px -18px rgb(14 27 61 / 0.3);
   --shadow-flotante: 0 2px 6px rgb(14 27 61 / 0.1), 0 24px 48px -20px rgb(14 27 61 / 0.45);
   --shadow-boton: 0 1px 2px rgb(12 35 87 / 0.25), 0 6px 14px -8px rgb(24 70 163 / 0.7);
+  /* El texto secundario no baja de 14 px aunque la base sea de 15. */
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.4;
 }
 
 :root {
   color-scheme: light;
 }
 
-/* Todo un paso más grande: texto base de 18 px y, como las medidas están en
-   rem, botones, campos y espacios crecen en la misma proporción. Es un
-   porcentaje para respetar el tamaño de letra que la persona eligió en su
-   navegador. */
+/* Texto base de 15 px. Como las medidas están en rem, botones, campos y
+   espacios guardan la misma proporción. Es un porcentaje para respetar el
+   tamaño de letra que la persona eligió en su navegador. */
 html {
-  font-size: 112.5%;
+  font-size: 93.75%;
 }
 
 body {

@@ -163,7 +163,7 @@ export function Navegacion({ children }: { children: React.ReactNode }) {
                 key={d.href}
                 href={d.href}
                 aria-current={estaActivo(pathname, d.href) ? "page" : undefined}
-                className="group relative flex min-h-[4.25rem] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-[0.78rem] font-semibold leading-tight text-gris aria-[current=page]:font-bold aria-[current=page]:text-pista"
+                className="group relative flex min-h-[4.25rem] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 py-1.5 text-[0.85rem] font-semibold leading-tight text-gris aria-[current=page]:font-bold aria-[current=page]:text-pista"
               >
                 <span className="flex h-8 w-14 items-center justify-center rounded-full group-aria-[current=page]:bg-pista group-aria-[current=page]:text-white">
                   <Icono nombre={d.icono} className="size-6" />
