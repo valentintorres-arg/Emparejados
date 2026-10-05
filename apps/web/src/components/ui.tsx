@@ -30,6 +30,8 @@ const ICONOS = {
   editar: "M5 19h3.5L19 8.5 15.5 5 5 15.5zM13.5 7l3.5 3.5",
   llave: "M14.5 13.5a4.5 4.5 0 1 0-4.3-3.1L4 16.6V20h3.4v-2h2v-2h2l1.3-1.3c.6.5 1.1.8 1.8.8ZM16 8h.01",
   campana: "M6 16.5V11a6 6 0 1 1 12 0v5.5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0",
+  ojo: "M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z",
+  ojoTachado: "M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM4 4l16 16",
 } as const;
 
 export type NombreDeIcono = keyof typeof ICONOS;
@@ -113,14 +115,32 @@ interface PropsDeCampo extends React.InputHTMLAttributes<HTMLInputElement> {
   ayuda?: string;
 }
 
-export function Campo({ etiqueta, ayuda, className = "", ...resto }: PropsDeCampo) {
+export function Campo({ etiqueta, ayuda, className = "", type, ...resto }: PropsDeCampo) {
   const id = useId();
+  const [visible, setVisible] = useState(false);
+  const describe = ayuda ? `${id}-ayuda` : undefined;
   return (
     <div className={className}>
       <label htmlFor={id} className={ETIQUETA}>
         {etiqueta}
       </label>
-      <input id={id} className={CONTROL} aria-describedby={ayuda ? `${id}-ayuda` : undefined} {...resto} />
+      {type === "password" ? (
+        // Las contraseñas llevan un botón para verlas mientras se escriben.
+        // Se oculta el ojo propio de Edge para que no queden dos.
+        <div className="relative">
+          <input id={id} type={visible ? "text" : "password"} className={`${CONTROL} pr-14 [&::-ms-reveal]:hidden`} aria-describedby={describe} {...resto} />
+          <button
+            type="button"
+            onClick={() => setVisible(!visible)}
+            aria-label={visible ? "Ocultar la contraseña" : "Mostrar la contraseña"}
+            className="absolute right-1 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-lg bg-fondo text-tinta hover:bg-pista-50"
+          >
+            <Icono nombre={visible ? "ojoTachado" : "ojo"} className="size-6" />
+          </button>
+        </div>
+      ) : (
+        <input id={id} type={type} className={CONTROL} aria-describedby={describe} {...resto} />
+      )}
       {ayuda && (
         <p id={`${id}-ayuda`} className="mt-1.5 text-sm text-gris">
           {ayuda}
