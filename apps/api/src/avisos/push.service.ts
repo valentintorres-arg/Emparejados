@@ -21,6 +21,9 @@ export interface DatosDeSuscripcion {
 /** Un día: si el teléfono está apagado más tiempo, el aviso ya no sirve. */
 const VIGENCIA_SEG = 60 * 60 * 24;
 
+/** Tope por cuenta: un teléfono que reintenta sin parar no puede llenar la tabla de logs. */
+const MAX_FALLOS_POR_HORA = 20;
+
 /**
  * Notificaciones push con el estándar Web Push. Las claves VAPID identifican al
  * servidor ante Google, Apple y Mozilla; sin ellas las notificaciones quedan
@@ -53,6 +56,21 @@ export class PushService {
 
   async borrar(usuarioId: number, endpoint: string) {
     await this.prisma.suscripcionPush.deleteMany({ where: { usuarioId, endpoint } });
+  }
+
+  /**
+   * Un teléfono no pudo activar los avisos. Queda en la tabla `logs` con el
+   * navegador, que es lo que permite diagnosticarlo sin tener el teléfono a mano.
+   */
+  async registrarFallo(usuarioId: number, paso: string, detalle: string, navegador: string) {
+    // Sin saltos de línea: el texto viene del teléfono y no tiene que poder simular otros renglones del log.
+    const limpio = (texto: string) => texto.replace(/\s+/g, ' ').trim().slice(0, 300);
+    const fallo = { codigo: paso, detalle: limpio(detalle) || 'sin detalle', navegador: limpio(navegador) || null };
+    this.log.warn(`El usuario ${usuarioId} no pudo activar las notificaciones (${paso}): ${fallo.detalle} | ${fallo.navegador}`);
+
+    const desde = new Date(Date.now() - 60 * 60 * 1000);
+    if ((await this.prisma.log.count({ where: { usuarioId, fecha: { gte: desde } } })) >= MAX_FALLOS_POR_HORA) return;
+    await this.prisma.log.create({ data: { origen: 'notificaciones', usuarioId, ...fallo } });
   }
 
   /** Manda el aviso a todos los dispositivos de esos usuarios. Nunca falla: los errores quedan en el log. */

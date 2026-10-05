@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, Post, Req, Res } from '@nestjs/common';
-import { Matches, MaxLength } from 'class-validator';
+import { IsIn, IsString, Matches, MaxLength } from 'class-validator';
 import type { Request, Response } from 'express';
 import { Publico, type Sesion, SesionActual } from '../comun/sesion.ts';
 import { CambiosService } from './cambios.service.ts';
@@ -22,6 +22,16 @@ export class SuscripcionDto extends BajaDeSuscripcionDto {
   @Matches(BASE64URL, { message: 'La suscripción no es válida.' })
   @MaxLength(100)
   auth!: string;
+}
+
+/** Lo que manda la web cuando un teléfono no logra activar las notificaciones. */
+export class FalloDeSuscripcionDto {
+  @IsIn(['suscripcion', 'guardado'])
+  paso!: string;
+
+  @IsString()
+  @MaxLength(300)
+  detalle!: string;
 }
 
 /** Cada cuánto se manda un comentario vacío para que el túnel y los proxies no corten la conexión. */
@@ -79,5 +89,12 @@ export class AvisosController {
   @HttpCode(204)
   async darDeBaja(@SesionActual() sesion: Sesion, @Body() dto: BajaDeSuscripcionDto) {
     await this.push.borrar(sesion.usuarioId, dto.endpoint);
+  }
+
+  /** Un teléfono no pudo activar los avisos: se guarda para poder diagnosticarlo. */
+  @Post('fallo')
+  @HttpCode(204)
+  async fallo(@SesionActual() sesion: Sesion, @Body() dto: FalloDeSuscripcionDto, @Req() req: Request) {
+    await this.push.registrarFallo(sesion.usuarioId, dto.paso, dto.detalle, String(req.headers['user-agent'] ?? ''));
   }
 }

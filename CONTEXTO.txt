@@ -88,9 +88,9 @@ Particularidades que conviene saber antes de tocar código:
 Pedido explícito del dueño: bien normalizado, con todas las relaciones y
 restricciones en la base (no solo en la app) e índices pensados para búsqueda.
 
-Tablas (18): localidades, clubes, canchas, categorias, usuarios, sesiones,
+Tablas (19): localidades, clubes, canchas, categorias, usuarios, sesiones,
 jugadores, qr_tokens, parejas, torneos, zonas, inscripciones, partidos, sets,
-auditoria, suscripciones_push, codigos_password, fotos_jugadores. Claves primarias enteras autoincrementales. Modelos en PascalCase
+auditoria, suscripciones_push, codigos_password, fotos_jugadores, logs. Claves primarias enteras autoincrementales. Modelos en PascalCase
 con @@map a nombres de tabla en snake_case y en castellano.
 
 Migraciones:
@@ -99,6 +99,7 @@ Migraciones:
   20261001190000_reglas_de_integridad  escrita a mano: CHECK, exclusión, triggers
   20261003150000_avisos                suscripciones_push y el trigger auditoria_avisar
   20261003200000_codigos_y_fotos       codigos_password, fotos_jugadores y CHECK de foto_url
+  20261005170000_logs                  logs: fallos del teléfono al activar las notificaciones
 
 Reglas que garantiza la base:
 - DNI único; email único sin distinguir mayúsculas (citext).
@@ -178,7 +179,7 @@ Rutas principales:
   GET  /integracion/usuarios   POST /integracion/usuarios/:id/codigo-password  (clave de integración)
   GET  /auditoria   GET /admin/resumen
   GET  /avisos/en-vivo (público, SSE)   GET /avisos/clave (público)
-  POST /avisos/suscripcion | suscripcion/baja
+  POST /avisos/suscripcion | suscripcion/baja | fallo (guarda en logs por qué un teléfono no pudo activar)
 
 Lógica de torneos (src/torneos/fixture.ts):
 - Eliminación directa: llave de 2 a 32 parejas, siembra estándar, los mejores

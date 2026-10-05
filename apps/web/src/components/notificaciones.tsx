@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { activarNotificaciones, desactivarNotificaciones, type EstadoDeNotificaciones, estadoDeNotificaciones } from "@/lib/notificaciones";
+import { activarNotificaciones, desactivarNotificaciones, type EstadoDeNotificaciones, estadoDeNotificaciones, FalloDeNotificaciones } from "@/lib/notificaciones";
 import { Boton, Icono, Tarjeta, useAviso } from "./ui";
 
 /**
@@ -13,6 +13,7 @@ export function ActivarNotificaciones({ soloSiFaltan = false, className = "" }: 
   const avisar = useAviso();
   const [estado, setEstado] = useState<EstadoDeNotificaciones>("cargando");
   const [ocupado, setOcupado] = useState(false);
+  const [fallo, setFallo] = useState<FalloDeNotificaciones | null>(null);
 
   useEffect(() => {
     let vigente = true;
@@ -29,12 +30,14 @@ export function ActivarNotificaciones({ soloSiFaltan = false, className = "" }: 
 
   const activar = async () => {
     setOcupado(true);
+    setFallo(null);
     try {
       const nuevo = await activarNotificaciones();
       setEstado(nuevo);
       if (nuevo === "activado") avisar("Listo: te vamos a avisar en este teléfono.");
-    } catch {
-      avisar("No se pudieron activar las notificaciones. Probá de nuevo.", "mal");
+    } catch (error) {
+      // La explicación queda en la tarjeta: un aviso de 10 segundos no alcanza para leerla.
+      setFallo(error instanceof FalloDeNotificaciones ? error : new FalloDeNotificaciones("suscripcion", String(error)));
     } finally {
       setOcupado(false);
     }
@@ -76,6 +79,17 @@ export function ActivarNotificaciones({ soloSiFaltan = false, className = "" }: 
           {estado === "instalar-primero" &&
             "En iPhone, las notificaciones funcionan con la app instalada: tocá Compartir, después “Agregar a inicio”, y abrila desde ese ícono."}
         </p>
+        {fallo && (
+          <div role="alert" className="mt-3 rounded-xl border-2 border-mal/40 bg-mal-50 p-3">
+            <p className="font-semibold text-mal">No se pudieron activar las notificaciones.</p>
+            <p className="mt-1">
+              {fallo.paso === "suscripcion"
+                ? "Este teléfono no logró conectarse con el servicio de notificaciones. Revisá que tenga internet y, en Android, que Chrome y “Servicios de Google Play” estén actualizados y sin restricción de batería. Después probá de nuevo."
+                : "El teléfono quedó listo, pero no pudimos guardarlo. Revisá tu conexión y probá de nuevo."}
+            </p>
+            <p className="mt-1 break-words text-sm text-gris">Detalle: {fallo.detalle}</p>
+          </div>
+        )}
       </div>
       {estado === "apagado" && (
         <Boton icono="campana" cargando={ocupado} onClick={activar} className="sm:shrink-0">

@@ -56,6 +56,28 @@ export async function estadoDeNotificaciones(): Promise<EstadoDeNotificaciones> 
   return "activado";
 }
 
+/**
+ * No se pudo activar. `paso` dice dónde falló: "suscripcion" es el teléfono contra
+ * el servicio de notificaciones de su navegador; "guardado", contra nuestra API.
+ */
+export class FalloDeNotificaciones extends Error {
+  constructor(
+    public readonly paso: "suscripcion" | "guardado",
+    public readonly detalle: string,
+  ) {
+    super(detalle);
+  }
+}
+
+/** Deja el fallo en el log de la API: desde el teléfono de otra persona no hay otra forma de verlo. */
+async function fallo(paso: FalloDeNotificaciones["paso"], causa: unknown) {
+  const detalle = (causa instanceof Error ? `${causa.name}: ${causa.message}` : String(causa)).slice(0, 300);
+  await api.post("/avisos/fallo", { paso, detalle }).catch(() => {});
+  return new FalloDeNotificaciones(paso, detalle);
+}
+
+const ESPERA_REINTENTO_MS = 1500;
+
 /** Pide permiso y suscribe este dispositivo. Tiene que llamarse desde un toque de la persona. */
 export async function activarNotificaciones(): Promise<EstadoDeNotificaciones> {
   const clave = await clavePublica();
@@ -63,10 +85,26 @@ export async function activarNotificaciones(): Promise<EstadoDeNotificaciones> {
   if (!clave || !reg) return "no-disponible";
   const permiso = await Notification.requestPermission();
   if (permiso !== "granted") return permiso === "denied" ? "bloqueado" : "apagado";
-  // Una suscripción vieja pudo hacerse con otra clave del servidor: se arranca de cero.
-  await (await reg.pushManager.getSubscription())?.unsubscribe();
-  const suscripcion = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: claveEnBytes(clave) });
-  await api.post("/avisos/suscripcion", datosDe(suscripcion));
+
+  let suscripcion: PushSubscription;
+  try {
+    // Una suscripción vieja pudo hacerse con otra clave del servidor: se arranca de cero.
+    await (await reg.pushManager.getSubscription())?.unsubscribe();
+    const opciones = { userVisibleOnly: true, applicationServerKey: claveEnBytes(clave) };
+    // El servicio del navegador a veces rechaza el primer pedido y acepta el siguiente.
+    suscripcion = await reg.pushManager.subscribe(opciones).catch(async () => {
+      await new Promise((listo) => setTimeout(listo, ESPERA_REINTENTO_MS));
+      return reg.pushManager.subscribe(opciones);
+    });
+  } catch (causa) {
+    throw await fallo("suscripcion", causa);
+  }
+
+  try {
+    await api.post("/avisos/suscripcion", datosDe(suscripcion));
+  } catch (causa) {
+    throw await fallo("guardado", causa);
+  }
   return "activado";
 }
 

@@ -198,6 +198,7 @@ model Usuario {
   suscripcionesPush        SuscripcionPush[]
   codigosPassword          CodigoPassword[]  @relation("CodigosDelUsuario")
   codigosGenerados         CodigoPassword[]  @relation("CodigosGenerados")
+  logs                     Log[]
 
   @@index([rol, estado])
   @@map("usuarios")
@@ -566,4 +567,28 @@ model Auditoria {
   // para filtrar por rango de fechas.
   @@index([fecha], type: Brin)
   @@map("auditoria")
+}
+
+// ─── Logs ─────────────────────────────────────────────────────────────────────
+
+// Fallos que pasan en el teléfono de la persona y que de otro modo no se ven
+// (hoy, no poder activar las notificaciones). No es la auditoría: acá no hay
+// acciones de negocio, solo diagnóstico, y se puede vaciar sin perder nada.
+model Log {
+  id        Int      @id @default(autoincrement())
+  // Parte de la app que lo registró ("notificaciones") y qué falló ahí ("suscripcion").
+  origen    String   @db.VarChar(40)
+  codigo    String   @db.VarChar(40)
+  detalle   String   @db.VarChar(300)
+  navegador String?  @db.VarChar(300)
+  // Queda aunque se borre la cuenta: el fallo es del dispositivo.
+  usuarioId Int?     @map("usuario_id")
+  fecha     DateTime @default(now()) @db.Timestamptz(3)
+
+  usuario Usuario? @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
+
+  // Lo último que pasó, en general y para una cuenta.
+  @@index([fecha(sort: Desc)])
+  @@index([usuarioId, fecha(sort: Desc)])
+  @@map("logs")
 }
