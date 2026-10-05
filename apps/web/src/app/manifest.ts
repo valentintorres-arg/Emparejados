@@ -12,7 +12,9 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/",
     scope: "/",
     display: "standalone",
-    background_color: "#eef2f8",
+    // Fondo de la pantalla que Android arma al abrir la app (ícono y nombre): el
+    // azul de la marca, el mismo con el que sigue components/arranque.tsx.
+    background_color: "#1846a3",
     theme_color: "#1846a3",
     categories: ["sports"],
     icons: [

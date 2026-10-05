@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { BotonCodigoPassword, type CodigoGenerado, MostrarCodigo } from "@/components/codigo-password";
-import { Boton, Campo, Cargando, CONTROL, Dialogo, Encabezado, ErrorDeFormulario, FalloDeCarga, Icono, Paginador, PIE_DE_DIALOGO, Tarjeta, useAccion, Vacio } from "@/components/ui";
+import { EsqueletoLista } from "@/components/esqueletos";
+import { Boton, Campo, CONTROL, Dialogo, Encabezado, ErrorDeFormulario, FalloDeCarga, Icono, Paginador, PIE_DE_DIALOGO, Tarjeta, useAccion, Vacio } from "@/components/ui";
 import { api, mensajeDe, traer } from "@/lib/api";
 import { fechaYHora, nombreCompleto } from "@/lib/formato";
 import { useSesion } from "@/lib/sesion";
@@ -101,7 +102,7 @@ export default function Usuarios() {
       {fallo ? (
         <FalloDeCarga error={fallo} reintentar={() => mutate()} />
       ) : !data ? (
-        <Cargando />
+        <EsqueletoLista />
       ) : data.items.length === 0 ? (
         <Vacio titulo="Ningún usuario coincide con la búsqueda" />
       ) : (

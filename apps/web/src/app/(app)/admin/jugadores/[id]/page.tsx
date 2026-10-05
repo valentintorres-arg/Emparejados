@@ -6,9 +6,10 @@ import { useState } from "react";
 import useSWR from "swr";
 import { BotonCodigoPassword } from "@/components/codigo-password";
 import { TarjetaPartido } from "@/components/competencia";
+import { EsqueletoFicha } from "@/components/esqueletos";
 import { FormularioJugador } from "@/components/form-jugador";
 import { CambiarFoto } from "@/components/foto";
-import { Avatar, Boton, Cargando, Encabezado, ENLACE, Estado, FalloDeCarga, Seccion, Tarjeta, useAccion, useAviso, useConfirmar, Vacio } from "@/components/ui";
+import { Avatar, Boton, Encabezado, ENLACE, Estado, FalloDeCarga, Seccion, Tarjeta, useAccion, useAviso, useConfirmar, Vacio } from "@/components/ui";
 import { api, traer } from "@/lib/api";
 import { ESTADOS_INSCRIPCION, ESTADOS_PAREJA, ESTADOS_USUARIO, fecha, nombreCompleto, rangoDeFechas } from "@/lib/formato";
 import type { FichaJugador } from "@/lib/tipos";
@@ -32,7 +33,7 @@ export default function FichaDeJugador() {
   const [editando, setEditando] = useState(false);
 
   if (error) return <FalloDeCarga error={error} reintentar={() => mutate()} />;
-  if (!ficha) return <Cargando />;
+  if (!ficha) return <EsqueletoFicha />;
 
   const deBaja = ficha.eliminadoEn !== null;
   const otro = (pareja: FichaJugador["parejas"][number]) => (pareja.jugador1.id === ficha.id ? pareja.jugador2 : pareja.jugador1);

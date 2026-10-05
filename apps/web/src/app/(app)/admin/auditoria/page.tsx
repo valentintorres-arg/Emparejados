@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import useSWR from "swr";
-import { Cargando, CONTROL, Encabezado, FalloDeCarga, Paginador, Tarjeta, Vacio } from "@/components/ui";
+import { EsqueletoTabla } from "@/components/esqueletos";
+import { CONTROL, Encabezado, FalloDeCarga, Paginador, Tarjeta, Vacio } from "@/components/ui";
 import { traer } from "@/lib/api";
 import { accionLegible, fechaYHora } from "@/lib/formato";
 import type { Pagina, RegistroAuditoria } from "@/lib/tipos";
@@ -48,7 +49,7 @@ export default function Auditoria() {
       {error ? (
         <FalloDeCarga error={error} reintentar={() => mutate()} />
       ) : !data ? (
-        <Cargando />
+        <EsqueletoTabla />
       ) : data.items.length === 0 ? (
         <Vacio titulo="No hay registros de ese tipo" />
       ) : (

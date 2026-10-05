@@ -1,0 +1,3 @@
+# Corren en el servidor (Linux): con fin de línea de Windows no arrancan.
+*.sh text eol=lf
+*.cron text eol=lf

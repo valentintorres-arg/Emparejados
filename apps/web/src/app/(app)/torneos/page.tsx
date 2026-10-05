@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import useSWR from "swr";
-import { Boton, Cargando, Encabezado, Estado, FalloDeCarga, Icono, TARJETA_ENLACE, Vacio } from "@/components/ui";
+import { EsqueletoTorneos } from "@/components/esqueletos";
+import { Boton, Encabezado, Estado, FalloDeCarga, Icono, TARJETA_ENLACE, Vacio } from "@/components/ui";
 import { traer } from "@/lib/api";
 import { ESTADOS_TORNEO, FORMATOS, RAMAS, rangoDeFechas } from "@/lib/formato";
 import { useSesion } from "@/lib/sesion";
@@ -25,7 +26,7 @@ export default function Torneos() {
       {error ? (
         <FalloDeCarga error={error} reintentar={() => mutate()} />
       ) : !torneos ? (
-        <Cargando />
+        <EsqueletoTorneos />
       ) : torneos.length === 0 ? (
         <Vacio titulo="Todavía no hay torneos publicados">{esAdmin ? "Creá el primero con el botón de arriba." : "Cuando la organización publique uno, aparece acá."}</Vacio>
       ) : (

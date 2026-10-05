@@ -112,6 +112,7 @@ export const ESTADOS_USUARIO: Record<EstadoUsuario, [string, Tono]> = {
 };
 
 const ACCIONES: Record<string, string> = {
+  PASSWORD_BLANQUEADA: "El administrador general le blanqueó la contraseña",
   ALTA: "Dio de alta",
   BAJA: "Dio de baja",
   EDICION: "Editó",

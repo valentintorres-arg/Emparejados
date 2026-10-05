@@ -24,8 +24,9 @@ import { PrismaService } from '../prisma/prisma.service.ts';
 import { CodigosService } from '../usuarios/codigos.service.ts';
 
 // Conexión con el sistema de licencias (licenses.onlineturnos.ar/admin): desde
-// ahí el administrador general ve los usuarios de Emparejados y genera códigos
-// para cambiar la contraseña de cualquiera, también de la organización.
+// ahí el administrador general ve los usuarios de Emparejados y, para cualquiera
+// (también la organización), genera códigos para cambiar la contraseña o se la
+// blanquea con una provisoria.
 //
 // No usa la sesión de la app: el panel de licencias manda
 // "Authorization: Bearer <CLAVE_INTEGRACION>" (la misma clave en el .env de los
@@ -94,6 +95,7 @@ export class IntegracionController {
           rol: true,
           estado: true,
           ultimoLoginEn: true,
+          debeCambiarPassword: true,
           jugador: { select: { nombre: true, apellido: true } },
           codigosPassword: { where: { usadoEn: null, venceEn: { gt: new Date() } }, select: { venceEn: true } },
         },
@@ -110,5 +112,11 @@ export class IntegracionController {
   @Post('usuarios/:id/codigo-password')
   codigo(@Param('id', ParseIntPipe) id: number, @Body() dto: CodigoDto) {
     return this.codigos.generar(id, { externo: dto.generadoPor.toLowerCase() });
+  }
+
+  @HttpCode(200)
+  @Post('usuarios/:id/blanquear-password')
+  blanquear(@Param('id', ParseIntPipe) id: number, @Body() dto: CodigoDto) {
+    return this.codigos.blanquear(id, dto.generadoPor.toLowerCase());
   }
 }

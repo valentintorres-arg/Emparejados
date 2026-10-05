@@ -6,7 +6,8 @@ import { api, mensajeDe, traer } from "@/lib/api";
 import { deInputLocal, nombreDePareja, paraInputLocal } from "@/lib/formato";
 import type { Cancha, Pagina, Pareja, Partido, TorneoDetalle } from "@/lib/tipos";
 import { descripcionDePartido } from "./competencia";
-import { AreaDeTexto, Boton, Campo, Cargando, Dialogo, ErrorDeFormulario, Paginador, PIE_DE_DIALOGO, Selector, useAviso, Vacio } from "./ui";
+import { EsqueletoRenglones } from "./esqueletos";
+import { AreaDeTexto, Boton, Campo, Dialogo, ErrorDeFormulario, Paginador, PIE_DE_DIALOGO, Selector, useAviso, Vacio } from "./ui";
 
 // Diálogos de la organización: rechazar con motivo, cargar resultados y armar la agenda.
 
@@ -327,7 +328,7 @@ export function DialogoInscribirPareja({ torneo, abierto, cerrar, alTerminar }: 
   return (
     <Dialogo abierto={abierto} cerrar={cerrar} titulo="Inscribir una pareja">
       {!data ? (
-        <Cargando />
+        <EsqueletoRenglones filas={4} />
       ) : data.items.length === 0 ? (
         <Vacio titulo="No hay parejas activas" />
       ) : (

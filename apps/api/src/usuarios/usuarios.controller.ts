@@ -152,6 +152,20 @@ export class UsuariosController {
     return this.auditoria.listar(filtro);
   }
 
+  /** Fallos de los teléfonos (hoy, al activar las notificaciones), del más reciente al más viejo. */
+  @Get('logs')
+  async listarLogs(@Query() filtro: PaginaDto) {
+    const [items, total] = await Promise.all([
+      this.prisma.log.findMany({
+        orderBy: [{ fecha: 'desc' }, { id: 'desc' }],
+        include: { usuario: { select: { email: true } } },
+        ...rango(filtro.pagina),
+      }),
+      this.prisma.log.count(),
+    ]);
+    return paginar(items, total, filtro.pagina);
+  }
+
   /** Números del tablero de la organización. */
   @Get('admin/resumen')
   async resumen() {

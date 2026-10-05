@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import useSWR from "swr";
+import { EsqueletoLista, EsqueletoPendientes } from "@/components/esqueletos";
 import { ActivarNotificaciones } from "@/components/notificaciones";
 import { InstalarApp } from "@/components/pwa";
-import { Boton, Cargando, Encabezado, Estado, Icono, type NombreDeIcono, Seccion, Tarjeta, TARJETA_ENLACE } from "@/components/ui";
+import { Boton, Encabezado, Estado, Icono, type NombreDeIcono, Seccion, Tarjeta, TARJETA_ENLACE } from "@/components/ui";
 import { traer } from "@/lib/api";
 import { ESTADOS_TORNEO, RAMAS, rangoDeFechas } from "@/lib/formato";
 import type { ResumenAdmin, TorneoResumen } from "@/lib/tipos";
@@ -31,6 +32,8 @@ const ACCESOS: { href: string; texto: string; detalle: string; icono: NombreDeIc
   { href: "/admin/sedes", texto: "Sedes y canchas", detalle: "Clubes donde se juega", icono: "sede" },
   { href: "/admin/usuarios", texto: "Usuarios", detalle: "Roles, bloqueos y contraseñas", icono: "escudo" },
   { href: "/admin/auditoria", texto: "Auditoría", detalle: "Quién hizo qué y cuándo", icono: "registro" },
+  { href: "/admin/logs", texto: "Fallos en los teléfonos", detalle: "Lo que no le anduvo a alguien", icono: "campana" },
+  { href: "/admin/cuenta", texto: "Mi cuenta", detalle: "Cambiar mi contraseña", icono: "llave" },
 ];
 
 export default function InicioDeLaOrganizacion() {
@@ -48,7 +51,7 @@ export default function InicioDeLaOrganizacion() {
 
       <Seccion titulo="Esperan tu decisión">
         {!resumen ? (
-          <Cargando />
+          <EsqueletoPendientes />
         ) : (
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Pendiente href="/admin/aprobaciones" cantidad={resumen.parejasPorAprobar} singular="pareja por aprobar" plural="parejas por aprobar" />
@@ -66,7 +69,7 @@ export default function InicioDeLaOrganizacion() {
         }
       >
         {!vigentes ? (
-          <Cargando />
+          <EsqueletoLista filas={3} />
         ) : (
           <Tarjeta>
             <ul className="divide-y divide-linea">

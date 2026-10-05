@@ -100,6 +100,7 @@ Migraciones:
   20261003150000_avisos                suscripciones_push y el trigger auditoria_avisar
   20261003200000_codigos_y_fotos       codigos_password, fotos_jugadores y CHECK de foto_url
   20261005170000_logs                  logs: fallos del teléfono al activar las notificaciones
+  20261005190000_password_provisoria   usuarios.debe_cambiar_password (blanqueo de contraseña)
 
 Reglas que garantiza la base:
 - DNI único; email único sin distinguir mayúsculas (citext).
@@ -176,8 +177,18 @@ Rutas principales:
   POST /partidos/programar-torneo/:torneoId   POST /partidos/:id/estado | resultado
   GET  /usuarios   POST /usuarios   PATCH /usuarios/:id   POST /usuarios/:id/codigo-password
   POST /auth/password-con-codigo (público)
-  GET  /integracion/usuarios   POST /integracion/usuarios/:id/codigo-password  (clave de integración)
-  GET  /auditoria   GET /admin/resumen
+  GET  /integracion/usuarios   POST /integracion/usuarios/:id/codigo-password | blanquear-password  (clave de integración)
+  GET  /auditoria   GET /logs   GET /admin/resumen
+
+Blanqueo de contraseña (solo desde el panel de licencias): deja una contraseña
+provisoria de 10 letras y números en minúsculas, que el panel muestra una sola
+vez; cierra las sesiones de la persona, anula su código sin usar y marca
+usuarios.debe_cambiar_password. Al entrar con ella, la web (Navegacion) no
+muestra nada más que "Elegí tu contraseña" hasta que la cambia. POST
+/auth/password pide siempre la contraseña actual, también la provisoria: una
+sesión abierta antes del blanqueo sigue viva hasta 15 minutos (lo que dura el
+token de acceso) y no tiene que poder elegir la contraseña sin conocerla. Queda
+en la auditoría como PASSWORD_BLANQUEADA, con quién lo pidió en el detalle.
   GET  /avisos/en-vivo (público, SSE)   GET /avisos/clave (público)
   POST /avisos/suscripcion | suscripcion/baja | fallo (guarda en logs por qué un teléfono no pudo activar)
 
@@ -271,6 +282,17 @@ Pensado para que lo use sin esfuerzo gente de 50 años o más:
 - Los avisos duran 6 segundos (10 si son de error) y los botones muestran un
   indicador mientras la acción está en curso.
 - Tarjetas con esquinas bien redondeadas y sombra suave (--shadow-tarjeta).
+- Mientras llegan los datos no hay carteles de "Cargando": cada pantalla muestra
+  un esqueleto con la forma de su tarjeta (components/esqueletos.tsx). Esperan
+  150 ms antes de aparecer para no parpadear si la respuesta es inmediata.
+- Pantalla de arranque (components/arranque.tsx, en "/"): azul, con la cancha, el
+  isotipo, el lema y dos pelotas picando. El background_color del manifest es el
+  mismo azul, así la pantalla que arma Android al abrir la app instalada (ícono
+  y nombre, no se puede cambiar más que eso) empalma con la nuestra. Los
+  teléfonos que ya la tienen instalada toman el manifest nuevo con demora, o al
+  reinstalarla. En iPhone no hay pantalla automática: se declara una imagen por
+  tamaño de teléfono (lib/pantallas-ios.json, public/arranque/, generadas con
+  scripts/generar-iconos.mjs). Un modelo que no esté en la lista abre en blanco.
 Las confirmaciones usan un diálogo propio (useConfirmar en ui.tsx), no
 window.confirm.
 
@@ -292,6 +314,7 @@ Rutas:
   /admin  /admin/aprobaciones  /admin/jugadores (+ /nuevo, /[id])
   /admin/torneos/nuevo  /admin/torneos/[id]/editar
   /admin/sedes  /admin/usuarios  /admin/auditoria              organización
+  /admin/logs (fallos en los teléfonos)  /admin/cuenta (cambiar mi contraseña)
 
 QR: contiene el enlace https://<dominio>/q/<token>. El escáner usa el lector
 nativo del navegador (BarcodeDetector, en Chrome de Android) y, si no está,
@@ -370,6 +393,19 @@ Los datos de acceso SSH no están en este archivo.
 Actualizar:
   cd /opt/emparejados && git pull && docker compose up -d --build
 
+Respaldos: scripts/respaldo.sh vuelca la base todos los días a las 4:20 en
+/opt/emparejados/respaldos (comprimidos, 30 días, solo root los lee) y descarta
+el volcado si quedó incompleto. El registro queda en
+/var/log/emparejados-respaldo.log. Instalarlo (una sola vez):
+  cp /opt/emparejados/scripts/emparejados-respaldo.cron /etc/cron.d/emparejados-respaldo
+  chmod 644 /etc/cron.d/emparejados-respaldo
+Restaurar (pisa todo lo que haya en la base):
+  cd /opt/emparejados && docker compose stop api web
+  gunzip -c respaldos/emparejados-AAAAMMDD-HHMM.sql.gz | docker compose exec -T db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+  docker compose start api web
+Los respaldos quedan en el mismo servidor: sirven contra un borrado o una
+migración mala, no contra la pérdida del disco. Falta copiarlos afuera.
+
 
 11. QUÉ SE VERIFICÓ
 -------------------
@@ -406,10 +442,8 @@ el repositorio.
   reconstruir la web.
 - Cambiar la clave de root del VPS y la del administrador (quedaron escritas en
   una conversación) y pasar el SSH a clave pública.
-- La cuenta de organización sin ficha de jugador no tiene pantalla para cambiar
-  su propia contraseña (la API sí: POST /auth/password). Mientras tanto, el
-  administrador general le genera un código desde el panel de licencias.
 - Check-in de partidos por QR (opcional en la especificación).
-- Suite de tests en el repositorio y respaldos periódicos de la base.
+- Suite de tests en el repositorio, y copiar los respaldos de la base fuera del
+  servidor.
 - Aviso conocido: al usar transacciones aparece una advertencia de
   obsolescencia de la librería pg; viene de adentro de Prisma y no afecta.

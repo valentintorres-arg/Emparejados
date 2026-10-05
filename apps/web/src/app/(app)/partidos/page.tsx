@@ -3,7 +3,8 @@
 import Link from "next/link";
 import useSWR from "swr";
 import { TarjetaPartido } from "@/components/competencia";
-import { Cargando, Encabezado, ENLACE, FalloDeCarga, Seccion, Vacio } from "@/components/ui";
+import { EsqueletoPartidos } from "@/components/esqueletos";
+import { Encabezado, ENLACE, FalloDeCarga, Seccion, Vacio } from "@/components/ui";
 import { traer } from "@/lib/api";
 import type { Partido } from "@/lib/tipos";
 
@@ -39,7 +40,7 @@ export default function MisPartidos() {
       {error ? (
         <FalloDeCarga error={error} reintentar={() => mutate()} />
       ) : !partidos ? (
-        <Cargando />
+        <EsqueletoPartidos />
       ) : partidos.length === 0 ? (
         <Vacio titulo="Todavía no tenés partidos">
           Aparecen cuando tu pareja queda inscripta en un torneo y la organización sortea el fixture.

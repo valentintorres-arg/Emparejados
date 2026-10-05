@@ -8,9 +8,11 @@ import { traer } from "@/lib/api";
 import { nombreCompleto } from "@/lib/formato";
 import { useSesion } from "@/lib/sesion";
 import type { ResumenAdmin } from "@/lib/tipos";
+import { CambiarPassword } from "./cambiar-password";
+import { EsqueletoPantalla } from "./esqueletos";
 import { Marca } from "./marca";
 import { InstalarApp } from "./pwa";
-import { Boton, Cargando, Icono, type NombreDeIcono } from "./ui";
+import { Boton, Icono, type NombreDeIcono, Tarjeta } from "./ui";
 
 interface Destino {
   href: string;
@@ -36,6 +38,8 @@ const DE_ADMIN: Destino[] = [
   { href: "/admin/sedes", texto: "Sedes", icono: "sede", soloEscritorio: true },
   { href: "/admin/usuarios", texto: "Usuarios", icono: "escudo", soloEscritorio: true },
   { href: "/admin/auditoria", texto: "Auditoría", icono: "registro", soloEscritorio: true },
+  { href: "/admin/logs", texto: "Fallos", icono: "campana", soloEscritorio: true },
+  { href: "/admin/cuenta", texto: "Mi cuenta", icono: "llave", soloEscritorio: true },
 ];
 
 const SOLO_JUGADOR = ["/panel", "/parejas", "/partidos", "/perfil"];
@@ -43,6 +47,20 @@ const SOLO_JUGADOR = ["/panel", "/parejas", "/partidos", "/perfil"];
 function estaActivo(pathname: string, href: string) {
   if (href === "/admin") return pathname === "/admin";
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/** A quien le blanquearon la contraseña: antes de usar la app, elige la suya. */
+function ElegirPassword() {
+  const { recargar } = useSesion();
+  return (
+    <div className="mx-auto max-w-2xl">
+      <h1 className="titulo text-3xl sm:text-4xl">Elegí tu contraseña</h1>
+      <p className="mb-6 mt-2 text-lg text-gris">Entraste con una contraseña provisoria. Antes de seguir, elegí una que solo vos conozcas.</p>
+      <Tarjeta className="p-5 sm:p-6">
+        <CambiarPassword provisoria alTerminar={recargar} />
+      </Tarjeta>
+    </div>
+  );
 }
 
 export function Navegacion({ children }: { children: React.ReactNode }) {
@@ -150,7 +168,7 @@ export function Navegacion({ children }: { children: React.ReactNode }) {
       </header>
 
       <main className="mx-auto w-full max-w-5xl px-4 pb-32 pt-6 sm:px-6 lg:pb-14 lg:pt-9">
-        {usuario === undefined || destino ? <Cargando /> : children}
+        {usuario === undefined || destino ? <EsqueletoPantalla /> : usuario?.debeCambiarPassword ? <ElegirPassword /> : children}
       </main>
 
       {/* Celular: barra inferior. El destino activo se marca con forma y peso, no solo con color. */}

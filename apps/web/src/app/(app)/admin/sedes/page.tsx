@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import useSWR from "swr";
-import { Boton, Campo, Cargando, Dialogo, Encabezado, ErrorDeFormulario, FalloDeCarga, PIE_DE_DIALOGO, Selector, Tarjeta, useAccion, useAviso, Vacio } from "@/components/ui";
+import { EsqueletoPantalla } from "@/components/esqueletos";
+import { Boton, Campo, Dialogo, Encabezado, ErrorDeFormulario, FalloDeCarga, PIE_DE_DIALOGO, Selector, Tarjeta, useAccion, useAviso, Vacio } from "@/components/ui";
 import { api, mensajeDe, traer } from "@/lib/api";
 import type { Catalogos, Club } from "@/lib/tipos";
 
@@ -125,7 +126,7 @@ export default function Sedes() {
   const [creando, setCreando] = useState(false);
 
   if (error) return <FalloDeCarga error={error} reintentar={() => mutate()} />;
-  if (!catalogos) return <Cargando />;
+  if (!catalogos) return <EsqueletoPantalla volver />;
 
   return (
     <>

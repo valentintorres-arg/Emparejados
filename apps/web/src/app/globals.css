@@ -116,6 +116,35 @@ dialog[open] {
   animation: girar 0.8s linear infinite;
 }
 
+/* Pelotas de la pantalla de arranque: suben frenando y caen acelerando, como un pique. */
+@keyframes picar {
+  0%,
+  100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.4, 1);
+  }
+  50% {
+    transform: translateY(-1.4rem);
+    animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.3);
+  }
+}
+
+.picando {
+  animation: picar 0.75s infinite;
+}
+
+/* Los esqueletos esperan un instante antes de aparecer: si los datos llegan
+   enseguida, la pantalla no parpadea. */
+@keyframes asomar {
+  from {
+    opacity: 0;
+  }
+}
+
+.esqueleto {
+  animation: asomar 200ms ease-out 150ms both;
+}
+
 /* ─── Llave de eliminación ─────────────────────────────────────────────────
    Cada rama dibuja un tramo horizontal hacia la derecha y medio tramo
    vertical que la une con su hermana. */
@@ -168,5 +197,8 @@ dialog[open] {
   /* El indicador de carga sigue girando, más lento: sin él no se sabe si la app respondió. */
   .girando {
     animation-duration: 2s;
+  }
+  .picando {
+    animation-duration: 1.6s;
   }
 }

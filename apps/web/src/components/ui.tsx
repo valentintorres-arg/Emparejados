@@ -286,15 +286,6 @@ export function Vacio({ titulo, children }: { titulo: string; children?: React.R
   );
 }
 
-export function Cargando({ texto = "Cargando" }: { texto?: string }) {
-  return (
-    <p role="status" className="flex items-center justify-center gap-3 py-10 text-lg text-gris">
-      <Giro className="size-6 text-pista" />
-      {texto}…
-    </p>
-  );
-}
-
 export function FalloDeCarga({ error, reintentar }: { error: unknown; reintentar?: () => void }) {
   return (
     <div role="alert" className="rounded-2xl border-2 border-mal/30 bg-mal-50 px-5 py-7 text-center">

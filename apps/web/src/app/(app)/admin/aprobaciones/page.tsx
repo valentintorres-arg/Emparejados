@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import { DialogoMotivo } from "@/components/dialogos";
-import { Avatar, Boton, Cargando, Encabezado, FalloDeCarga, Seccion, Tarjeta, useAccion, Vacio } from "@/components/ui";
+import { EsqueletoSolicitudes } from "@/components/esqueletos";
+import { Avatar, Boton, Encabezado, FalloDeCarga, Seccion, Tarjeta, useAccion, Vacio } from "@/components/ui";
 import { api, traer } from "@/lib/api";
 import { fechaYHora, nombreCompleto, nombreDePareja } from "@/lib/formato";
 import type { Inscripcion, JugadorBasico, Pagina, Pareja } from "@/lib/tipos";
@@ -75,7 +76,7 @@ export default function Aprobaciones() {
 
       <Seccion titulo="Parejas confirmadas por los dos jugadores">
         {!parejas.data ? (
-          <Cargando />
+          <EsqueletoSolicitudes integrantes />
         ) : parejas.data.items.length === 0 ? (
           <Vacio titulo="No hay parejas esperando aprobación" />
         ) : (
@@ -95,7 +96,7 @@ export default function Aprobaciones() {
 
       <Seccion titulo="Inscripciones a torneos">
         {!inscripciones.data ? (
-          <Cargando />
+          <EsqueletoSolicitudes />
         ) : inscripciones.data.length === 0 ? (
           <Vacio titulo="No hay inscripciones por resolver" />
         ) : (

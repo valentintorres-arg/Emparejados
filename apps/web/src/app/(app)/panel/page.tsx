@@ -3,11 +3,12 @@
 import Link from "next/link";
 import useSWR from "swr";
 import { TarjetaPartido } from "@/components/competencia";
+import { EsqueletoPartidos } from "@/components/esqueletos";
 import { TarjetaDePareja } from "@/components/parejas";
 import { InstalarApp } from "@/components/pwa";
 import { ActivarNotificaciones } from "@/components/notificaciones";
 import { CodigoQr, enlaceDeQr } from "@/components/qr";
-import { Boton, Cargando, Encabezado, Estado, FalloDeCarga, Seccion, Tarjeta, TARJETA_ENLACE, useAccion, useAviso, useConfirmar, Vacio } from "@/components/ui";
+import { Boton, Encabezado, Estado, FalloDeCarga, Seccion, Tarjeta, TARJETA_ENLACE, useAccion, useAviso, useConfirmar, Vacio } from "@/components/ui";
 import { api, traer } from "@/lib/api";
 import { ESTADOS_INSCRIPCION, nombreDePareja, rangoDeFechas } from "@/lib/formato";
 import { useSesion } from "@/lib/sesion";
@@ -41,7 +42,7 @@ function MiQr() {
       <div className="flex flex-col items-center gap-3 bg-pista px-6 py-7 text-white lg:w-80">
         <p className="text-center text-lg font-semibold">Tu código de jugador</p>
         <div className="w-full max-w-64 rounded-2xl bg-white p-4">
-          {qr ? <CodigoQr token={qr.token} /> : <div className="aspect-square" />}
+          {qr ? <CodigoQr token={qr.token} /> : <div className="aspect-square animate-pulse rounded-lg bg-linea" />}
         </div>
         <p className="text-center text-white/90">Mostráselo a tu compañero</p>
       </div>
@@ -119,7 +120,7 @@ export default function PanelDelJugador() {
         }
       >
         {!proximos ? (
-          <Cargando />
+          <EsqueletoPartidos cantidad={2} />
         ) : proximos.length === 0 ? (
           <Vacio titulo="No tenés partidos por jugar">Cuando tu pareja entre al fixture de un torneo, los partidos aparecen acá con día, hora y cancha.</Vacio>
         ) : (

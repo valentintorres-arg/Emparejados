@@ -59,6 +59,8 @@ export interface Yo {
   id: number;
   email: string;
   rol: Rol;
+  /** Entró con una contraseña provisoria: tiene que elegir la suya antes de seguir. */
+  debeCambiarPassword: boolean;
   jugador: {
     id: number;
     nombre: string;
@@ -213,6 +215,17 @@ export interface RegistroAuditoria {
   detalle: Record<string, unknown> | null;
   fecha: string;
   usuario: { email: string };
+}
+
+/** Un fallo ocurrido en el teléfono de alguien (tabla logs). */
+export interface RegistroDeLog {
+  id: number;
+  origen: string;
+  codigo: string;
+  detalle: string;
+  navegador: string | null;
+  fecha: string;
+  usuario: { email: string } | null;
 }
 
 export interface ResumenAdmin {

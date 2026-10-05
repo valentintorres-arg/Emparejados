@@ -6,7 +6,8 @@ import useSWR, { useSWRConfig } from "swr";
 import { api, traer } from "@/lib/api";
 import { companero, ESTADOS_PAREJA, FORMATOS, nombreCompleto, RAMAS, rangoDeFechas } from "@/lib/formato";
 import type { Pareja, TorneoResumen } from "@/lib/tipos";
-import { Avatar, Boton, Cargando, Dialogo, ENLACE, Estado, Tarjeta, useAccion, useConfirmar, Vacio } from "./ui";
+import { EsqueletoRenglones } from "./esqueletos";
+import { Avatar, Boton, Dialogo, ENLACE, Estado, Tarjeta, useAccion, useConfirmar, Vacio } from "./ui";
 
 /** Qué falta para que la pareja quede activa, dicho desde el punto de vista del jugador. */
 function situacion(pareja: Pareja, miId: number, nombreDelOtro: string): string | null {
@@ -117,7 +118,7 @@ function DialogoInscribir({ pareja, abierto, cerrar }: { pareja: Pareja; abierto
   return (
     <Dialogo abierto={abierto} cerrar={cerrar} titulo="Inscribir en un torneo">
       {!abiertos ? (
-        <Cargando />
+        <EsqueletoRenglones />
       ) : abiertos.length === 0 ? (
         <Vacio titulo="No hay torneos con inscripción abierta">Cuando la organización abra uno, lo vas a ver acá.</Vacio>
       ) : (

@@ -177,15 +177,17 @@ model Categoria {
 // ─── Usuarios y acceso ────────────────────────────────────────────────────────
 
 model Usuario {
-  id            Int           @id @default(autoincrement())
+  id                  Int           @id @default(autoincrement())
   // citext: el UNIQUE es insensible a mayúsculas sin necesidad de lower() en cada consulta.
-  email         String        @unique @db.Citext
-  passwordHash  String        @map("password_hash") @db.VarChar(255)
-  rol           RolUsuario    @default(JUGADOR)
-  estado        EstadoUsuario @default(ACTIVO)
-  ultimoLoginEn DateTime?     @map("ultimo_login_en") @db.Timestamptz(3)
-  creadoEn      DateTime      @default(now()) @map("creado_en") @db.Timestamptz(3)
-  actualizadoEn DateTime      @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  email               String        @unique @db.Citext
+  passwordHash        String        @map("password_hash") @db.VarChar(255)
+  // La contraseña es provisoria (se la blanquearon): la app le hace elegir la suya antes de seguir.
+  debeCambiarPassword Boolean       @default(false) @map("debe_cambiar_password")
+  rol                 RolUsuario    @default(JUGADOR)
+  estado              EstadoUsuario @default(ACTIVO)
+  ultimoLoginEn       DateTime?     @map("ultimo_login_en") @db.Timestamptz(3)
+  creadoEn            DateTime      @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn       DateTime      @updatedAt @map("actualizado_en") @db.Timestamptz(3)
 
   jugador                  Jugador?
   sesiones                 Sesion[]

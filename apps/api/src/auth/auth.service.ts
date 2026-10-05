@@ -106,6 +106,7 @@ export class AuthService {
         id: true,
         email: true,
         rol: true,
+        debeCambiarPassword: true,
         jugador: {
           select: {
             id: true,
@@ -122,12 +123,14 @@ export class AuthService {
 
   async cambiarPassword(sesion: Sesion, actual: string, nueva: string) {
     const usuario = await this.prisma.usuario.findUniqueOrThrow({ where: { id: sesion.usuarioId } });
+    // También con una contraseña provisoria: una sesión abierta antes del blanqueo vive
+    // hasta que vence su token de acceso, y no puede elegir la contraseña sin conocerla.
     if (!(await verificarPassword(actual, usuario.passwordHash))) {
-      throw new BadRequestException('La contraseña actual no coincide.');
+      throw new BadRequestException(usuario.debeCambiarPassword ? 'La contraseña provisoria no coincide.' : 'La contraseña actual no coincide.');
     }
     await this.prisma.usuario.update({
       where: { id: usuario.id },
-      data: { passwordHash: await hashearPassword(nueva) },
+      data: { passwordHash: await hashearPassword(nueva), debeCambiarPassword: false },
     });
   }
 

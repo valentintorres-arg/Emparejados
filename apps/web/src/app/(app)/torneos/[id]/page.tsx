@@ -6,7 +6,8 @@ import { useState } from "react";
 import useSWR from "swr";
 import { Llave, TablaPosiciones, TarjetaPartido } from "@/components/competencia";
 import { DialogoAgenda, DialogoHorario, DialogoInscribirPareja, DialogoMotivo, DialogoResultado } from "@/components/dialogos";
-import { Boton, Cargando, Encabezado, ENLACE, Estado, FalloDeCarga, Seccion, Tarjeta, useAccion, useConfirmar, Vacio } from "@/components/ui";
+import { EsqueletoTorneo } from "@/components/esqueletos";
+import { Boton, Encabezado, ENLACE, Estado, FalloDeCarga, Seccion, Tarjeta, useAccion, useConfirmar, Vacio } from "@/components/ui";
 import { api, traer } from "@/lib/api";
 import { dia, ESTADOS_INSCRIPCION, ESTADOS_TORNEO, fechaYHora, FORMATOS, nombreCompleto, nombreDePareja, RAMAS, rangoDeFechas } from "@/lib/formato";
 import { useSesion } from "@/lib/sesion";
@@ -426,7 +427,7 @@ export default function PaginaDeTorneo() {
   const [resultado, setResultado] = useState<Partido | null>(null);
 
   if (error) return <FalloDeCarga error={error} reintentar={() => mutate()} />;
-  if (!torneo) return <Cargando />;
+  if (!torneo) return <EsqueletoTorneo />;
 
   const recargar = () => void mutate();
   const tieneLlave = torneo.partidos.some((p) => p.instancia !== "ZONA");

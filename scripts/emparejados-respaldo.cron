@@ -1,0 +1,2 @@
+# Respaldo diario de la base de Emparejados, a las 4:20. Se copia a /etc/cron.d/emparejados-respaldo.
+20 4 * * * root sh /opt/emparejados/scripts/respaldo.sh >> /var/log/emparejados-respaldo.log 2>&1

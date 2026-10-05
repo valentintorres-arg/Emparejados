@@ -6,7 +6,8 @@ import useSWR from "swr";
 import { api, mensajeDe, traer } from "@/lib/api";
 import { deInputLocal, FORMATOS, paraInputLocal, RAMAS } from "@/lib/formato";
 import type { Catalogos, TorneoDetalle, TorneoResumen } from "@/lib/tipos";
-import { AreaDeTexto, Boton, Campo, Cargando, ErrorDeFormulario, Selector } from "./ui";
+import { EsqueletoFormulario } from "./esqueletos";
+import { AreaDeTexto, Boton, Campo, ErrorDeFormulario, Selector } from "./ui";
 
 export function FormularioTorneo({ inicial }: { inicial?: TorneoDetalle }) {
   const router = useRouter();
@@ -14,7 +15,7 @@ export function FormularioTorneo({ inicial }: { inicial?: TorneoDetalle }) {
   const [error, setError] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
 
-  if (!catalogos) return <Cargando />;
+  if (!catalogos) return <EsqueletoFormulario campos={8} />;
 
   const guardar = async (evento: React.FormEvent<HTMLFormElement>) => {
     evento.preventDefault();

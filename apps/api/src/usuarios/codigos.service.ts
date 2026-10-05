@@ -9,10 +9,13 @@ import { PrismaService } from '../prisma/prisma.service.ts';
 // corto para dictarlo por teléfono, sin 0/O ni 1/I/L, de un solo uso y con
 // vencimiento. 31^8 combinaciones con 5 intentos.
 const ALFABETO = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+// Contraseña provisoria del blanqueo: en minúsculas y sin guiones, para escribirla en el teléfono sin cambiar de teclado.
+const LARGO_PROVISORIA = 10;
 const VIGENCIA_HORAS = 24;
 export const INTENTOS_MAXIMOS = 5;
 
 const grupo = () => Array.from({ length: 4 }, () => ALFABETO[randomInt(ALFABETO.length)]).join('');
+const provisoria = () => Array.from({ length: LARGO_PROVISORIA }, () => ALFABETO[randomInt(ALFABETO.length)]).join('').toLowerCase();
 const normalizar = (codigo: string) => codigo.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
 const hashDe = (codigo: string) => createHash('sha256').update(normalizar(codigo)).digest('hex');
 
@@ -93,7 +96,7 @@ export class CodigosService {
       if (usuario.estado !== 'ACTIVO') return { error: 'Tu cuenta no está activa. Hablá con la organización.' } as const;
 
       await tx.codigoPassword.update({ where: { id: pendiente.id }, data: { usadoEn: new Date() } });
-      await tx.usuario.update({ where: { id: usuario.id }, data: { passwordHash, ultimoLoginEn: new Date() } });
+      await tx.usuario.update({ where: { id: usuario.id }, data: { passwordHash, debeCambiarPassword: false, ultimoLoginEn: new Date() } });
       await tx.sesion.updateMany({ where: { usuarioId: usuario.id, revocadaEn: null }, data: { revocadaEn: new Date() } });
       await this.auditoria.registrar(tx, usuario.id, 'CAMBIAR_PASSWORD_CON_CODIGO', 'usuario', usuario.id);
       return { usuario } as const;
@@ -101,5 +104,28 @@ export class CodigosService {
     // El intento fallido queda guardado: por eso el error se lanza fuera de la transacción.
     if ('error' in resultado) throw new BadRequestException(resultado.error);
     return resultado.usuario;
+  }
+
+  /**
+   * Blanqueo, desde el sistema de licencias: deja una contraseña provisoria que
+   * se muestra una sola vez a quien la pidió. La persona entra con ella y la app
+   * le hace elegir la suya antes de seguir. Cierra sus sesiones y anula el código
+   * sin usar que tuviera.
+   */
+  async blanquear(usuarioId: number, externo: string): Promise<{ password: string; email: string }> {
+    const password = provisoria();
+    const passwordHash = await hashearPassword(password);
+    return this.prisma.$transaction(async (tx) => {
+      const usuario = await tx.usuario.findUnique({ where: { id: usuarioId }, select: { email: true, estado: true } });
+      if (!usuario) throw new NotFoundException('No encontramos ese usuario.');
+      if (usuario.estado !== 'ACTIVO') throw new ConflictException('La cuenta no está activa: activala antes de blanquear la contraseña.');
+
+      await tx.usuario.update({ where: { id: usuarioId }, data: { passwordHash, debeCambiarPassword: true } });
+      await tx.sesion.updateMany({ where: { usuarioId, revocadaEn: null }, data: { revocadaEn: new Date() } });
+      await tx.codigoPassword.deleteMany({ where: { usuarioId, usadoEn: null } });
+      // La auditoría exige un usuario de la app: va la cuenta afectada, y en el detalle quién lo pidió.
+      await this.auditoria.registrar(tx, usuarioId, 'PASSWORD_BLANQUEADA', 'usuario', usuarioId, { por: externo });
+      return { password, email: usuario.email };
+    });
   }
 }

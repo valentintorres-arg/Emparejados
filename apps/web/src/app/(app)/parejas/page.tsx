@@ -1,8 +1,9 @@
 "use client";
 
 import useSWR from "swr";
+import { EsqueletoParejas } from "@/components/esqueletos";
 import { TarjetaDePareja } from "@/components/parejas";
-import { Boton, Cargando, Encabezado, FalloDeCarga, Seccion, Vacio } from "@/components/ui";
+import { Boton, Encabezado, FalloDeCarga, Seccion, Vacio } from "@/components/ui";
 import { traer } from "@/lib/api";
 import { useSesion } from "@/lib/sesion";
 import type { Pareja } from "@/lib/tipos";
@@ -27,7 +28,7 @@ export default function MisParejas() {
       {error ? (
         <FalloDeCarga error={error} reintentar={() => mutate()} />
       ) : !parejas ? (
-        <Cargando />
+        <EsqueletoParejas />
       ) : parejas.length === 0 ? (
         <Vacio titulo="Todavía no armaste ninguna pareja">
           Juntate con tu compañero y escaneá su código QR. Lo encuentra en la pantalla de inicio de su cuenta.

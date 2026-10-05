@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
-import { Avatar, Boton, Cargando, CONTROL, Encabezado, Estado, FalloDeCarga, Icono, Paginador, Tarjeta, Vacio } from "@/components/ui";
+import { EsqueletoLista } from "@/components/esqueletos";
+import { Avatar, Boton, CONTROL, Encabezado, Estado, FalloDeCarga, Icono, Paginador, Tarjeta, Vacio } from "@/components/ui";
 import { traer } from "@/lib/api";
 import { ESTADOS_USUARIO, nombreCompleto } from "@/lib/formato";
 import type { Catalogos, Jugador, Pagina } from "@/lib/tipos";
@@ -79,7 +80,7 @@ export default function Jugadores() {
       {error ? (
         <FalloDeCarga error={error} reintentar={() => mutate()} />
       ) : !data ? (
-        <Cargando />
+        <EsqueletoLista filas={8} avatar />
       ) : data.items.length === 0 ? (
         <Vacio titulo="Ningún jugador coincide con la búsqueda">Probá con menos letras o quitá los filtros.</Vacio>
       ) : (
