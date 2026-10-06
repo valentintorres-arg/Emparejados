@@ -33,6 +33,7 @@ enum EstadoUsuario {
 enum Genero {
   MASCULINO
   FEMENINO
+  OTRO
 
   @@map("genero")
 }

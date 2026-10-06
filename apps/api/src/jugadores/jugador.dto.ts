@@ -4,6 +4,7 @@ import {
   IsDateString,
   IsEmail,
   IsEnum,
+  IsIn,
   IsInt,
   IsOptional,
   IsString,
@@ -41,7 +42,7 @@ export class DatosJugadorDto {
   @IsDateString({}, { message: 'Elegí la fecha de nacimiento.' })
   fechaNacimiento!: string;
 
-  @IsEnum(Genero, { message: 'Elegí el género.' })
+  @IsIn([Genero.MASCULINO, Genero.FEMENINO], { message: 'Elegí el género.' })
   genero!: Genero;
 
   @Transform(soloNumeros)
