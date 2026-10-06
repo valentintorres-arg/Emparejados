@@ -7,7 +7,7 @@ import { DialogoMotivo } from "@/components/dialogos";
 import { EsqueletoSolicitudes } from "@/components/esqueletos";
 import { Avatar, Boton, Encabezado, FalloDeCarga, Seccion, Tarjeta, useAccion, Vacio } from "@/components/ui";
 import { api, traer } from "@/lib/api";
-import { fechaYHora, nombreCompleto, nombreDePareja } from "@/lib/formato";
+import { fechaYHora, nombreCompleto, nombreDePareja, resumenDePago } from "@/lib/formato";
 import type { Inscripcion, JugadorBasico, Pagina, Pareja } from "@/lib/tipos";
 
 type InscripcionPendiente = Inscripcion & { torneo: { id: number; nombre: string; cupoMaximo: number } };
@@ -112,6 +112,7 @@ export default function Aprobaciones() {
                 <p className="mt-1 text-gris">
                   {inscripcion.pareja.jugador1.categoria.nombre} y {inscripcion.pareja.jugador2.categoria.nombre}. Pidieron lugar el {fechaYHora(inscripcion.creadaEn)}.
                 </p>
+                <p className="mt-2 font-semibold">Pago: {resumenDePago(inscripcion).toLowerCase()}. Se anota desde el torneo.</p>
                 <p className="mt-2 text-gris">Si el cupo de {inscripcion.torneo.cupoMaximo} parejas ya está completo, al aprobarla pasa a lista de espera.</p>
               </Solicitud>
             ))}

@@ -17,7 +17,7 @@ import {
   repartirEnZonas,
   sembrarClasificadas,
 } from './fixture.ts';
-import type { TorneoDto } from './torneo.dto.ts';
+import type { PagoDto, TorneoDto } from './torneo.dto.ts';
 
 const TRANSICIONES: Record<EstadoTorneo, EstadoTorneo[]> = {
   BORRADOR: ['INSCRIPCION_ABIERTA', 'CANCELADO'],
@@ -52,6 +52,12 @@ const inscripcionDetalle = {
   creadaEn: true,
   motivoRechazo: true,
   pareja: { select: parejaConJugadores },
+} satisfies Prisma.InscripcionSelect;
+
+// Los pagos solo viajan en las respuestas para la organización.
+const inscripcionConPagos = {
+  ...inscripcionDetalle,
+  pagos: { select: { jugadorId: true, registradoEn: true } },
 } satisfies Prisma.InscripcionSelect;
 
 type Tx = Prisma.TransactionClient;
@@ -94,7 +100,7 @@ export class TorneosService {
         zonas: { select: { id: true, nombre: true }, orderBy: { nombre: 'asc' } },
         inscripciones: {
           where: esAdmin(sesion) ? {} : { estado: 'APROBADA' },
-          select: inscripcionDetalle,
+          select: esAdmin(sesion) ? inscripcionConPagos : inscripcionDetalle,
           orderBy: [{ siembra: { sort: 'asc', nulls: 'last' } }, { creadaEn: 'asc' }],
         },
         partidos: { include: partidoCompleto, orderBy: { numero: 'asc' } },
@@ -238,7 +244,7 @@ export class TorneosService {
   listarInscripciones(estado: EstadoInscripcion) {
     return this.prisma.inscripcion.findMany({
       where: { estado, torneo: { estado: 'INSCRIPCION_ABIERTA' } },
-      select: { ...inscripcionDetalle, torneo: { select: { id: true, nombre: true, cupoMaximo: true } } },
+      select: { ...inscripcionConPagos, torneo: { select: { id: true, nombre: true, cupoMaximo: true } } },
       orderBy: { creadaEn: 'asc' },
     });
   }
@@ -301,6 +307,35 @@ export class TorneosService {
       const actualizada = await tx.inscripcion.update({ where: { id }, data: { siembra }, select: inscripcionDetalle });
       await this.auditoria.registrar(tx, sesion.usuarioId, 'SEMBRAR', 'inscripcion', id, { siembra });
       return actualizada;
+    });
+  }
+
+  /**
+   * La organización anota quién pagó la inscripción, antes o después de aprobarla
+   * y también con el torneo ya empezado. Sin jugador, vale para toda la pareja.
+   */
+  async registrarPago(id: number, dto: PagoDto, sesion: Sesion) {
+    const inscripcion = await this.buscarInscripcion(id);
+    const integrantes = [inscripcion.pareja.jugador1Id, inscripcion.pareja.jugador2Id];
+    if (dto.jugadorId !== undefined && !integrantes.includes(dto.jugadorId)) {
+      throw new BadRequestException('Ese jugador no es parte de la pareja inscripta.');
+    }
+    // Sacar un pago mal anotado se puede siempre; anotar uno, solo si la inscripción sigue en pie.
+    if (dto.pago && !VIGENTES.includes(inscripcion.estado)) {
+      throw new ConflictException('Esta inscripción ya no está vigente: no se le anotan pagos.');
+    }
+    const jugadorIds = dto.jugadorId !== undefined ? [dto.jugadorId] : integrantes;
+    return this.prisma.$transaction(async (tx) => {
+      const { count } = dto.pago
+        ? await tx.pagoInscripcion.createMany({
+            data: jugadorIds.map((jugadorId) => ({ inscripcionId: id, jugadorId, registradoPorId: sesion.usuarioId })),
+            skipDuplicates: true,
+          })
+        : await tx.pagoInscripcion.deleteMany({ where: { inscripcionId: id, jugadorId: { in: jugadorIds } } });
+      if (count > 0) {
+        await this.auditoria.registrar(tx, sesion.usuarioId, dto.pago ? 'REGISTRAR_PAGO' : 'QUITAR_PAGO', 'inscripcion', id, { jugadorIds });
+      }
+      return tx.inscripcion.findUniqueOrThrow({ where: { id }, select: inscripcionConPagos });
     });
   }
 

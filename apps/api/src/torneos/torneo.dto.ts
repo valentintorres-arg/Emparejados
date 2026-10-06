@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsDateString, IsEnum, IsInt, IsOptional, IsString, Length, Max, MaxLength, Min, ValidateIf } from 'class-validator';
+import { IsBoolean, IsDateString, IsEnum, IsInt, IsOptional, IsString, Length, Max, MaxLength, Min, ValidateIf } from 'class-validator';
 import { EstadoInscripcion, EstadoTorneo, FormatoTorneo, Rama } from '../generated/prisma/enums.ts';
 
 export class TorneoDto {
@@ -56,6 +56,16 @@ export class SiembraDto {
   @Min(1)
   @Max(64)
   siembra!: number | null;
+}
+
+export class PagoDto {
+  @IsBoolean()
+  pago!: boolean;
+
+  /** Sin jugador, vale para los dos integrantes de la pareja. */
+  @IsOptional()
+  @IsInt()
+  jugadorId?: number;
 }
 
 export class FiltroInscripcionesDto {

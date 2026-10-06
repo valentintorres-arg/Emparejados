@@ -195,6 +195,7 @@ model Usuario {
   parejasResueltas         Pareja[]          @relation("ParejaResueltaPor")
   inscripcionesSolicitadas Inscripcion[]     @relation("InscripcionSolicitadaPor")
   inscripcionesResueltas   Inscripcion[]     @relation("InscripcionResueltaPor")
+  pagosRegistrados         PagoInscripcion[] @relation("PagoRegistradoPor")
   resultadosCargados       Partido[]         @relation("ResultadoCargadoPor")
   suscripcionesPush        SuscripcionPush[]
   codigosPassword          CodigoPassword[]  @relation("CodigosDelUsuario")
@@ -300,14 +301,15 @@ model Jugador {
   // Baja lógica: un jugador con historial nunca se borra físicamente.
   eliminadoEn   DateTime? @map("eliminado_en") @db.Timestamptz(3)
 
-  usuario          Usuario      @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
-  localidad        Localidad?   @relation(fields: [localidadId], references: [id], onDelete: Restrict)
-  club             Club?        @relation(fields: [clubId], references: [id], onDelete: Restrict)
-  categoria        Categoria    @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
+  usuario          Usuario           @relation(fields: [usuarioId], references: [id], onDelete: Restrict)
+  localidad        Localidad?        @relation(fields: [localidadId], references: [id], onDelete: Restrict)
+  club             Club?             @relation(fields: [clubId], references: [id], onDelete: Restrict)
+  categoria        Categoria         @relation(fields: [categoriaId], references: [id], onDelete: Restrict)
   qrTokens         QrToken[]
-  parejasComoJ1    Pareja[]     @relation("ParejaJugador1")
-  parejasComoJ2    Pareja[]     @relation("ParejaJugador2")
-  parejasIniciadas Pareja[]     @relation("ParejaCreadaPor")
+  parejasComoJ1    Pareja[]          @relation("ParejaJugador1")
+  parejasComoJ2    Pareja[]          @relation("ParejaJugador2")
+  parejasIniciadas Pareja[]          @relation("ParejaCreadaPor")
+  pagos            PagoInscripcion[]
   foto             FotoJugador?
 
   // Búsqueda por texto parcial (nombre, apellido o DNI) con trigramas.
@@ -459,9 +461,10 @@ model Inscripcion {
   solicitadaPor Usuario  @relation("InscripcionSolicitadaPor", fields: [solicitadaPorId], references: [id], onDelete: Restrict)
   resueltaPor   Usuario? @relation("InscripcionResueltaPor", fields: [resueltaPorId], references: [id], onDelete: Restrict)
 
-  partidosComoPareja1 Partido[] @relation("PartidoPareja1")
-  partidosComoPareja2 Partido[] @relation("PartidoPareja2")
-  partidosGanados     Partido[] @relation("PartidoGanador")
+  partidosComoPareja1 Partido[]         @relation("PartidoPareja1")
+  partidosComoPareja2 Partido[]         @relation("PartidoPareja2")
+  partidosGanados     Partido[]         @relation("PartidoGanador")
+  pagos               PagoInscripcion[]
 
   // La misma pareja no se inscribe dos veces en un torneo. También es el
   // destino de las FK de partidos: solo juegan parejas inscriptas en ese torneo.
@@ -472,6 +475,25 @@ model Inscripcion {
   @@index([parejaId])
   @@index([zonaId])
   @@map("inscripciones")
+}
+
+// Pago de la inscripción, por jugador: que exista la fila significa que esa
+// persona pagó; si pagaron los dos, la pareja está paga. Lo anota y lo ve solo
+// la organización, antes o después de aprobar la inscripción. Un trigger exige
+// que el jugador sea integrante de la pareja inscripta.
+model PagoInscripcion {
+  inscripcionId   Int      @map("inscripcion_id")
+  jugadorId       Int      @map("jugador_id")
+  registradoPorId Int      @map("registrado_por_id")
+  registradoEn    DateTime @default(now()) @map("registrado_en") @db.Timestamptz(3)
+
+  inscripcion   Inscripcion @relation(fields: [inscripcionId], references: [id], onDelete: Restrict)
+  jugador       Jugador     @relation(fields: [jugadorId], references: [id], onDelete: Restrict)
+  registradoPor Usuario     @relation("PagoRegistradoPor", fields: [registradoPorId], references: [id], onDelete: Restrict)
+
+  @@id([inscripcionId, jugadorId])
+  @@index([jugadorId])
+  @@map("pagos_inscripcion")
 }
 
 // ─── Partidos ─────────────────────────────────────────────────────────────────

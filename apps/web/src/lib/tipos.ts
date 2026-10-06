@@ -122,6 +122,12 @@ export interface TorneoResumen {
   inscriptas?: number;
 }
 
+/** Un integrante de la pareja que ya pagó la inscripción. */
+export interface PagoDeInscripcion {
+  jugadorId: number;
+  registradoEn: string;
+}
+
 export interface Inscripcion {
   id: number;
   estado: EstadoInscripcion;
@@ -131,6 +137,8 @@ export interface Inscripcion {
   creadaEn: string;
   motivoRechazo: string | null;
   pareja: ParejaBasica;
+  /** Quiénes pagaron. Solo llega para la organización. */
+  pagos?: PagoDeInscripcion[];
 }
 
 export interface SetJugado {

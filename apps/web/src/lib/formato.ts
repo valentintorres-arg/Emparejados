@@ -97,6 +97,12 @@ export const ESTADOS_INSCRIPCION: Record<EstadoInscripcion, [string, Tono]> = {
   BAJA: ["Dada de baja", "neutro"],
 };
 
+/** Cómo viene el pago de una pareja inscripta, para la organización. */
+export function resumenDePago(inscripcion: { pagos?: unknown[] }) {
+  const pagaron = inscripcion.pagos?.length ?? 0;
+  return pagaron >= 2 ? "Pareja paga" : pagaron === 1 ? "Pagó 1 de 2" : "Sin pagar";
+}
+
 export const ESTADOS_PARTIDO: Record<EstadoPartido, [string, Tono]> = {
   PROGRAMADO: ["Por jugar", "neutro"],
   EN_JUEGO: ["En juego", "vivo"],
@@ -128,6 +134,8 @@ const ACCIONES: Record<string, string> = {
   LISTA_DE_ESPERA: "Pasó a lista de espera",
   PROMOVER_DE_ESPERA: "Subió de la lista de espera",
   SEMBRAR: "Sembró",
+  REGISTRAR_PAGO: "Anotó el pago",
+  QUITAR_PAGO: "Quitó el pago",
   SORTEAR: "Sorteó el fixture",
   GENERAR_LLAVES: "Generó las llaves",
   CAMBIAR_ESTADO: "Cambió el estado",

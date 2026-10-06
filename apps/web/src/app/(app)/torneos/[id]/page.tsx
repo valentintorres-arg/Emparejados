@@ -7,9 +7,9 @@ import useSWR from "swr";
 import { Llave, TablaPosiciones, TarjetaPartido } from "@/components/competencia";
 import { DialogoAgenda, DialogoHorario, DialogoInscribirPareja, DialogoMotivo, DialogoResultado } from "@/components/dialogos";
 import { EsqueletoTorneo } from "@/components/esqueletos";
-import { Boton, Encabezado, ENLACE, Estado, FalloDeCarga, Seccion, Tarjeta, useAccion, useConfirmar, Vacio } from "@/components/ui";
+import { Boton, Encabezado, ENLACE, Estado, FalloDeCarga, Icono, Seccion, Tarjeta, useAccion, useConfirmar, Vacio } from "@/components/ui";
 import { api, traer } from "@/lib/api";
-import { dia, ESTADOS_INSCRIPCION, ESTADOS_TORNEO, fechaYHora, FORMATOS, nombreCompleto, nombreDePareja, RAMAS, rangoDeFechas } from "@/lib/formato";
+import { dia, ESTADOS_INSCRIPCION, ESTADOS_TORNEO, fechaYHora, FORMATOS, nombreCompleto, nombreDePareja, RAMAS, rangoDeFechas, resumenDePago } from "@/lib/formato";
 import { useSesion } from "@/lib/sesion";
 import type { EstadoInscripcion, Inscripcion, Pareja, Partido, TorneoDetalle, TorneoResumen } from "@/lib/tipos";
 
@@ -26,6 +26,10 @@ function parejaCampeona(torneo: TorneoDetalle) {
   return torneo.zonas[0]?.posiciones[0]?.pareja ?? null;
 }
 
+/** Cuántos jugadores de las parejas inscriptas ya pagaron. Solo la organización recibe los pagos. */
+const jugadoresQuePagaron = (torneo: TorneoDetalle) =>
+  torneo.inscripciones.filter((i) => i.estado === "APROBADA").reduce((total, i) => total + (i.pagos?.length ?? 0), 0);
+
 // ─── Gestión de la organización ──────────────────────────────────────────────
 
 function Gestion({ torneo, recargar }: { torneo: TorneoDetalle; recargar: () => void }) {
@@ -35,6 +39,7 @@ function Gestion({ torneo, recargar }: { torneo: TorneoDetalle; recargar: () => 
   const [dialogo, setDialogo] = useState<"agenda" | "inscribir" | null>(null);
 
   const aprobadas = torneo.inscripciones.filter((i) => i.estado === "APROBADA").length;
+  const sinPagar = aprobadas * 2 - jugadoresQuePagaron(torneo);
   const porResolver = torneo.inscripciones.filter((i) => i.estado === "PENDIENTE").length;
   const sinHorario = torneo.partidos.filter((p) => !p.inicio && !p.ganadorId).length;
   const deZonaSinJugar = torneo.partidos.filter((p) => p.instancia === "ZONA" && !p.ganadorId).length;
@@ -86,7 +91,9 @@ function Gestion({ torneo, recargar }: { torneo: TorneoDetalle; recargar: () => 
               onClick={() =>
                 confirmar({
                   titulo: `¿Sortear con ${aprobadas} parejas?`,
-                  texto: "Se cierra la inscripción, se arma el fixture y ya no se pueden agregar parejas.",
+                  texto: `Se cierra la inscripción, se arma el fixture y ya no se pueden agregar parejas.${
+                    sinPagar > 0 ? ` Todavía ${sinPagar === 1 ? "falta pagar 1 jugador" : `faltan pagar ${sinPagar} jugadores`}: lo podés anotar después.` : ""
+                  }`,
                   confirmar: "Sortear fixture",
                 }).then((si) => si && ejecutar("sorteo", () => api.post(`/torneos/${torneo.id}/sorteo`), "Fixture sorteado.").then((ok) => ok && recargar()))
               }
@@ -307,6 +314,7 @@ function FilaDeInscripcion({ inscripcion, torneo, esAdmin, recargar }: { inscrip
           )}
         </span>
       )}
+      {esAdmin && <Pagos inscripcion={inscripcion} recargar={recargar} />}
       <DialogoMotivo
         titulo={`Rechazar a ${nombreDePareja(pareja)}`}
         abierto={rechazando}
@@ -317,6 +325,45 @@ function FilaDeInscripcion({ inscripcion, torneo, esAdmin, recargar }: { inscrip
         }}
       />
     </li>
+  );
+}
+
+/** Solo la organización: anota quién pagó la inscripción, jugador por jugador o la pareja entera. */
+function Pagos({ inscripcion, recargar }: { inscripcion: Inscripcion; recargar: () => void }) {
+  const { ejecutar, enCurso } = useAccion();
+  const pagaron = new Set((inscripcion.pagos ?? []).map((p) => p.jugadorId));
+  // Rechazada o dada de baja: solo queda corregir un pago que ya estaba anotado.
+  const vigente = VIGENTES.includes(inscripcion.estado);
+  if (!vigente && pagaron.size === 0) return null;
+
+  const anotar = (clave: string, cuerpo: { pago: boolean; jugadorId?: number }) =>
+    ejecutar(clave, () => api.post(`/inscripciones/${inscripcion.id}/pago`, cuerpo)).then((ok) => ok && recargar());
+
+  return (
+    <div className="flex w-full flex-wrap items-center gap-2">
+      <span className="mr-1 font-semibold text-gris">{resumenDePago(inscripcion)}</span>
+      {[inscripcion.pareja.jugador1, inscripcion.pareja.jugador2].map((jugador) => {
+        const pago = pagaron.has(jugador.id);
+        return (
+          <button
+            key={jugador.id}
+            type="button"
+            aria-pressed={pago}
+            disabled={enCurso !== null || (!pago && !vigente)}
+            onClick={() => anotar(`j${jugador.id}`, { pago: !pago, jugadorId: jugador.id })}
+            className="inline-flex min-h-12 items-center gap-2 rounded-xl border-2 border-borde bg-white px-4 text-left text-[0.95rem] font-semibold leading-tight text-gris transition-colors hover:border-pista disabled:pointer-events-none disabled:opacity-50 aria-pressed:border-ok aria-pressed:bg-ok-50 aria-pressed:text-ok"
+          >
+            {pago && <Icono nombre="ok" className="size-5 shrink-0" />}
+            {nombreCompleto(jugador)}: {pago ? "pagó" : "no pagó"}
+          </button>
+        );
+      })}
+      {vigente && pagaron.size < 2 && (
+        <Boton tamano="chico" variante="secundario" cargando={enCurso === "pareja"} disabled={enCurso !== null} onClick={() => anotar("pareja", { pago: true })}>
+          Pagaron los dos
+        </Boton>
+      )}
+    </div>
   );
 }
 
@@ -396,9 +443,17 @@ function Parejas({ torneo, esAdmin, recargar }: { torneo: TorneoDetalle; esAdmin
     .map(([titulo, estados]) => [titulo, torneo.inscripciones.filter((i) => estados.includes(i.estado))] as const)
     .filter(([, lista]) => lista.length > 0);
 
+  const inscriptas = torneo.inscripciones.filter((i) => i.estado === "APROBADA");
+
   if (conParejas.length === 0) return <Vacio titulo="Todavía no hay parejas inscriptas" />;
   return (
     <>
+      {esAdmin && inscriptas.length > 0 && (
+        <p className="mb-5 text-lg">
+          Pagos: <strong>{jugadoresQuePagaron(torneo)} de {inscriptas.length * 2}</strong> jugadores inscriptos ya pagaron ({inscriptas.filter((i) => i.pagos?.length === 2).length} de{" "}
+          {inscriptas.length} parejas completas). Solo lo ve la organización.
+        </p>
+      )}
       {conParejas.map(([titulo, lista]) => (
         <Seccion key={titulo} titulo={`${titulo} (${lista.length})`}>
           <Tarjeta>

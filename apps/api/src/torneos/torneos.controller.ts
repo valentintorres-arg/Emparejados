@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { Publico, SesionActual, SoloAdmin, type Sesion } from '../comun/sesion.ts';
 import { MotivoDto } from '../parejas/parejas.controller.ts';
-import { EstadoTorneoDto, FiltroInscripcionesDto, InscribirDto, SiembraDto, TorneoDto } from './torneo.dto.ts';
+import { EstadoTorneoDto, FiltroInscripcionesDto, InscribirDto, PagoDto, SiembraDto, TorneoDto } from './torneo.dto.ts';
 import { TorneosService } from './torneos.service.ts';
 
 @Controller('torneos')
@@ -106,5 +106,12 @@ export class InscripcionesController {
   @Post(':id/siembra')
   sembrar(@Param('id', ParseIntPipe) id: number, @Body() dto: SiembraDto, @SesionActual() sesion: Sesion) {
     return this.torneos.sembrar(id, dto.siembra, sesion);
+  }
+
+  @SoloAdmin()
+  @HttpCode(200)
+  @Post(':id/pago')
+  registrarPago(@Param('id', ParseIntPipe) id: number, @Body() dto: PagoDto, @SesionActual() sesion: Sesion) {
+    return this.torneos.registrarPago(id, dto, sesion);
   }
 }
