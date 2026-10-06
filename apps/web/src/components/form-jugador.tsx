@@ -110,7 +110,7 @@ export function FormularioJugador({ modo, inicial, esAdmin = false, textoDelBoto
           defaultValue={inicial?.genero ?? ""}
           vacio="Elegí"
           required
-          opciones={[["MASCULINO", "Masculino"], ["FEMENINO", "Femenino"], ["OTRO", "Otro"]]}
+          opciones={[["MASCULINO", "Masculino"], ["FEMENINO", "Femenino"]]}
         />
         <Campo etiqueta="Teléfono o WhatsApp" name="telefono" type="tel" autoComplete="tel" defaultValue={inicial?.telefono} required ayuda="Con código de área, por ejemplo 341 555 1234." />
       </fieldset>

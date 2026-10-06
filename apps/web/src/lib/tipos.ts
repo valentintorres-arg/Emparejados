@@ -2,7 +2,7 @@
 
 export type Rol = "ADMIN" | "JUGADOR";
 export type EstadoUsuario = "ACTIVO" | "INACTIVO" | "BLOQUEADO";
-export type Genero = "MASCULINO" | "FEMENINO" | "OTRO";
+export type Genero = "MASCULINO" | "FEMENINO";
 export type ManoHabil = "DERECHA" | "IZQUIERDA";
 export type Posicion = "DRIVE" | "REVES";
 export type EstadoPareja = "PENDIENTE" | "CONFIRMADA" | "ACTIVA" | "RECHAZADA" | "DISUELTA";
