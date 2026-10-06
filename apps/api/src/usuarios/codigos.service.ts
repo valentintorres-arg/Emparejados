@@ -15,7 +15,7 @@ const VIGENCIA_HORAS = 24;
 export const INTENTOS_MAXIMOS = 5;
 
 const grupo = () => Array.from({ length: 4 }, () => ALFABETO[randomInt(ALFABETO.length)]).join('');
-const provisoria = () => Array.from({ length: LARGO_PROVISORIA }, () => ALFABETO[randomInt(ALFABETO.length)]).join('').toLowerCase();
+export const provisoria = () => Array.from({ length: LARGO_PROVISORIA }, () => ALFABETO[randomInt(ALFABETO.length)]).join('').toLowerCase();
 const normalizar = (codigo: string) => codigo.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
 const hashDe = (codigo: string) => createHash('sha256').update(normalizar(codigo)).digest('hex');
 
