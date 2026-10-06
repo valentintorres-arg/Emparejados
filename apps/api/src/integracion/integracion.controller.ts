@@ -13,6 +13,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Put,
   Query,
   ServiceUnavailableException,
   UnauthorizedException,
@@ -24,11 +25,12 @@ import { IsEmail, IsEnum, IsOptional, IsString, MaxLength } from 'class-validato
 import type { Request } from 'express';
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { AuditoriaService } from '../auditoria/auditoria.service.ts';
-import { hashearPassword } from '../comun/password.ts';
+import { generarToken, hashearPassword } from '../comun/password.ts';
 import { Publico } from '../comun/sesion.ts';
 import type { Prisma } from '../generated/prisma/client.ts';
 import { EstadoUsuario, RolUsuario } from '../generated/prisma/enums.ts';
-import { normalizarEmail } from '../jugadores/jugador.dto.ts';
+import { AltaJugadorDto, DatosJugadorDto, normalizarEmail } from '../jugadores/jugador.dto.ts';
+import { datosDeJugador, VERSION_CONSENTIMIENTO } from '../jugadores/jugadores.service.ts';
 import { PrismaService } from '../prisma/prisma.service.ts';
 import { CodigosService, provisoria } from '../usuarios/codigos.service.ts';
 
@@ -36,7 +38,8 @@ import { CodigosService, provisoria } from '../usuarios/codigos.service.ts';
 // ahí el administrador general ve los usuarios de Emparejados y, para cualquiera
 // (también la organización), genera códigos para cambiar la contraseña o se la
 // blanquea con una provisoria. También da de alta cuentas de la organización,
-// les cambia el email, el rol y el estado, y las elimina.
+// les cambia el email, el rol y el estado, y las elimina; y da de alta y edita
+// jugadores con la misma ficha que el formulario de la app.
 //
 // No usa la sesión de la app: el panel de licencias manda
 // "Authorization: Bearer <CLAVE_INTEGRACION>" (la misma clave en el .env de los
@@ -93,6 +96,19 @@ class CambiosDto extends CodigoDto {
   estado?: EstadoUsuario;
 }
 
+/** Los mismos datos que carga la organización en el formulario de alta de la app. */
+class AltaJugadorDeLicenciasDto extends AltaJugadorDto {
+  @IsEmail()
+  @MaxLength(200)
+  generadoPor!: string;
+}
+
+class FichaDto extends DatosJugadorDto {
+  @IsEmail()
+  @MaxLength(200)
+  generadoPor!: string;
+}
+
 const MAXIMO_EN_LISTA = 200;
 
 // Es una función porque el filtro del código vigente depende de la hora del pedido.
@@ -110,10 +126,26 @@ const seleccionDeUsuario = () =>
 
 type UsuarioDeIntegracion = Prisma.UsuarioGetPayload<{ select: ReturnType<typeof seleccionDeUsuario> }>;
 
-const aFila = ({ codigosPassword, ...usuario }: UsuarioDeIntegracion) => ({
+const aFila = <T extends UsuarioDeIntegracion>({ codigosPassword, ...usuario }: T) => ({
   ...usuario,
   codigoVigenteHasta: codigosPassword[0]?.venceEn ?? null,
 });
+
+// La ficha completa, con los ids de categoría, club y ciudad: lo que precarga el formulario del panel.
+const fichaParaEditar = {
+  id: true,
+  nombre: true,
+  apellido: true,
+  dni: true,
+  fechaNacimiento: true,
+  genero: true,
+  telefono: true,
+  manoHabil: true,
+  posicion: true,
+  categoriaId: true,
+  clubId: true,
+  localidadId: true,
+} satisfies Prisma.JugadorSelect;
 
 type Tx = Prisma.TransactionClient;
 
@@ -159,9 +191,68 @@ export class IntegracionController {
     return { total, items: items.map(aFila) };
   }
 
+  /** Lo que necesitan los formularios del panel: categorías, ciudades y clubes. */
+  @Get('catalogos')
+  async catalogos() {
+    const [categorias, localidades, clubes] = await Promise.all([
+      this.prisma.categoria.findMany({ select: { id: true, nombre: true }, orderBy: { orden: 'asc' } }),
+      this.prisma.localidad.findMany({ select: { id: true, nombre: true, provincia: true }, orderBy: [{ provincia: 'asc' }, { nombre: 'asc' }] }),
+      this.prisma.club.findMany({ select: { id: true, nombre: true, localidad: { select: { nombre: true } } }, orderBy: { nombre: 'asc' } }),
+    ]);
+    return { categorias, localidades, clubes };
+  }
+
+  /** Una cuenta con su ficha de jugador completa (si la tiene), para editarla. */
+  @Get('usuarios/:id')
+  usuario(@Param('id', ParseIntPipe) id: number) {
+    return this.conFicha(this.prisma, id);
+  }
+
   /**
-   * Alta de una cuenta de la organización (los jugadores se registran solos o
-   * los carga la organización, con su ficha). Devuelve una contraseña provisoria
+   * Alta de un jugador con su ficha, igual que cuando lo carga la organización
+   * desde la app. Devuelve una contraseña provisoria que se muestra una sola vez.
+   */
+  @Post('jugadores')
+  async crearJugador(@Body() dto: AltaJugadorDeLicenciasDto) {
+    const password = provisoria();
+    const passwordHash = await hashearPassword(password);
+    return this.prisma.$transaction(async (tx) => {
+      const usuario = await tx.usuario.create({
+        data: {
+          email: dto.email,
+          passwordHash,
+          debeCambiarPassword: true,
+          jugador: {
+            create: {
+              ...datosDeJugador(dto),
+              consentimientoVersion: VERSION_CONSENTIMIENTO,
+              consentimientoAceptadoEn: new Date(),
+              qrTokens: { create: { token: generarToken() } },
+            },
+          },
+        },
+        select: { ...seleccionDeUsuario(), jugador: { select: fichaParaEditar } },
+      });
+      await this.auditoria.registrar(tx, usuario.id, 'ALTA', 'jugador', usuario.jugador!.id, { por: dto.generadoPor.toLowerCase(), email: dto.email });
+      return { usuario: aFila(usuario), password };
+    });
+  }
+
+  /** Cambia la ficha del jugador de esa cuenta. Como la organización, puede cambiar también el DNI y la categoría. */
+  @Put('usuarios/:id/jugador')
+  async actualizarJugador(@Param('id', ParseIntPipe) id: number, @Body() dto: FichaDto) {
+    return this.prisma.$transaction(async (tx) => {
+      const usuario = await tx.usuario.findUnique({ where: { id }, select: { jugador: { select: { id: true } } } });
+      if (!usuario) throw new NotFoundException('No encontramos ese usuario.');
+      if (!usuario.jugador) throw new ConflictException('Esta cuenta no tiene ficha de jugador.');
+      await tx.jugador.update({ where: { id: usuario.jugador.id }, data: datosDeJugador(dto) });
+      await this.auditoria.registrar(tx, id, 'EDICION', 'jugador', usuario.jugador.id, { por: dto.generadoPor.toLowerCase() });
+      return this.conFicha(tx, id);
+    });
+  }
+
+  /**
+   * Alta de una cuenta de la organización. Devuelve una contraseña provisoria
    * que se muestra una sola vez: al entrar con ella, la app le hace elegir la suya.
    */
   @Post('usuarios')
@@ -270,6 +361,15 @@ export class IntegracionController {
   @Post('usuarios/:id/blanquear-password')
   blanquear(@Param('id', ParseIntPipe) id: number, @Body() dto: CodigoDto) {
     return this.codigos.blanquear(id, dto.generadoPor.toLowerCase());
+  }
+
+  private async conFicha(db: Tx | PrismaService, id: number) {
+    const usuario = await db.usuario.findUnique({
+      where: { id },
+      select: { ...seleccionDeUsuario(), jugador: { select: fichaParaEditar } },
+    });
+    if (!usuario) throw new NotFoundException('No encontramos ese usuario.');
+    return aFila(usuario);
   }
 
   /**
