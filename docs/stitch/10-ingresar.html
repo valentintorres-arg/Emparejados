@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#eef2f8]" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ingresá | Emparejados Pádel</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600;700;800&amp;family=Public+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: "#1846a3",
+              dark: "#0c2357",
+              light: "#e8eefb",
+              ball: "#d9f03f",
+              ink: "#0e1b3d",
+              gray: "#55627d",
+              surface: "#eef2f8",
+              border: "#d3dbe9",
+              success: "#146c48",
+              successBg: "#e0f3ea",
+              danger: "#b02d23",
+              dangerBg: "#fbe9e7",
+              warning: "#7d4a00",
+              warningBg: "#fcefd8",
+            }
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Archivo Narrow", "sans-serif"],
+            display: ["Archivo Narrow", "sans-serif"],
+            body: ["Public Sans", "sans-serif"],
+            label: ["Public Sans", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1;
+    }
+    /* Estilo de pista de pádel de fondo */
+    .padel-court-lines {
+      background-image: 
+        radial-gradient(circle at 50% 18%, rgba(217, 240, 63, 0.15) 0%, transparent 60%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+      background-size: 100% 100%, 48px 48px, 48px 48px;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-full font-body text-brand-ink bg-brand-surface flex flex-col justify-between antialiased selection:bg-brand-ball selection:text-brand-ink">
+<!-- Header Superior Inmersivo con Identidad de Pista y Marca -->
+<header class="relative bg-brand-primary padel-court-lines pt-10 pb-20 px-6 overflow-hidden">
+<!-- Luces y textura decorativa sutil de cancha de cristal -->
+<div class="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-brand-ball/10 blur-2xl pointer-events-none"></div>
+<div class="absolute top-2 left-1/2 -translate-x-1/2 w-80 h-1 bg-white/20 rounded-full"></div>
+<div class="max-w-md mx-auto text-center relative z-10">
+<!-- Ícono / Emblema de la App: Paleta de Pádel + Pelota Fluor -->
+<div class="inline-flex items-center justify-center mb-3 relative">
+<div class="w-16 h-16 rounded-2xl bg-brand-dark/40 border border-white/20 flex items-center justify-center shadow-lg shadow-black/10">
+<span class="material-symbols-outlined text-white text-4xl" data-icon="sports_tennis">sports_tennis</span>
+</div>
+<!-- Pelota oficial Amarillo Pelota #d9f03f -->
+<span class="absolute -top-1 -right-1.5 w-6 h-6 rounded-full bg-brand-ball border-2 border-brand-primary flex items-center justify-center shadow-sm" title="Pelota oficial de pádel">
+<span class="w-2.5 h-2.5 rounded-full border border-brand-ink/40"></span>
+</span>
+</div>
+<!-- Nombre Institucional y Bajada -->
+<h1 class="font-headline text-3xl font-extrabold uppercase tracking-tight text-white leading-tight">
+        Emparejados <span class="text-brand-ball">Pádel</span>
+</h1>
+<p class="font-body text-xs sm:text-sm font-medium text-white/80 mt-1 max-w-xs mx-auto">
+        El circuito amateur de clubes de Argentina
+      </p>
+</div>
+<!-- Divisor decorativo de corte inferior -->
+<div class="absolute bottom-0 left-0 right-0 h-6 bg-brand-surface" style="border-top-left-radius: 2rem; border-top-right-radius: 2rem;"></div>
+</header>
+<!-- Contenedor Principal (Tarjeta Flotante de Acceso) -->
+<main class="flex-grow px-4 -mt-10 pb-8 z-20">
+<div class="max-w-md mx-auto">
+<!-- Tarjeta Blanca Principal -->
+<div class="bg-white rounded-2xl border border-brand-border shadow-md p-6 sm:p-7">
+<!-- Encabezado de la Tarjeta -->
+<div class="mb-6">
+<div class="flex items-center gap-2 mb-1.5">
+<span class="w-2 h-5 bg-brand-primary rounded-full"></span>
+<h2 class="font-headline text-2xl font-bold tracking-tight text-brand-ink">
+              Ingresá a tu cuenta
+            </h2>
+</div>
+<p class="text-xs sm:text-sm text-brand-gray leading-relaxed">
+            Gestioná tus parejas, revisá fixtures y confirmá asistencia a los partidos.
+          </p>
+</div>
+<!-- Formulario de Acceso -->
+<form class="space-y-4" onsubmit="event.preventDefault();">
+<!-- Campo 1: Email / DNI -->
+<div>
+<label class="block font-label text-xs font-bold text-brand-ink uppercase tracking-wide mb-1.5" for="identifier">
+              Correo electrónico o DNI
+            </label>
+<div class="relative rounded-lg shadow-sm">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-brand-gray">
+<span class="material-symbols-outlined text-[20px]" data-icon="mail">mail</span>
+</div>
+<input class="block w-full pl-10 pr-3.5 py-3 text-sm font-medium text-brand-ink bg-white border border-brand-border rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary placeholder:text-brand-gray/60 transition-colors" id="identifier" name="identifier" placeholder="martin.morales@gmail.com" required="" type="text" value="martin.morales@gmail.com"/>
+</div>
+</div>
+<!-- Campo 2: Contraseña -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<label class="block font-label text-xs font-bold text-brand-ink uppercase tracking-wide" for="password">
+                Contraseña
+              </label>
+<a class="text-xs font-semibold text-brand-primary hover:text-brand-dark transition-colors" href="#">
+                ¿Olvidaste tu contraseña?
+              </a>
+</div>
+<div class="relative rounded-lg shadow-sm">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-brand-gray">
+<span class="material-symbols-outlined text-[20px]" data-icon="lock">lock</span>
+</div>
+<input class="block w-full pl-10 pr-11 py-3 text-sm font-medium text-brand-ink bg-white border border-brand-border rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary placeholder:text-brand-gray/60 transition-colors" id="password" name="password" placeholder="••••••••" required="" type="password" value="secretpadel2025"/>
+<!-- Botón Mostrar/Ocultar -->
+<button aria-label="Mostrar u ocultar contraseña" class="absolute inset-y-0 right-0 pr-3 flex items-center text-brand-gray hover:text-brand-ink transition-colors cursor-pointer" id="togglePassword" onclick="
+                  const input = document.getElementById('password');
+                  const icon = this.querySelector('.material-symbols-outlined');
+                  if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.textContent = 'visibility_off';
+                  } else {
+                    input.type = 'password';
+                    icon.textContent = 'visibility';
+                  }
+                " type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<!-- Checkbox Recordar Sesión -->
+<div class="flex items-center justify-between pt-1">
+<label class="flex items-center gap-2.5 cursor-pointer select-none">
+<input checked="" class="w-4 h-4 rounded border-brand-border text-brand-primary focus:ring-brand-primary cursor-pointer" name="remember" type="checkbox"/>
+<span class="text-xs font-medium text-brand-ink">
+                Recordar mis datos en este teléfono
+              </span>
+</label>
+</div>
+<!-- Botón Primario: Ingresar -->
+<div class="pt-2">
+<button class="w-full min-h-[48px] bg-brand-primary text-white font-headline text-base font-bold tracking-wide rounded-lg flex items-center justify-center gap-2 hover:bg-brand-dark active:scale-[0.98] transition-all duration-150 shadow-sm" type="submit">
+<span>Ingresar</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</form>
+<!-- Separador -->
+<div class="relative my-6">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-brand-border"></div>
+</div>
+<div class="relative flex justify-center text-xs">
+<span class="bg-white px-3 text-brand-gray font-medium">o ingresá con</span>
+</div>
+</div>
+<!-- Acceso Rápido con Credencial / QR de Pareja -->
+<div class="grid grid-cols-2 gap-3">
+<button class="min-h-[44px] flex items-center justify-center gap-2 px-3 py-2 border border-brand-border rounded-lg bg-brand-surface/60 hover:bg-brand-light text-brand-ink text-xs font-bold transition-colors" type="button">
+<span class="material-symbols-outlined text-brand-primary text-base" data-icon="qr_code_scanner">qr_code_scanner</span>
+<span>Escanear QR</span>
+</button>
+<button class="min-h-[44px] flex items-center justify-center gap-2 px-3 py-2 border border-brand-border rounded-lg bg-brand-surface/60 hover:bg-brand-light text-brand-ink text-xs font-bold transition-colors" type="button">
+<span class="material-symbols-outlined text-brand-primary text-base" data-icon="badge">badge</span>
+<span>Credencial Club</span>
+</button>
+</div>
+<!-- Registro de Jugador -->
+<div class="mt-6 pt-5 border-t border-brand-border text-center">
+<p class="text-xs text-brand-gray mb-3">
+            ¿No tenés cuenta todavía?
+          </p>
+<a class="inline-flex items-center justify-center w-full min-h-[44px] px-4 py-2 border-2 border-brand-primary text-brand-primary hover:bg-brand-light rounded-lg font-headline text-sm font-bold tracking-wide transition-colors" href="#">
+            Creá tu cuenta de jugador
+          </a>
+</div>
+</div>
+<!-- Acceso Rápido Modo Invitado / Público -->
+<div class="mt-4 text-center">
+<a class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-brand-primary hover:text-brand-dark bg-white/70 hover:bg-white rounded-lg border border-brand-border/60 transition-colors shadow-2xs" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="visibility">visibility</span>
+<span>Ver los torneos y fixtures sin ingresar</span>
+</a>
+</div>
+<!-- Notificación rápida de Clubes Activos en Argentina -->
+<div class="mt-5 p-3 rounded-lg bg-brand-light border border-brand-border/80 flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-white border border-brand-border flex items-center justify-center shrink-0 text-brand-primary">
+<span class="material-symbols-outlined text-base fill" data-icon="location_on">location_on</span>
+</div>
+<div class="text-xs">
+<p class="font-bold text-brand-ink">Circuito Oficial de Clubes</p>
+<p class="text-brand-gray leading-tight mt-0.5">
+            Palermo, San Isidro, Rosario, Córdoba, Pilar y más de 45 sedes activas.
+          </p>
+</div>
+</div>
+</div>
+</main>
+<!-- Pie Institucional Sutil -->
+<footer class="py-4 px-4 text-center z-10">
+<p class="font-label text-[11px] text-brand-gray tracking-tight">
+      Emparejados Pádel Argentina • Plataforma de competencia oficial
+    </p>
+</footer>
+</body></html>

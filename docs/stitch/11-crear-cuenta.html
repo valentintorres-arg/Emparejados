@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#0c2357]" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Crear tu cuenta | Emparejados Pádel</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Public Sans & Archivo Narrow -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600;700;800&amp;family=Public+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {},
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {},
+          fontFamily: {
+            headline: ["Archivo Narrow", "Public Sans", "sans-serif"],
+            display: ["Archivo Narrow", "Public Sans", "sans-serif"],
+            body: ["Public Sans", "sans-serif"],
+            label: ["Public Sans", "sans-serif"]
+          },
+          fontSize: {}
+        },
+      },
+    }
+  </script>
+<style>
+    /* Estilos de soporte para inputs y layout específico */
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+    /* Suprimir spinners de input number */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-full font-body text-[#0e1b3d] bg-[#0c2357] antialiased selection:bg-[#d9f03f] selection:text-[#0e1b3d]">
+<!-- Canvas Mobile Principal Conductor de Registro (Onboarding sin Nav Bars) -->
+<main class="min-h-screen flex flex-col justify-start max-w-md mx-auto relative pb-12">
+<!-- Textura y líneas sutiles de cancha de pádel en el fondo superior -->
+<div aria-hidden="true" class="absolute top-0 left-0 right-0 h-80 overflow-hidden pointer-events-none z-0">
+<div class="absolute inset-0 bg-gradient-to-b from-[#1846a3] to-[#0c2357] opacity-95"></div>
+<!-- Líneas de cancha vectorizadas discretas -->
+<div class="absolute inset-x-8 top-12 bottom-10 border border-white/10 rounded-sm"></div>
+<div class="absolute left-1/2 top-12 bottom-10 -translate-x-1/2 border-l border-white/10"></div>
+<div class="absolute inset-x-8 top-1/2 -translate-y-1/2 border-t border-white/10"></div>
+<div class="absolute -top-12 -right-12 w-64 h-64 bg-[#1846a3]/40 rounded-full blur-3xl"></div>
+</div>
+<!-- Cabecera Superior: Volver sutil + Logo Integrado de Marca -->
+<header class="relative z-10 px-5 pt-5 pb-6">
+<div class="flex items-center justify-between">
+<a aria-label="Volver a la pantalla anterior" class="inline-flex items-center gap-1.5 py-1.5 px-2.5 -ml-2 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[#d9f03f]/50" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_back">arrow_back</span>
+<span class="text-xs font-semibold tracking-wide">Volver</span>
+</a>
+<div class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#d9f03f] bg-black/20 border border-white/10 px-2.5 py-1 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-[#d9f03f] animate-pulse"></span>
+<span>Temporada 2025</span>
+</div>
+</div>
+<!-- Identidad Emparejados Pádel -->
+<div class="mt-4 flex flex-col items-center text-center">
+<div class="relative flex items-center justify-center w-14 h-14 bg-white/10 border border-white/20 rounded-2xl shadow-inner mb-3">
+<span class="material-symbols-outlined text-white text-3xl" data-icon="sports_tennis">sports_tennis</span>
+<!-- Pelotita de pádel lima vibrante característica -->
+<div class="absolute -bottom-1 -right-1 w-5 h-5 bg-[#d9f03f] rounded-full border-2 border-[#0c2357] flex items-center justify-center shadow-sm">
+<span class="w-2.5 h-2.5 rounded-full border border-[#0e1b3d]/30 block"></span>
+</div>
+</div>
+<h1 class="font-headline text-2xl font-extrabold tracking-tight text-white uppercase leading-none">
+          Emparejados <span class="text-[#d9f03f]">Pádel</span>
+</h1>
+<p class="text-xs text-white/70 mt-1 font-normal tracking-wide">
+          Circuito de Torneos &amp; Comunidad Amateur Argentina
+        </p>
+</div>
+</header>
+<!-- Tarjeta Blanca Contenedora Prominente (Formulario Extenso Agrupado) -->
+<section class="relative z-10 mx-3 bg-white rounded-xl shadow-xl border border-[#d3dbe9] overflow-hidden">
+<!-- Encabezado de la tarjeta -->
+<div class="p-6 bg-gradient-to-b from-white to-[#f8faff] border-b border-[#d3dbe9]">
+<div class="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#1846a3] bg-[#e8eefb] px-2.5 py-0.5 rounded-full mb-2">
+<span class="material-symbols-outlined text-[14px]" data-icon="how_to_reg">how_to_reg</span>
+          Paso 1 de 2: Ficha oficial
+        </div>
+<h2 class="font-headline text-2xl font-bold tracking-tight text-[#0e1b3d]">
+          Creá tu cuenta de jugador
+        </h2>
+<p class="text-xs leading-relaxed text-[#55627d] mt-1.5">
+          Completá tus datos para sumarte a torneos de pádel, armar tu dupla y llevar tu historial de partidos.
+        </p>
+</div>
+<form class="p-6 space-y-7" id="registroForm" novalidate="" onsubmit="return false;">
+<!-- ================= SECCIÓN 1: DATOS DE ACCESO ================= -->
+<fieldset class="space-y-4">
+<legend class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1846a3] mb-1">
+<span class="material-symbols-outlined text-base" data-icon="lock">lock</span>
+            Datos de acceso
+          </legend>
+<!-- Correo Electrónico -->
+<div>
+<label class="block text-xs font-semibold text-[#0e1b3d] mb-1.5" for="email">
+              Correo electrónico <span class="text-[#b02d23]">*</span>
+</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#55627d]">
+<span class="material-symbols-outlined text-[18px]" data-icon="mail">mail</span>
+</div>
+<input class="w-full h-11 pl-10 pr-3.5 bg-white border border-[#d3dbe9] rounded-lg text-sm text-[#0e1b3d] placeholder:text-[#55627d]/60 focus:outline-none focus:ring-2 focus:ring-[#1846a3] focus:border-transparent transition-all" id="email" name="email" placeholder="ejemplo@gmail.com" required="" type="email"/>
+</div>
+</div>
+<!-- Contraseña -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<label class="block text-xs font-semibold text-[#0e1b3d]" for="password">
+                Contraseña <span class="text-[#b02d23]">*</span>
+</label>
+</div>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#55627d]">
+<span class="material-symbols-outlined text-[18px]" data-icon="key">key</span>
+</div>
+<input class="w-full h-11 pl-10 pr-11 bg-white border border-[#d3dbe9] rounded-lg text-sm text-[#0e1b3d] placeholder:text-[#55627d]/60 focus:outline-none focus:ring-2 focus:ring-[#1846a3] focus:border-transparent transition-all" id="password" minlength="8" name="password" placeholder="••••••••" required="" type="password"/>
+<button aria-label="Mostrar u ocultar contraseña" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#55627d] hover:text-[#0e1b3d] transition-colors focus:outline-none" id="togglePassword" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility" id="eyeIcon">visibility</span>
+</button>
+</div>
+<p class="text-[11px] text-[#55627d] mt-1.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-[#1846a3]" data-icon="info">info</span>
+              Al menos 8 caracteres (recomendamos combinar letras y números).
+            </p>
+</div>
+</fieldset>
+<hr class="border-[#d3dbe9]"/>
+<!-- ================= SECCIÓN 2: DATOS PERSONALES Y FEDERATIVOS ================= -->
+<fieldset class="space-y-4">
+<legend class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1846a3] mb-1">
+<span class="material-symbols-outlined text-base" data-icon="badge">badge</span>
+            Datos personales y federativos
+          </legend>
+<!-- Nombre y Apellido en 2 columnas -->
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="block text-xs font-semibold text-[#0e1b3d] mb-1.5" for="nombre">
+                Nombre <span class="text-[#b02d23]">*</span>
+</label>
+<input class="w-full h-11 px-3.5 bg-white border border-[#d3dbe9] rounded-lg text-sm text-[#0e1b3d] placeholder:text-[#55627d]/60 focus:outline-none focus:ring-2 focus:ring-[#1846a3] focus:border-transparent transition-all" id="nombre" name="nombre" placeholder="Martín" required="" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-semibold text-[#0e1b3d] mb-1.5" for="apellido">
+                Apellido <span class="text-[#b02d23]">*</span>
+</label>
+<input class="w-full h-11 px-3.5 bg-white border border-[#d3dbe9] rounded-lg text-sm text-[#0e1b3d] placeholder:text-[#55627d]/60 focus:outline-none focus:ring-2 focus:ring-[#1846a3] focus:border-transparent transition-all" id="apellido" name="apellido" placeholder="Morales" required="" type="text"/>
+</div>
+</div>
+<!-- DNI con aclaración legal de torneos -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<label class="block text-xs font-semibold text-[#0e1b3d]" for="dni">
+                DNI / Documento <span class="text-[#b02d23]">*</span>
+</label>
+<span class="text-[10px] uppercase font-bold text-[#146c48] bg-[#e0f3ea] px-1.5 py-0.5 rounded">Requerido</span>
+</div>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#55627d]">
+<span class="material-symbols-outlined text-[18px]" data-icon="fingerprint">fingerprint</span>
+</div>
+<input class="w-full h-11 pl-10 pr-3.5 bg-white border border-[#d3dbe9] rounded-lg text-sm tabular-nums text-[#0e1b3d] placeholder:text-[#55627d]/60 focus:outline-none focus:ring-2 focus:ring-[#1846a3] focus:border-transparent transition-all" id="dni" inputmode="numeric" name="dni" placeholder="38.452.190" required="" type="text"/>
+</div>
+<p class="text-[11px] text-[#55627d] mt-1.5 flex items-start gap-1">
+<span class="material-symbols-outlined text-[13px] text-[#7d4a00] shrink-0 mt-0.5" data-icon="verified_user">verified_user</span>
+<span>Se utiliza para verificar inscripciones en torneos y evitar suplantación de identidad en la cancha.</span>
+</p>
+</div>
+<!-- Fecha de nacimiento -->
+<div>
+<label class="block text-xs font-semibold text-[#0e1b3d] mb-1.5" for="fechaNacimiento">
+              Fecha de nacimiento <span class="text-[#b02d23]">*</span>
+</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#55627d]">
+<span class="material-symbols-outlined text-[18px]" data-icon="calendar_today">calendar_today</span>
+</div>
+<input class="w-full h-11 pl-10 pr-3.5 bg-white border border-[#d3dbe9] rounded-lg text-sm tabular-nums text-[#0e1b3d] focus:outline-none focus:ring-2 focus:ring-[#1846a3] focus:border-transparent transition-all" id="fechaNacimiento" name="fechaNacimiento" required="" type="date"/>
+</div>
+</div>
+<!-- Género (Chips de selección táctil) -->
+<div>
+<span class="block text-xs font-semibold text-[#0e1b3d] mb-1.5">
+              Género de competencia <span class="text-[#b02d23]">*</span>
+</span>
+<div aria-label="Género de competencia" class="grid grid-cols-3 gap-2" role="radiogroup">
+<label class="gender-chip relative flex items-center justify-center py-2.5 px-3 border border-[#1846a3] bg-[#e8eefb] text-[#1846a3] rounded-lg text-xs font-bold cursor-pointer transition-all select-none">
+<input checked="" class="sr-only" name="genero" type="radio" value="masculino"/>
+<span>Masculino</span>
+</label>
+<label class="gender-chip relative flex items-center justify-center py-2.5 px-3 border border-[#d3dbe9] bg-white text-[#55627d] rounded-lg text-xs font-semibold cursor-pointer hover:border-[#1846a3]/40 transition-all select-none">
+<input class="sr-only" name="genero" type="radio" value="femenino"/>
+<span>Femenino</span>
+</label>
+<label class="gender-chip relative flex items-center justify-center py-2.5 px-3 border border-[#d3dbe9] bg-white text-[#55627d] rounded-lg text-xs font-semibold cursor-pointer hover:border-[#1846a3]/40 transition-all select-none">
+<input class="sr-only" name="genero" type="radio" value="otro"/>
+<span>Otro</span>
+</label>
+</div>
+</div>
+<!-- Teléfono / WhatsApp -->
+<div>
+<label class="block text-xs font-semibold text-[#0e1b3d] mb-1.5" for="telefono">
+              Teléfono / WhatsApp <span class="text-[#b02d23]">*</span>
+</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#146c48]">
+<span class="material-symbols-outlined text-[18px]" data-icon="call">call</span>
+</div>
+<input class="w-full h-11 pl-10 pr-3.5 bg-white border border-[#d3dbe9] rounded-lg text-sm tabular-nums text-[#0e1b3d] placeholder:text-[#55627d]/60 focus:outline-none focus:ring-2 focus:ring-[#1846a3] focus:border-transparent transition-all" id="telefono" name="telefono" placeholder="11 5824-9102" required="" type="tel"/>
+</div>
+<p class="text-[11px] text-[#55627d] mt-1.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-[#146c48]" data-icon="chat">chat</span>
+              Con código de área, por ejemplo 341 555 1234.
+            </p>
+</div>
+</fieldset>
+<hr class="border-[#d3dbe9]"/>
+<!-- ================= SECCIÓN 3: PERFIL DE JUEGO ================= -->
+<fieldset class="space-y-4">
+<legend class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#1846a3] mb-1">
+<span class="material-symbols-outlined text-base" data-icon="sports_score">sports_score</span>
+            Perfil de juego
+          </legend>
+<!-- Categoría Oficial -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<label class="block text-xs font-semibold text-[#0e1b3d]" for="categoria">
+                Categoría oficial <span class="text-[#b02d23]">*</span>
+</label>
+<span class="text-[11px] text-[#55627d]">Sujeta a fiscalización</span>
+</div>
+<div class="relative">
+<select class="w-full h-11 pl-3.5 pr-10 bg-white border border-[#d3dbe9] rounded-lg text-sm font-semibold text-[#0e1b3d] focus:outline-none focus:ring-2 focus:ring-[#1846a3] focus:border-transparent transition-all appearance-none cursor-pointer" id="categoria" name="categoria">
+<option value="1">1ª Categoría (Profesional / Elite)</option>
+<option value="2">2ª Categoría</option>
+<option value="3">3ª Categoría</option>
+<option value="4">4ª Categoría</option>
+<option value="5">5ª Categoría</option>
+<option selected="" value="6">6ª Categoría (Predeterminada)</option>
+<option value="7">7ª Categoría</option>
+<option value="8">8ª Categoría (Iniciación)</option>
+</select>
+<div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-[#55627d]">
+<span class="material-symbols-outlined text-[20px]" data-icon="unfold_more">unfold_more</span>
+</div>
+</div>
+</div>
+<!-- Club Habitual -->
+<div>
+<label class="block text-xs font-semibold text-[#0e1b3d] mb-1.5" for="club">
+              Club habitual de entrenamiento
+            </label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#55627d]">
+<span class="material-symbols-outlined text-[18px]" data-icon="stadium">stadium</span>
+</div>
+<input class="w-full h-11 pl-10 pr-3.5 bg-white border border-[#d3dbe9] rounded-lg text-sm text-[#0e1b3d] placeholder:text-[#55627d]/60 focus:outline-none focus:ring-2 focus:ring-[#1846a3] focus:border-transparent transition-all" id="club" name="club" placeholder="Club Náutico San Isidro, El Monasterio, etc." type="text"/>
+</div>
+</div>
+<!-- Ciudad / Localidad -->
+<div>
+<label class="block text-xs font-semibold text-[#0e1b3d] mb-1.5" for="ciudad">
+              Ciudad / Localidad <span class="text-[#b02d23]">*</span>
+</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#55627d]">
+<span class="material-symbols-outlined text-[18px]" data-icon="location_on">location_on</span>
+</div>
+<input class="w-full h-11 pl-10 pr-3.5 bg-white border border-[#d3dbe9] rounded-lg text-sm text-[#0e1b3d] placeholder:text-[#55627d]/60 focus:outline-none focus:ring-2 focus:ring-[#1846a3] focus:border-transparent transition-all" id="ciudad" name="ciudad" placeholder="San Isidro, Rosario, CABA, Córdoba..." required="" type="text"/>
+</div>
+</div>
+<!-- Mano Hábil (Chips) -->
+<div>
+<span class="block text-xs font-semibold text-[#0e1b3d] mb-1.5">
+              Mano hábil <span class="text-[#b02d23]">*</span>
+</span>
+<div aria-label="Mano hábil" class="grid grid-cols-2 gap-2" role="radiogroup">
+<label class="hand-chip relative flex items-center justify-center gap-2 py-2.5 px-3 border border-[#1846a3] bg-[#e8eefb] text-[#1846a3] rounded-lg text-xs font-bold cursor-pointer transition-all select-none">
+<input checked="" class="sr-only" name="mano" type="radio" value="diestro"/>
+<span class="material-symbols-outlined text-[16px]" data-icon="pan_tool">pan_tool</span>
+<span>Diestro</span>
+</label>
+<label class="hand-chip relative flex items-center justify-center gap-2 py-2.5 px-3 border border-[#d3dbe9] bg-white text-[#55627d] rounded-lg text-xs font-semibold cursor-pointer hover:border-[#1846a3]/40 transition-all select-none">
+<input class="sr-only" name="mano" type="radio" value="zurdo"/>
+<span class="material-symbols-outlined text-[16px]" data-icon="front_hand">front_hand</span>
+<span>Zurdo</span>
+</label>
+</div>
+</div>
+<!-- Posición preferida en cancha (Chips) -->
+<div>
+<span class="block text-xs font-semibold text-[#0e1b3d] mb-1.5">
+              Posición preferida en cancha <span class="text-[#b02d23]">*</span>
+</span>
+<div aria-label="Posición de juego" class="grid grid-cols-3 gap-2" role="radiogroup">
+<label class="pos-chip relative flex items-center justify-center py-2.5 px-2 border border-[#1846a3] bg-[#e8eefb] text-[#1846a3] rounded-lg text-xs font-bold cursor-pointer transition-all select-none text-center">
+<input checked="" class="sr-only" name="posicion" type="radio" value="drive"/>
+<span>Drive (Derecha)</span>
+</label>
+<label class="pos-chip relative flex items-center justify-center py-2.5 px-2 border border-[#d3dbe9] bg-white text-[#55627d] rounded-lg text-xs font-semibold cursor-pointer hover:border-[#1846a3]/40 transition-all select-none text-center">
+<input class="sr-only" name="posicion" type="radio" value="reves"/>
+<span>Revés</span>
+</label>
+<label class="pos-chip relative flex items-center justify-center py-2.5 px-2 border border-[#d3dbe9] bg-white text-[#55627d] rounded-lg text-xs font-semibold cursor-pointer hover:border-[#1846a3]/40 transition-all select-none text-center">
+<input class="sr-only" name="posicion" type="radio" value="indistinto"/>
+<span>Indistinto</span>
+</label>
+</div>
+</div>
+</fieldset>
+<hr class="border-[#d3dbe9]"/>
+<!-- ================= SECCIÓN 4: LEGALES / CONSENTIMIENTO ARGENTINO ================= -->
+<div class="p-3.5 bg-[#fcefd8]/40 border border-[#d3dbe9] rounded-lg">
+<label class="flex items-start gap-3 cursor-pointer">
+<input class="w-5 h-5 mt-0.5 rounded border-[#d3dbe9] text-[#1846a3] focus:ring-[#1846a3] focus:ring-offset-0 transition-colors cursor-pointer shrink-0" id="terminos" name="terminos" required="" type="checkbox"/>
+<span class="text-xs text-[#0e1b3d] leading-snug">
+              Acepto el tratamiento de mis datos personales de conformidad con la <strong class="font-bold text-[#0c2357]">Ley N° 25.326 de Protección de Datos Personales</strong> de la República Argentina y los términos de competencia del circuito amateur.
+            </span>
+</label>
+</div>
+<!-- Alerta informativa de aprobación requerida (Regla Central del Sistema) -->
+<div class="flex items-start gap-2.5 p-3 bg-[#e8eefb] border border-[#1846a3]/20 rounded-lg text-xs text-[#0c2357]">
+<span class="material-symbols-outlined text-[18px] text-[#1846a3] shrink-0 mt-0.5" data-icon="approval">approval</span>
+<div>
+<span class="font-bold">Recordá:</span> Tu usuario quedará registrado de inmediato, pero las parejas y las inscripciones a torneos requieren aprobación final de la fiscalización del circuito.
+          </div>
+</div>
+<!-- ================= ACCIONES PRINCIPALES ================= -->
+<div class="space-y-3 pt-2">
+<!-- Botón CTA Primario -->
+<button class="w-full min-h-[48px] bg-[#1846a3] text-white font-headline font-bold text-base tracking-wide rounded-lg flex items-center justify-center gap-2 hover:bg-[#0c2357] active:scale-[0.98] transition-all duration-150 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1846a3]" id="btnSubmit" type="submit">
+<span>Crear cuenta</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Enlace Secundario para Login -->
+<div class="text-center pt-2">
+<a class="inline-block text-xs font-semibold text-[#55627d] hover:text-[#1846a3] py-2 transition-colors" href="#">
+              ¿Ya tenés cuenta? <span class="text-[#1846a3] font-bold underline underline-offset-2">Iniciar sesión</span>
+</a>
+</div>
+</div>
+</form>
+</section>
+<!-- Pie institucional discreto para mobile -->
+<footer class="mt-6 text-center px-4">
+<p class="text-[11px] text-white/50">
+        Emparejados Pádel Argentina © 2025 • Hecho para jugadores de pádel
+      </p>
+</footer>
+</main>
+<!-- Micro-interacciones con JavaScript nativo -->
+<script>
+    // 1. Mostrar/Ocultar contraseña
+    const togglePasswordBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    if (togglePasswordBtn && passwordInput && eyeIcon) {
+      togglePasswordBtn.addEventListener('click', () => {
+        const isPassword = passwordInput.getAttribute('type') === 'password';
+        passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+        eyeIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+        eyeIcon.setAttribute('data-icon', isPassword ? 'visibility_off' : 'visibility');
+      });
+    }
+
+    // 2. Control visual de Radio Chips (Género, Mano, Posición)
+    function setupChips(groupName, chipClass) {
+      const inputs = document.querySelectorAll(`input[name="${groupName}"]`);
+      inputs.forEach(input => {
+        input.addEventListener('change', () => {
+          inputs.forEach(item => {
+            const parentLabel = item.closest(`.${chipClass}`);
+            if (item.checked) {
+              parentLabel.classList.remove('border-[#d3dbe9]', 'bg-white', 'text-[#55627d]', 'font-semibold');
+              parentLabel.classList.add('border-[#1846a3]', 'bg-[#e8eefb]', 'text-[#1846a3]', 'font-bold');
+            } else {
+              parentLabel.classList.remove('border-[#1846a3]', 'bg-[#e8eefb]', 'text-[#1846a3]', 'font-bold');
+              parentLabel.classList.add('border-[#d3dbe9]', 'bg-white', 'text-[#55627d]', 'font-semibold');
+            }
+          });
+        });
+      });
+    }
+
+    setupChips('genero', 'gender-chip');
+    setupChips('mano', 'hand-chip');
+    setupChips('posicion', 'pos-chip');
+
+    // 3. Feedback visual ligero de envío
+    const form = document.getElementById('registroForm');
+    const btnSubmit = document.getElementById('btnSubmit');
+
+    if (form && btnSubmit) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const terminosChecked = document.getElementById('terminos').checked;
+        if (!terminosChecked) {
+          alert('Por favor aceptá los términos de conformidad con la Ley N° 25.326 para continuar.');
+          return;
+        }
+
+        // Efecto visual rápido de procesamiento
+        const originalHtml = btnSubmit.innerHTML;
+        btnSubmit.innerHTML = `
+          <span class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+          <span>Creando tu cuenta...</span>
+        `;
+        btnSubmit.disabled = true;
+
+        setTimeout(() => {
+          btnSubmit.innerHTML = `
+            <span class="material-symbols-outlined text-[20px]" data-icon="check_circle">check_circle</span>
+            <span>¡Cuenta creada con éxito!</span>
+          `;
+          btnSubmit.classList.remove('bg-[#1846a3]');
+          btnSubmit.classList.add('bg-[#146c48]');
+          
+          setTimeout(() => {
+            btnSubmit.innerHTML = originalHtml;
+            btnSubmit.classList.remove('bg-[#146c48]');
+            btnSubmit.classList.add('bg-[#1846a3]');
+            btnSubmit.disabled = false;
+          }, 2500);
+        }, 1200);
+      });
+    }
+  </script>
+</body></html>

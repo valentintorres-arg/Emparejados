@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#eef2f8]" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Emparejados Pádel - Panel de Control Organización</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,600;0,700;1,700&amp;family=Public+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#1846a3",
+            "primary-dark": "#0c2357",
+            "primary-light": "#e8eefb",
+            pelota: "#d9f03f",
+            ink: "#0e1b3d",
+            "ink-muted": "#55627d",
+            surface: "#ffffff",
+            "surface-ground": "#eef2f8",
+            "outline-variant": "#d3dbe9",
+            "success-text": "#146c48",
+            "success-bg": "#e0f3ea",
+            "danger-text": "#b02d23",
+            "danger-bg": "#fbe9e7",
+            "warning-text": "#7d4a00",
+            "warning-bg": "#fcefd8",
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["'Archivo Narrow'", "'Public Sans'", "sans-serif"],
+            display: ["'Archivo Narrow'", "'Public Sans'", "sans-serif"],
+            body: ["'Public Sans'", "sans-serif"],
+            label: ["'Public Sans'", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .font-tabular {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body class="h-full text-ink font-body bg-surface-ground antialiased selection:bg-pelota selection:text-ink">
+<!-- ==================== SIDE NAVBAR (FIJO 240px #1846a3) ==================== -->
+<aside class="fixed top-0 left-0 h-screen w-60 z-40 bg-primary text-white border-r border-[#133782] flex flex-col justify-between p-4 shadow-sm select-none">
+<!-- Top Brand & Escanear Action -->
+<div class="space-y-4">
+<!-- Brand & Club Title -->
+<div class="px-2 pt-1 pb-2 border-b border-white/15">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-pelota text-2xl" style="font-variation-settings: 'FILL' 1;">sports_tennis</span>
+<span class="font-headline text-lg font-black tracking-tight text-white uppercase">Emparejados Pádel</span>
+</div>
+<div class="mt-1 flex items-center justify-between text-xs font-semibold text-white/75">
+<span>Club Náutico San Isidro</span>
+<span class="text-[10px] px-1.5 py-0.5 rounded bg-white/20 text-white font-mono tracking-wider">FISCALÍA</span>
+</div>
+</div>
+<!-- Action Button: Escanear Pareja -->
+<div>
+<button class="w-full h-11 flex items-center justify-center gap-2 bg-pelota text-ink font-headline text-xs font-black tracking-wider uppercase rounded-lg shadow-sm hover:brightness-105 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-lg">qr_code_scanner</span>
+<span>Escanear Pareja</span>
+</button>
+</div>
+<!-- Primary Navigation Links -->
+<nav class="space-y-1 pt-1 font-body text-sm">
+<!-- Inicio: ACTIVO (fondo blanco, texto azul) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white text-primary font-bold shadow-sm transition-transform duration-100 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="flex-1">Inicio</span>
+</a>
+<!-- Aprobaciones con Badge -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-xl">how_to_reg</span>
+<span class="flex-1">Aprobaciones</span>
+<span class="px-2 py-0.5 rounded-full bg-pelota text-ink text-xs font-black font-tabular leading-tight shadow-sm">5</span>
+</a>
+<!-- Torneos -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-xl">emoji_events</span>
+<span class="flex-1">Torneos</span>
+</a>
+<!-- Jugadores -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-xl">groups</span>
+<span class="flex-1">Jugadores</span>
+</a>
+<!-- Sedes y Canchas -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-xl">stadium</span>
+<span class="flex-1">Sedes y Canchas</span>
+</a>
+<!-- Usuarios -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-xl">manage_accounts</span>
+<span class="flex-1">Usuarios</span>
+</a>
+<!-- Auditoría -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-xl">history</span>
+<span class="flex-1">Auditoría</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Nav & User Profile -->
+<div class="pt-4 border-t border-white/15 space-y-3">
+<!-- Profile Card -->
+<div class="px-2 py-2 rounded-lg bg-[#0c2357]/60 flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-pelota text-ink flex items-center justify-center font-headline font-bold text-xs">
+          FG
+        </div>
+<div class="overflow-hidden">
+<p class="text-xs font-bold text-white truncate leading-tight">Fiscal General</p>
+<p class="text-[11px] text-white/60 truncate leading-tight">fiscalia@nauticosanisidro.com</p>
+</div>
+</div>
+<!-- Footer navigation -->
+<div class="space-y-0.5 text-xs font-medium">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-white/80 hover:bg-white/10 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-base">settings</span>
+<span>Configuración</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-red-200 hover:bg-red-500/20 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-base">logout</span>
+<span>Cerrar sesión</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- ==================== MAIN CONTENT WRAPPER ==================== -->
+<div class="ml-60 min-h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-30 bg-surface border-b border-outline-variant px-8 py-3 flex items-center justify-between">
+<!-- Left: Breadcrumb & Context -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-xs font-medium text-ink-muted">
+<span>Organización</span>
+<span class="text-gray-300">/</span>
+<span class="font-bold text-primary">Panel de Control</span>
+</div>
+<div class="h-4 w-px bg-outline-variant"></div>
+<!-- Venue selector -->
+<div class="flex items-center gap-2 px-2.5 py-1 rounded-md bg-surface-ground border border-outline-variant text-xs text-ink">
+<span class="w-2 h-2 rounded-full bg-success-text"></span>
+<span class="font-semibold">CNSI - Sede Central</span>
+<span class="text-ink-muted">• Circuito Oficial APA 2025</span>
+<span class="material-symbols-outlined text-xs text-ink-muted">expand_more</span>
+</div>
+</div>
+<!-- Right: Actions, Notifications & Profile -->
+<div class="flex items-center gap-3">
+<!-- Ver Club Secondary Action -->
+<button class="h-9 px-3.5 flex items-center gap-1.5 text-xs font-bold text-primary bg-primary-light hover:bg-[#d8e4fb] rounded-lg transition-colors">
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+<span>Ver Club</span>
+</button>
+<div class="h-4 w-px bg-outline-variant"></div>
+<!-- Utility icons -->
+<div class="flex items-center gap-1">
+<button class="relative w-9 h-9 flex items-center justify-center rounded-lg text-ink-muted hover:bg-surface-ground hover:text-ink transition-colors" title="Escanear QR rápido">
+<span class="material-symbols-outlined text-xl">qr_code_scanner</span>
+</button>
+<button class="relative w-9 h-9 flex items-center justify-center rounded-lg text-ink-muted hover:bg-surface-ground hover:text-ink transition-colors" title="Notificaciones">
+<span class="material-symbols-outlined text-xl">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-danger-text rounded-full ring-2 ring-white"></span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center rounded-lg text-ink-muted hover:bg-surface-ground hover:text-ink transition-colors" title="Ayuda">
+<span class="material-symbols-outlined text-xl">help_outline</span>
+</button>
+</div>
+<div class="h-4 w-px bg-outline-variant"></div>
+<!-- Profile Tag -->
+<div class="flex items-center gap-2 pl-1">
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs border border-primary-dark">
+            AG
+          </div>
+<div class="text-left hidden lg:block">
+<p class="text-xs font-bold text-ink leading-none">Admin General</p>
+<p class="text-[10px] text-ink-muted leading-tight mt-0.5">Sede San Isidro</p>
+</div>
+</div>
+</div>
+</header>
+<!-- Canvas Page Body -->
+<main class="flex-1 p-8 max-w-7xl w-full mx-auto space-y-8">
+<!-- Page Header Banner -->
+<section class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-outline-variant">
+<div>
+<div class="flex items-center gap-3">
+<h1 class="font-headline text-3xl font-extrabold text-ink tracking-tight">Organización</h1>
+<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary-light text-primary border border-[#cfddfa]">
+              Panel de Club / Fiscal General
+            </span>
+</div>
+<p class="mt-1 text-sm text-ink-muted">
+            ¡Buenas tardes, Club Náutico San Isidro! Gestioná tus torneos y fiscalizá duplas en tiempo real.
+          </p>
+</div>
+<!-- Quick actions header -->
+<div class="flex items-center gap-2">
+<button class="h-10 px-4 rounded-lg bg-surface border border-outline-variant hover:bg-surface-ground text-xs font-bold text-ink flex items-center gap-2 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-base text-ink-muted">badge</span>
+<span>Escanear DNI</span>
+</button>
+<button class="h-10 px-4 rounded-lg bg-surface border border-outline-variant hover:bg-surface-ground text-xs font-bold text-ink flex items-center gap-2 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-base text-ink-muted">analytics</span>
+<span>Ver estadísticas</span>
+</button>
+</div>
+</section>
+<!-- ==================== SECCIÓN: ESPERAN TU DECISIÓN ==================== -->
+<section class="space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-pelota text-ink font-bold text-xs font-tabular">
+              !
+            </span>
+<h2 class="font-headline text-xl font-bold tracking-tight text-ink uppercase">
+              Esperan tu decisión
+            </h2>
+<span class="text-xs px-2 py-0.5 rounded-full bg-warning-bg text-warning-text font-bold border border-[#f3ddb6]">
+              5 acciones pendientes
+            </span>
+</div>
+<span class="text-xs text-ink-muted font-medium">Revisá las solicitudes para habilitar los cuadros oficiales</span>
+</div>
+<!-- 2 Big Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<!-- Card 1: Parejas por aprobar -->
+<div class="bg-surface rounded-lg border border-outline-variant p-5 shadow-sm hover:border-primary/40 transition-colors flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 rounded-lg bg-primary-light text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">group_add</span>
+</div>
+<div>
+<h3 class="font-headline text-base font-bold text-ink tracking-tight">Parejas por aprobar</h3>
+<p class="text-xs text-ink-muted">Duplas armadas por QR de jugadores</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-warning-bg text-warning-text text-[11px] font-bold border border-[#f3ddb6]">
+                  Requiere validación
+                </span>
+</div>
+<!-- Metric + Explanatory block -->
+<div class="mt-4 flex items-baseline gap-3">
+<span class="font-headline text-5xl font-black text-ink font-tabular">3</span>
+<span class="text-xs font-semibold text-ink-muted uppercase tracking-wider">parejas listas para cotejo</span>
+</div>
+<p class="mt-2 text-xs text-ink-muted leading-relaxed">
+                Revisión técnica de categorías APA y club de origen. Las parejas no quedan habilitadas para jugar hasta tu aprobación formal.
+              </p>
+</div>
+<div class="mt-5 pt-4 border-t border-outline-variant flex items-center justify-between">
+<div class="flex -space-x-1.5 overflow-hidden">
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary-light text-primary text-[10px] font-bold ring-2 ring-white">LR</span>
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary-light text-primary text-[10px] font-bold ring-2 ring-white">MF</span>
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#fcefd8] text-warning-text text-[10px] font-bold ring-2 ring-white">+4</span>
+</div>
+<a class="h-10 px-4 rounded-lg bg-primary text-white text-xs font-bold flex items-center gap-1.5 hover:bg-primary-dark active:scale-[0.98] transition-all" href="#">
+<span>Revisar parejas</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Card 2: Inscripciones por aprobar -->
+<div class="bg-surface rounded-lg border border-outline-variant p-5 shadow-sm hover:border-primary/40 transition-colors flex flex-col justify-between">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 rounded-lg bg-[#e0f3ea] text-success-text flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">receipt_long</span>
+</div>
+<div>
+<h3 class="font-headline text-base font-bold text-ink tracking-tight">Inscripciones por aprobar</h3>
+<p class="text-xs text-ink-muted">Copa San Isidro &amp; Aniversario</p>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-primary-light text-primary text-[11px] font-bold border border-[#cfddfa]">
+                  2 comprobantes adjuntos
+                </span>
+</div>
+<!-- Metric + Explanatory block -->
+<div class="mt-4 flex items-baseline gap-3">
+<span class="font-headline text-5xl font-black text-ink font-tabular">2</span>
+<span class="text-xs font-semibold text-ink-muted uppercase tracking-wider">solicitudes con seña paga</span>
+</div>
+<p class="mt-2 text-xs text-ink-muted leading-relaxed">
+                Comprobantes y cupos: pagos de seña transferidos y confirmación de duplas en lista de espera para el cuadro principal.
+              </p>
+</div>
+<div class="mt-5 pt-4 border-t border-outline-variant flex items-center justify-between">
+<span class="text-xs font-medium text-ink-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-success-text">verified</span>
+                Mercado Pago / Transferencia verificada
+              </span>
+<a class="h-10 px-4 rounded-lg bg-primary text-white text-xs font-bold flex items-center gap-1.5 hover:bg-primary-dark active:scale-[0.98] transition-all" href="#">
+<span>Revisar inscripciones</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== SECCIÓN: TORNEOS ABIERTOS ==================== -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="font-headline text-xl font-bold tracking-tight text-ink uppercase">
+              Torneos abiertos
+            </h2>
+<p class="text-xs text-ink-muted">Torneos con fixture activo, zonas en juego o inscripciones vigentes</p>
+</div>
+<button class="h-10 px-4 bg-primary text-white font-headline text-xs font-bold uppercase tracking-wider rounded-lg shadow-sm hover:bg-primary-dark active:scale-[0.98] flex items-center gap-2 transition-all">
+<span class="material-symbols-outlined text-base">add</span>
+<span>Nuevo torneo</span>
+</button>
+</div>
+<!-- Grid de torneos (2 cols) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+<!-- TORNEO CARD 1 -->
+<div class="bg-surface rounded-lg border border-outline-variant p-5 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div class="space-y-3">
+<div class="flex items-start justify-between gap-2">
+<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-success-bg text-success-text border border-[#b6e4d0]">
+                  Inscripción abierta
+                </span>
+<span class="text-xs font-mono font-bold text-ink-muted">5ª Caballeros</span>
+</div>
+<div>
+<h3 class="font-headline text-lg font-bold text-ink leading-snug">
+                  Copa San Isidro Pádel 2025 · Edición Otoño
+                </h3>
+<p class="text-xs text-ink-muted mt-0.5">Formato: Zonas de 3 y llaves eliminatorias</p>
+</div>
+<!-- Cupo y Progress Bar -->
+<div class="space-y-1.5 pt-1">
+<div class="flex justify-between text-xs font-semibold">
+<span class="text-ink">Cupo de parejas</span>
+<span class="text-primary font-tabular font-bold">12 de 16 parejas</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-ground overflow-hidden border border-outline-variant">
+<div class="h-full bg-primary rounded-full" style="width: 75%;"></div>
+</div>
+<p class="text-[11px] text-ink-muted">Quedan 4 vacantes disponibles</p>
+</div>
+<!-- Meta info -->
+<div class="pt-2 border-t border-outline-variant/60 space-y-1 text-xs text-ink-muted">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+<span>18 al 20 de Abril • Viernes desde 18:30 hs</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">payments</span>
+<span>Arancel: $26.000 / dupla (incluye pelotas)</span>
+</div>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="mt-5 pt-4 border-t border-outline-variant flex items-center justify-between gap-2">
+<button class="h-9 px-3 rounded-lg border border-outline-variant hover:bg-surface-ground text-xs font-bold text-ink transition-colors">
+                Ver llaves
+              </button>
+<button class="h-9 px-3.5 rounded-lg bg-primary-light text-primary hover:bg-[#d4e2fa] text-xs font-bold flex items-center gap-1 transition-colors">
+<span>Gestionar torneo</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- TORNEO CARD 2 -->
+<div class="bg-surface rounded-lg border-2 border-primary/25 p-5 shadow-sm flex flex-col justify-between relative overflow-hidden">
+<!-- Ribbon / Accent -->
+<div class="absolute top-0 right-0 w-16 h-16 pointer-events-none overflow-hidden">
+<div class="bg-pelota text-ink text-[10px] font-bold text-center py-0.5 w-24 absolute top-3 right-[-24px] rotate-45 shadow-sm">
+                EN VIVO
+              </div>
+</div>
+<div class="space-y-3">
+<div class="flex items-start justify-between gap-2">
+<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-primary text-white">
+                  En curso / Fixture en vivo
+                </span>
+<span class="text-xs font-mono font-bold text-ink-muted">6ª Caballeros</span>
+</div>
+<div>
+<h3 class="font-headline text-lg font-bold text-ink leading-snug">
+                  Torneo Aniversario CNSI
+                </h3>
+<p class="text-xs text-ink-muted mt-0.5">Fase de Zonas • Canchas 1, 2 y 4 activas</p>
+</div>
+<!-- Cupo y Progress Bar -->
+<div class="space-y-1.5 pt-1">
+<div class="flex justify-between text-xs font-semibold">
+<span class="text-ink">Cuadro completo</span>
+<span class="text-danger-text font-tabular font-bold">14 de 16 parejas</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-ground overflow-hidden border border-outline-variant">
+<div class="h-full bg-pelota rounded-full" style="width: 87.5%;"></div>
+</div>
+<p class="text-[11px] text-danger-text font-bold">¡Últimos 2 cupos para lista de repechaje!</p>
+</div>
+<!-- Meta info -->
+<div class="pt-2 border-t border-outline-variant/60 space-y-1 text-xs text-ink-muted">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+<span>10 al 12 de Octubre • Turno vespertino</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">scoreboard</span>
+<span class="text-ink font-semibold">4 partidos jugándose ahora mismo</span>
+</div>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="mt-5 pt-4 border-t border-outline-variant flex items-center justify-between gap-2">
+<button class="h-9 px-3 rounded-lg bg-surface border border-outline-variant hover:bg-surface-ground text-xs font-bold text-ink flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-sm">sports_tennis</span>
+<span>Planilla de mesa</span>
+</button>
+<button class="h-9 px-3.5 rounded-lg bg-primary text-white hover:bg-primary-dark text-xs font-bold flex items-center gap-1 transition-colors">
+<span>Gestionar torneo</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- TORNEO CARD 3 -->
+<div class="bg-surface rounded-lg border border-outline-variant p-5 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div class="space-y-3">
+<div class="flex items-start justify-between gap-2">
+<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-success-bg text-success-text border border-[#b6e4d0]">
+                  Inscripción abierta
+                </span>
+<span class="text-xs font-mono font-bold text-ink-muted">Mixto B</span>
+</div>
+<div>
+<h3 class="font-headline text-lg font-bold text-ink leading-snug">
+                  Torneo Mixto de Primavera
+                </h3>
+<p class="text-xs text-ink-muted mt-0.5">Llave principal de 16 duplas mixtas</p>
+</div>
+<!-- Cupo y Progress Bar -->
+<div class="space-y-1.5 pt-1">
+<div class="flex justify-between text-xs font-semibold">
+<span class="text-ink">Cupo de parejas</span>
+<span class="text-primary font-tabular font-bold">8 de 16 parejas</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-ground overflow-hidden border border-outline-variant">
+<div class="h-full bg-primary rounded-full" style="width: 50%;"></div>
+</div>
+<p class="text-[11px] text-ink-muted">Cierre de inscripciones en 6 días</p>
+</div>
+<!-- Meta info -->
+<div class="pt-2 border-t border-outline-variant/60 space-y-1 text-xs text-ink-muted">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+<span>21 al 23 de Noviembre</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">military_tech</span>
+<span>Premios: Paletas de gama alta + Indumentaria</span>
+</div>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="mt-5 pt-4 border-t border-outline-variant flex items-center justify-end">
+<button class="w-full h-9 px-3.5 rounded-lg bg-primary-light text-primary hover:bg-[#d4e2fa] text-xs font-bold flex items-center justify-center gap-1 transition-colors">
+<span>Gestionar torneo</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== SECCIÓN: TODO LO DEMÁS ==================== -->
+<section class="space-y-3 pt-2">
+<div>
+<h2 class="font-headline text-xl font-bold tracking-tight text-ink uppercase">
+            Todo lo demás
+          </h2>
+<p class="text-xs text-ink-muted">Accesos rápidos a la administración del club</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Card 1: Jugadores -->
+<a class="group bg-surface rounded-lg border border-outline-variant p-4 shadow-sm hover:border-primary hover:shadow transition-all flex flex-col justify-between" href="#">
+<div class="space-y-2">
+<div class="w-9 h-9 rounded-lg bg-primary-light text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">groups</span>
+</div>
+<h3 class="font-headline text-base font-bold text-ink group-hover:text-primary transition-colors">
+                Jugadores
+              </h3>
+<p class="text-xs text-ink-muted leading-relaxed">
+                Padrón oficial de 342 jugadores federados, categorías APA y altas de socios.
+              </p>
+</div>
+<div class="mt-4 pt-3 border-t border-outline-variant/60 flex items-center justify-between text-xs font-bold text-primary">
+<span>Ir a Jugadores</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+</div>
+</a>
+<!-- Card 2: Sedes y Canchas -->
+<a class="group bg-surface rounded-lg border border-outline-variant p-4 shadow-sm hover:border-primary hover:shadow transition-all flex flex-col justify-between" href="#">
+<div class="space-y-2">
+<div class="w-9 h-9 rounded-lg bg-primary-light text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">stadium</span>
+</div>
+<h3 class="font-headline text-base font-bold text-ink group-hover:text-primary transition-colors">
+                Sedes y Canchas
+              </h3>
+<p class="text-xs text-ink-muted leading-relaxed">
+                22 canchas habilitadas en 6 sedes, disponibilidad y tipos de piso (cristal techado / muro).
+              </p>
+</div>
+<div class="mt-4 pt-3 border-t border-outline-variant/60 flex items-center justify-between text-xs font-bold text-primary">
+<span>Ir a Sedes</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+</div>
+</a>
+<!-- Card 3: Usuarios y Fiscales -->
+<a class="group bg-surface rounded-lg border border-outline-variant p-4 shadow-sm hover:border-primary hover:shadow transition-all flex flex-col justify-between" href="#">
+<div class="space-y-2">
+<div class="w-9 h-9 rounded-lg bg-primary-light text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">manage_accounts</span>
+</div>
+<h3 class="font-headline text-base font-bold text-ink group-hover:text-primary transition-colors">
+                Usuarios y Fiscales
+              </h3>
+<p class="text-xs text-ink-muted leading-relaxed">
+                8 fiscales activos, permisos de mesa y roles de control arbitral por partido.
+              </p>
+</div>
+<div class="mt-4 pt-3 border-t border-outline-variant/60 flex items-center justify-between text-xs font-bold text-primary">
+<span>Ir a Usuarios</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+</div>
+</a>
+<!-- Card 4: Auditoría -->
+<a class="group bg-surface rounded-lg border border-outline-variant p-4 shadow-sm hover:border-primary hover:shadow transition-all flex flex-col justify-between" href="#">
+<div class="space-y-2">
+<div class="w-9 h-9 rounded-lg bg-primary-light text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">history</span>
+</div>
+<h3 class="font-headline text-base font-bold text-ink group-hover:text-primary transition-colors">
+                Auditoría
+              </h3>
+<p class="text-xs text-ink-muted leading-relaxed">
+                Registro inmutable de 48 eventos hoy, actas de partidos y fiscalización.
+              </p>
+</div>
+<div class="mt-4 pt-3 border-t border-outline-variant/60 flex items-center justify-between text-xs font-bold text-primary">
+<span>Ir a Auditoría</span>
+<span class="material-symbols-outlined text-sm group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+</div>
+</a>
+</div>
+</section>
+<!-- Bottom club metadata banner -->
+<footer class="pt-6 pb-4 border-t border-outline-variant flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-ink-muted">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-pelota"></span>
+<span>Fiscalización Oficial Club Náutico San Isidro • Afiliado APA #1042</span>
+</div>
+<div class="flex items-center gap-4">
+<a class="hover:text-ink transition-colors" href="#">Reglamento APA</a>
+<a class="hover:text-ink transition-colors" href="#">Protocolo de Mesa</a>
+<a class="hover:text-ink transition-colors" href="#">Soporte técnico</a>
+</div>
+</footer>
+</main>
+</div>
+</body></html>

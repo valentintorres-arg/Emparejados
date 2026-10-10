@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Emparejados Pádel - Gestión de Usuarios y Accesos</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Fonts: Public Sans (Design System requirement) & Archivo Narrow for sports scoreboards/tabular stats -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600;700&amp;family=Public+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Forms & Container Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#1846a3",
+            "primary-dark": "#0c2357",
+            "primary-light": "#e8eefb",
+            ink: "#0e1b3d",
+            "ink-muted": "#55627d",
+            canvas: "#f8fafc",
+            card: "#ffffff",
+            outline: "#d3dbe9",
+            "outline-variant": "#e2e8f0",
+            pelota: "#d9f03f",
+            "pelota-hover": "#c8df2e",
+            "status-green": "#146c48",
+            "status-green-bg": "#e0f3ea",
+            "status-red": "#b02d23",
+            "status-red-bg": "#fbe9e7",
+            "status-amber": "#7d4a00",
+            "status-amber-bg": "#fcefd8",
+            surface: "#ffffff",
+            "on-surface": "#0e1b3d",
+            "on-surface-variant": "#55627d",
+            "surface-container-highest": "#e8eefb"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Public Sans", "sans-serif"],
+            display: ["Public Sans", "sans-serif"],
+            body: ["Public Sans", "sans-serif"],
+            label: ["Public Sans", "sans-serif"],
+            tabular: ["Archivo Narrow", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Switch toggle styling */
+    .switch-checkbox:checked + .switch-label {
+      background-color: #146c48;
+    }
+    .switch-checkbox:checked + .switch-label .switch-dot {
+      transform: translateX(1.25rem);
+    }
+    /* Custom scrollbar for clean desktop view */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="h-full bg-canvas text-ink font-body antialiased flex overflow-hidden">
+<!-- ========================================================================= -->
+<!-- 1. SideNavBar (Shared Component from JSON Blueprint)                      -->
+<!-- ========================================================================= -->
+<aside class="fixed top-0 left-0 h-screen w-60 z-40 bg-primary border-r border-outline-variant select-none flex flex-col justify-between p-4 shadow-none">
+<!-- Top Branding & CTA -->
+<div class="flex flex-col gap-4">
+<!-- Brand Header -->
+<div class="px-2 pt-1 pb-2">
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-pelota flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-ink text-2xl font-bold" data-icon="sports_tennis">sports_tennis</span>
+</div>
+<div>
+<div class="font-headline text-base font-black tracking-tight text-white leading-none">
+              Emparejados Pádel
+            </div>
+<div class="text-[11px] font-semibold text-white/70 mt-1 flex items-center gap-1.5 leading-none">
+<span>Club San Isidro</span>
+<span class="text-[9px] bg-white/20 text-white font-bold px-1.5 py-0.5 rounded tracking-wide uppercase">Oficial</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Prominent Action CTA: Escanear Pareja -->
+<button class="w-full flex items-center justify-center gap-2 bg-pelota hover:bg-pelota-hover active:scale-[0.98] text-ink font-bold text-xs uppercase tracking-wider py-2.5 px-3 rounded-lg shadow-sm transition-all duration-150">
+<span class="material-symbols-outlined text-lg" data-icon="qr_code_scanner">qr_code_scanner</span>
+<span>Escanear Pareja</span>
+</button>
+<!-- Navigation Links from JSON blueprint -->
+<nav class="flex flex-col gap-1 mt-1">
+<!-- 0. Inicio -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium text-xs tracking-wide transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="dashboard">dashboard</span>
+<span>Inicio</span>
+</a>
+<!-- 1. Aprobaciones (con pill amarillo para pendientes) -->
+<a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium text-xs tracking-wide transition-colors duration-150" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-xl" data-icon="how_to_reg">how_to_reg</span>
+<span>Aprobaciones</span>
+</div>
+<span class="bg-pelota text-ink text-[11px] font-bold px-2 py-0.5 rounded-full font-tabular leading-tight">5</span>
+</a>
+<!-- 2. Torneos -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium text-xs tracking-wide transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="emoji_events">emoji_events</span>
+<span>Torneos</span>
+</a>
+<!-- 3. Jugadores -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium text-xs tracking-wide transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="groups">groups</span>
+<span>Jugadores</span>
+</a>
+<!-- 4. Sedes y Canchas -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium text-xs tracking-wide transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="stadium">stadium</span>
+<span>Sedes y Canchas</span>
+</a>
+<!-- 5. Usuarios (ACTIVE ITEM - Exact JSON style_active_navigation applied) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white text-primary font-bold shadow-sm text-xs tracking-wide transition-transform active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="manage_accounts">manage_accounts</span>
+<span>Usuarios</span>
+</a>
+<!-- 6. Auditoría -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium text-xs tracking-wide transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="history">history</span>
+<span>Auditoría</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Footer Profile & Utilities from JSON -->
+<div class="pt-4 border-t border-white/15 flex flex-col gap-2">
+<!-- User ID Capsule -->
+<div class="flex items-center gap-2.5 p-2 rounded-lg bg-primary-dark/40 mb-1">
+<div class="w-8 h-8 rounded-full bg-pelota text-ink font-bold text-xs flex items-center justify-center shrink-0">
+          FG
+        </div>
+<div class="min-w-0 flex-1">
+<div class="text-xs font-bold text-white truncate leading-snug">Fiscal General</div>
+<div class="text-[10px] text-white/60 truncate leading-none">fiscalia@nauticosanisidro.com.ar</div>
+</div>
+</div>
+<!-- Secondary Links -->
+<div class="flex flex-col gap-0.5">
+<a class="flex items-center gap-3 px-3 py-1.5 rounded text-white/80 hover:bg-white/10 hover:text-white font-medium text-xs transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-base" data-icon="settings">settings</span>
+<span>Configuración</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-1.5 rounded text-white/80 hover:bg-white/10 hover:text-white font-medium text-xs transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-base" data-icon="logout">logout</span>
+<span>Cerrar sesión</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- ========================================================================= -->
+<!-- Main Content Wrapper (Fixed Sidebar Offset = 60 / 15rem / 240px)          -->
+<!-- ========================================================================= -->
+<div class="flex-1 ml-60 flex flex-col h-screen overflow-y-auto bg-canvas">
+<!-- ======================================================================= -->
+<!-- 2. TopNavBar (Shared Component from JSON Blueprint)                     -->
+<!-- ======================================================================= -->
+<header class="sticky top-0 z-30 bg-surface border-b border-outline-variant flex justify-between items-center w-full px-8 py-3">
+<!-- Left: Breadcrumb & Context Navigation Links -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-xs font-medium text-ink-muted">
+<span class="hover:text-primary cursor-pointer">Organización</span>
+<span class="material-symbols-outlined text-sm text-outline" data-icon="chevron_right">chevron_right</span>
+<span class="hover:text-primary cursor-pointer">Administración de Accesos</span>
+<span class="material-symbols-outlined text-sm text-outline" data-icon="chevron_right">chevron_right</span>
+<span class="font-bold text-ink">Usuarios del Club</span>
+</div>
+<div class="h-4 w-px bg-outline mx-2"></div>
+<!-- Club Venue Indicator Pill -->
+<div class="flex items-center gap-2 bg-primary-light px-2.5 py-1 rounded-md text-xs font-medium text-primary">
+<span class="material-symbols-outlined text-base" data-icon="location_on">location_on</span>
+<span class="font-bold">CNSI - Sede Central</span>
+<span class="text-ink-muted">· Circuito Oficial APA 2025</span>
+</div>
+</div>
+<!-- Right: Secondary actions, Search helper & Icons -->
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline hover:bg-surface-container-highest text-xs font-bold text-ink transition-colors duration-150">
+<span class="material-symbols-outlined text-sm" data-icon="visibility">visibility</span>
+<span>Ver Club</span>
+</button>
+<button class="relative p-2 rounded-lg hover:bg-surface-container-highest text-ink-muted hover:text-ink transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-pelota border-2 border-surface"></span>
+</button>
+<button class="p-2 rounded-lg hover:bg-surface-container-highest text-ink-muted hover:text-ink transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="help_outline">help_outline</span>
+</button>
+<div class="h-6 w-px bg-outline mx-1"></div>
+<!-- Profile badge -->
+<div class="flex items-center gap-2 pl-1">
+<div class="w-8 h-8 rounded-full bg-primary text-white font-bold text-xs flex items-center justify-center">
+            CN
+          </div>
+<div class="text-left hidden lg:block">
+<p class="text-xs font-bold text-ink leading-tight">Admin General</p>
+<p class="text-[10px] text-ink-muted">San Isidro Padel</p>
+</div>
+</div>
+</div>
+</header>
+<!-- ======================================================================= -->
+<!-- 3. Screen Main Container                                                -->
+<!-- ======================================================================= -->
+<main class="flex-1 px-8 py-6 max-w-7xl w-full mx-auto flex flex-col gap-6">
+<!-- Header Section: Title, Subtitle, and Primary Actions -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<div class="flex items-center gap-3">
+<h1 class="text-2xl font-black font-headline tracking-tight text-ink uppercase">
+              Usuarios y Accesos
+            </h1>
+<span class="bg-primary-light text-primary text-xs font-bold px-2.5 py-0.5 rounded-full border border-primary/20">
+              Panel de Club
+            </span>
+</div>
+<p class="text-xs text-ink-muted mt-1 max-w-2xl">
+            Administrá los permisos, roles y cuentas de fiscales, organizadores de club y jugadores registrados en el sistema de torneos.
+          </p>
+</div>
+<div class="flex items-center gap-2.5 shrink-0">
+<button class="flex items-center gap-2 px-3.5 py-2.5 rounded-lg border border-outline bg-white hover:bg-slate-50 text-ink font-semibold text-xs transition-colors duration-150 shadow-sm">
+<span class="material-symbols-outlined text-base" data-icon="file_download">file_download</span>
+<span>Exportar listado (CSV)</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary-dark active:scale-[0.98] text-white font-bold text-xs shadow-sm transition-all duration-150">
+<span class="material-symbols-outlined text-lg" data-icon="person_add">person_add</span>
+<span>+ Nuevo usuario</span>
+</button>
+</div>
+</div>
+<!-- ===================================================================== -->
+<!-- 4. Resumen / Métricas Superiores (KPIs Cards)                         -->
+<!-- ===================================================================== -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<!-- KPI 1: Total Usuarios -->
+<div class="bg-white border border-outline rounded-lg p-4 shadow-sm hover:border-primary/40 transition-colors">
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-ink-muted uppercase tracking-wider">Total Usuarios</span>
+<div class="w-8 h-8 rounded-md bg-primary-light text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-lg" data-icon="groups">groups</span>
+</div>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-black font-tabular text-ink">1.420</span>
+<span class="text-[11px] font-semibold text-status-green bg-status-green-bg px-1.5 py-0.5 rounded">+18 esta semana</span>
+</div>
+<p class="text-[11px] text-ink-muted mt-1">Activos en el club y circuito APA</p>
+</div>
+<!-- KPI 2: Cuentas de Organización -->
+<div class="bg-white border border-outline rounded-lg p-4 shadow-sm hover:border-primary/40 transition-colors">
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-ink-muted uppercase tracking-wider">Organización</span>
+<div class="w-8 h-8 rounded-md bg-blue-100 text-primary-dark flex items-center justify-center">
+<span class="material-symbols-outlined text-lg" data-icon="admin_panel_settings">admin_panel_settings</span>
+</div>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-black font-tabular text-ink">8</span>
+<span class="text-xs font-semibold text-ink-muted">fiscales y planilleros</span>
+</div>
+<p class="text-[11px] text-ink-muted mt-1">Acceso a mesa de control y canchas</p>
+</div>
+<!-- KPI 3: Jugadores Verificados -->
+<div class="bg-white border border-outline rounded-lg p-4 shadow-sm hover:border-primary/40 transition-colors">
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-ink-muted uppercase tracking-wider">Jugadores Federados</span>
+<div class="w-8 h-8 rounded-md bg-status-green-bg text-status-green flex items-center justify-center">
+<span class="material-symbols-outlined text-lg" data-icon="verified">verified</span>
+</div>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-black font-tabular text-ink">1.412</span>
+<span class="text-[11px] font-bold text-status-green">99.4% validados</span>
+</div>
+<p class="text-[11px] text-ink-muted mt-1">Con DNI y carnet APA verificado</p>
+</div>
+<!-- KPI 4: Solicitudes de restablecimiento (Yellow Accent Indicator) -->
+<div class="bg-white border border-outline rounded-lg p-4 shadow-sm hover:border-amber-400 transition-colors relative overflow-hidden">
+<div class="absolute top-0 right-0 w-2 h-full bg-pelota"></div>
+<div class="flex items-center justify-between">
+<span class="text-xs font-semibold text-ink-muted uppercase tracking-wider">Restablecimientos</span>
+<div class="w-8 h-8 rounded-md bg-status-amber-bg text-status-amber flex items-center justify-center">
+<span class="material-symbols-outlined text-lg" data-icon="lock_reset">lock_reset</span>
+</div>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="text-2xl font-black font-tabular text-ink">2</span>
+<span class="text-[11px] font-bold text-status-amber bg-status-amber-bg px-2 py-0.5 rounded-full">Pendientes</span>
+</div>
+<p class="text-[11px] text-ink-muted mt-1">Claves solicitadas vía WhatsApp de mesa</p>
+</div>
+</section>
+<!-- ===================================================================== -->
+<!-- 5. Filtros y Barra de Herramientas                                   -->
+<!-- ===================================================================== -->
+<section class="bg-white border border-outline rounded-lg p-3.5 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3">
+<!-- Buscador amplio -->
+<div class="relative w-full md:w-96">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-ink-muted text-lg pointer-events-none" data-icon="search">search</span>
+<input class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-outline rounded-lg text-xs font-medium text-ink placeholder:text-ink-muted focus:outline-none focus:border-primary focus:bg-white transition-all" placeholder="Buscá por nombre, apellido, email o DNI..." type="text" value=""/>
+</div>
+<!-- Selectores de filtrado rápido -->
+<div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+<!-- Rol -->
+<div class="flex items-center gap-1.5">
+<label class="text-[11px] font-bold text-ink-muted uppercase">Rol:</label>
+<select class="bg-slate-50 border border-outline rounded-lg text-xs font-medium text-ink py-1.5 pl-2.5 pr-8 focus:outline-none focus:border-primary focus:bg-white cursor-pointer">
+<option>Todos los roles</option>
+<option>Organización (Admin)</option>
+<option>Fiscal de Mesa</option>
+<option>Jugador Federado</option>
+</select>
+</div>
+<!-- Estado -->
+<div class="flex items-center gap-1.5">
+<label class="text-[11px] font-bold text-ink-muted uppercase">Estado:</label>
+<select class="bg-slate-50 border border-outline rounded-lg text-xs font-medium text-ink py-1.5 pl-2.5 pr-8 focus:outline-none focus:border-primary focus:bg-white cursor-pointer">
+<option>Todos los estados</option>
+<option>Activo (Habilitado)</option>
+<option>Inactivo / Pausado</option>
+<option>Bloqueado por sanción</option>
+</select>
+</div>
+<!-- Club -->
+<div class="flex items-center gap-1.5">
+<label class="text-[11px] font-bold text-ink-muted uppercase">Club:</label>
+<select class="bg-slate-50 border border-outline rounded-lg text-xs font-medium text-ink py-1.5 pl-2.5 pr-8 focus:outline-none focus:border-primary focus:bg-white cursor-pointer">
+<option>Club Náutico San Isidro (Local)</option>
+<option>San Isidro Padel Club (Anexo)</option>
+<option>Todos los clubes</option>
+</select>
+</div>
+<!-- Limpiar filtros -->
+<button class="text-xs font-semibold text-primary hover:underline px-2 py-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="filter_alt_off">filter_alt_off</span>
+<span>Limpiar</span>
+</button>
+</div>
+</section>
+<!-- ===================================================================== -->
+<!-- 6. Tabla Principal de Usuarios y Accesos                             -->
+<!-- ===================================================================== -->
+<section class="bg-white border border-outline rounded-lg shadow-sm overflow-hidden flex flex-col">
+<!-- Sub-header de la tabla -->
+<div class="px-5 py-3 border-b border-outline-variant bg-slate-50/70 flex items-center justify-between text-xs">
+<div class="flex items-center gap-3">
+<span class="font-bold text-ink">Listado de Usuarios Registrados</span>
+<span class="text-ink-muted font-normal">· Mostrando 7 de 1.420 cuentas</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs text-ink-muted">Acciones en lote:</span>
+<button class="px-2.5 py-1 text-xs font-semibold text-ink-muted border border-outline rounded bg-white hover:bg-slate-50 disabled:opacity-50" disabled="">
+              Desactivar seleccionados
+            </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline text-[11px] font-bold uppercase tracking-wider text-ink-muted bg-slate-100/60">
+<th class="py-3 px-4 w-10 text-center">
+<input class="rounded border-outline text-primary focus:ring-primary focus:ring-offset-0" type="checkbox"/>
+</th>
+<th class="py-3 px-4">Usuario / DNI</th>
+<th class="py-3 px-4">Contacto (WhatsApp / Email)</th>
+<th class="py-3 px-4">Rol en el Club</th>
+<th class="py-3 px-4">Última Actividad</th>
+<th class="py-3 px-4 text-center">Estado (Activo)</th>
+<th class="py-3 px-4 text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline text-xs">
+<!-- ROW 1: Mariano "Mono" Zabaleta (Admin General) -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="py-3.5 px-4 text-center">
+<input class="rounded border-outline text-primary focus:ring-primary focus:ring-offset-0" type="checkbox"/>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-primary text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-sm">
+                      MZ
+                    </div>
+<div>
+<div class="font-bold text-ink flex items-center gap-1.5">
+<span>Mariano "Mono" Zabaleta</span>
+<span class="material-symbols-outlined text-primary text-sm" data-icon="verified" title="Cuenta Oficial Verificada">verified</span>
+</div>
+<div class="text-[11px] text-ink-muted font-tabular">DNI 23.441.982 · Socio #1042</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-medium text-ink">mariano.zabaleta@nauticosanisidro.com.ar</div>
+<div class="text-[11px] text-ink-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-status-green" data-icon="chat">chat</span>
+<span>+54 9 11 4982-1100</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary text-white">
+<span class="material-symbols-outlined text-xs" data-icon="shield">shield</span>
+<span>Organización (Admin)</span>
+</span>
+</td>
+<td class="py-3.5 px-4 font-tabular">
+<div class="text-ink font-semibold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-status-green"></span>
+<span>Hace 12 min</span>
+</div>
+<div class="text-[10px] text-ink-muted">Mesa de Torneo Apertura</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only switch-checkbox" type="checkbox"/>
+<div class="w-9 h-5 bg-slate-300 rounded-full transition-colors switch-label">
+<div class="w-4 h-4 bg-white rounded-full m-0.5 transition-transform switch-dot shadow-sm"></div>
+</div>
+</label>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1 rounded border border-outline hover:bg-slate-100 text-ink font-medium text-xs flex items-center gap-1 transition-colors" title="Restablecer clave provisoria">
+<span class="material-symbols-outlined text-sm text-ink-muted" data-icon="lock_reset">lock_reset</span>
+<span>Clave</span>
+</button>
+<button class="p-1 rounded hover:bg-slate-100 text-ink-muted hover:text-ink">
+<span class="material-symbols-outlined text-base" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 2: Martín Morales (Jugador 6ta) -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="py-3.5 px-4 text-center">
+<input class="rounded border-outline text-primary focus:ring-primary focus:ring-offset-0" type="checkbox"/>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-slate-200 text-ink font-bold text-xs flex items-center justify-center shrink-0">
+                      MM
+                    </div>
+<div>
+<div class="font-bold text-ink">Martín Morales</div>
+<div class="text-[11px] text-ink-muted font-tabular">DNI 36.882.109 · Pareja #44</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-medium text-ink">martin.morales@gmail.com</div>
+<div class="text-[11px] text-ink-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-status-green" data-icon="chat">chat</span>
+<span>+54 9 11 5521-8842</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-ink border border-outline">
+<span class="material-symbols-outlined text-xs text-ink-muted" data-icon="sports_tennis">sports_tennis</span>
+<span>Jugador (6ª Cab)</span>
+</span>
+</td>
+<td class="py-3.5 px-4 font-tabular">
+<div class="text-ink">Ayer 19:40 hs</div>
+<div class="text-[10px] text-ink-muted">Cancha 2 (Victoria 6-4 / 6-2)</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only switch-checkbox" type="checkbox"/>
+<div class="w-9 h-5 bg-slate-300 rounded-full transition-colors switch-label">
+<div class="w-4 h-4 bg-white rounded-full m-0.5 transition-transform switch-dot shadow-sm"></div>
+</div>
+</label>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1 rounded border border-outline hover:bg-slate-100 text-ink font-medium text-xs flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-sm text-ink-muted" data-icon="lock_reset">lock_reset</span>
+<span>Clave</span>
+</button>
+<button class="p-1 rounded hover:bg-slate-100 text-ink-muted hover:text-ink">
+<span class="material-symbols-outlined text-base" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 3: Paula Domínguez (Fiscal de Torneo) -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="py-3.5 px-4 text-center">
+<input class="rounded border-outline text-primary focus:ring-primary focus:ring-offset-0" type="checkbox"/>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-blue-100 text-primary-dark font-bold text-xs flex items-center justify-center shrink-0 border border-primary/20">
+                      PD
+                    </div>
+<div>
+<div class="font-bold text-ink">Paula Domínguez</div>
+<div class="text-[11px] text-ink-muted font-tabular">DNI 31.902.774 · Fiscalia APA</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-medium text-ink">paula.dominguez@sanisidropadel.com.ar</div>
+<div class="text-[11px] text-ink-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-status-green" data-icon="chat">chat</span>
+<span>+54 9 11 6310-9941</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary-light text-primary">
+<span class="material-symbols-outlined text-xs" data-icon="badge">badge</span>
+<span>Fiscal de Torneo</span>
+</span>
+</td>
+<td class="py-3.5 px-4 font-tabular">
+<div class="text-ink font-semibold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-status-green"></span>
+<span>En línea ahora</span>
+</div>
+<div class="text-[10px] text-ink-muted">Validando Parejas Zona B</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only switch-checkbox" type="checkbox"/>
+<div class="w-9 h-5 bg-slate-300 rounded-full transition-colors switch-label">
+<div class="w-4 h-4 bg-white rounded-full m-0.5 transition-transform switch-dot shadow-sm"></div>
+</div>
+</label>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1 rounded border border-outline hover:bg-slate-100 text-ink font-medium text-xs flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-sm text-ink-muted" data-icon="lock_reset">lock_reset</span>
+<span>Clave</span>
+</button>
+<button class="p-1 rounded hover:bg-slate-100 text-ink-muted hover:text-ink">
+<span class="material-symbols-outlined text-base" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 4: Bruno Acosta (Jugador con clave solicitada) -->
+<tr class="hover:bg-slate-50/80 transition-colors bg-status-amber-bg/10">
+<td class="py-3.5 px-4 text-center">
+<input class="rounded border-outline text-primary focus:ring-primary focus:ring-offset-0" type="checkbox"/>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-slate-200 text-ink font-bold text-xs flex items-center justify-center shrink-0">
+                      BA
+                    </div>
+<div>
+<div class="font-bold text-ink flex items-center gap-1.5">
+<span>Bruno Acosta</span>
+<span class="text-[9px] bg-status-amber-bg text-status-amber font-bold px-1.5 py-0.2 rounded">Solicitó clave</span>
+</div>
+<div class="text-[11px] text-ink-muted font-tabular">DNI 38.109.432 · Pareja #44</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-medium text-ink">bruno.acosta@gmail.com</div>
+<div class="text-[11px] text-ink-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-status-green" data-icon="chat">chat</span>
+<span>+54 9 11 3290-7711</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-ink border border-outline">
+<span class="material-symbols-outlined text-xs text-ink-muted" data-icon="sports_tennis">sports_tennis</span>
+<span>Jugador (6ª Cab)</span>
+</span>
+</td>
+<td class="py-3.5 px-4 font-tabular">
+<div class="text-ink">Hoy 10:15 hs</div>
+<div class="text-[10px] text-status-amber font-medium">Requerimiento vía WhatsApp</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only switch-checkbox" type="checkbox"/>
+<div class="w-9 h-5 bg-slate-300 rounded-full transition-colors switch-label">
+<div class="w-4 h-4 bg-white rounded-full m-0.5 transition-transform switch-dot shadow-sm"></div>
+</div>
+</label>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1 rounded bg-pelota hover:bg-pelota-hover text-ink font-bold text-xs flex items-center gap-1 shadow-sm transition-colors" title="Generar y enviar link de acceso">
+<span class="material-symbols-outlined text-sm" data-icon="send">send</span>
+<span>Enviar link</span>
+</button>
+<button class="p-1 rounded hover:bg-slate-100 text-ink-muted hover:text-ink">
+<span class="material-symbols-outlined text-base" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 5: Hernán "Chino" Benítez -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="py-3.5 px-4 text-center">
+<input class="rounded border-outline text-primary focus:ring-primary focus:ring-offset-0" type="checkbox"/>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-slate-200 text-ink font-bold text-xs flex items-center justify-center shrink-0">
+                      HB
+                    </div>
+<div>
+<div class="font-bold text-ink">Hernán "Chino" Benítez</div>
+<div class="text-[11px] text-ink-muted font-tabular">DNI 29.544.112 · Pareja #12</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-medium text-ink">chino.benitez@fibertel.com.ar</div>
+<div class="text-[11px] text-ink-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-status-green" data-icon="chat">chat</span>
+<span>+54 9 11 5012-4433</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-ink border border-outline">
+<span class="material-symbols-outlined text-xs text-ink-muted" data-icon="sports_tennis">sports_tennis</span>
+<span>Jugador (6ª Cab)</span>
+</span>
+</td>
+<td class="py-3.5 px-4 font-tabular">
+<div class="text-ink">14 Oct 2025</div>
+<div class="text-[10px] text-ink-muted">Inscripción a Torneo</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only switch-checkbox" type="checkbox"/>
+<div class="w-9 h-5 bg-slate-300 rounded-full transition-colors switch-label">
+<div class="w-4 h-4 bg-white rounded-full m-0.5 transition-transform switch-dot shadow-sm"></div>
+</div>
+</label>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1 rounded border border-outline hover:bg-slate-100 text-ink font-medium text-xs flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-sm text-ink-muted" data-icon="lock_reset">lock_reset</span>
+<span>Clave</span>
+</button>
+<button class="p-1 rounded hover:bg-slate-100 text-ink-muted hover:text-ink">
+<span class="material-symbols-outlined text-base" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 6: Lucas Di Santo (INACTIVO - PAUSADO) -->
+<tr class="hover:bg-slate-50/80 transition-colors bg-slate-50/50 opacity-80">
+<td class="py-3.5 px-4 text-center">
+<input class="rounded border-outline text-primary focus:ring-primary focus:ring-offset-0" type="checkbox"/>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-slate-300 text-ink-muted font-bold text-xs flex items-center justify-center shrink-0">
+                      LD
+                    </div>
+<div>
+<div class="font-bold text-ink-muted flex items-center gap-1.5">
+<span>Lucas Di Santo</span>
+<span class="text-[9px] bg-status-red-bg text-status-red font-bold px-1.5 py-0.2 rounded">Pausado</span>
+</div>
+<div class="text-[11px] text-ink-muted font-tabular">DNI 34.221.809 · Sin Pareja</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 text-ink-muted">
+<div class="font-medium">lucas.disanto@live.com.ar</div>
+<div class="text-[11px] text-ink-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="phone">phone</span>
+<span>+54 9 11 2291-0044</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-ink-muted border border-outline">
+<span class="material-symbols-outlined text-xs text-ink-muted" data-icon="person_off">person_off</span>
+<span>Jugador Inactivo</span>
+</span>
+</td>
+<td class="py-3.5 px-4 font-tabular">
+<div class="text-ink-muted">02 Sep 2025</div>
+<div class="text-[10px] text-status-red">Suspendido por fiscalía</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only switch-checkbox" type="checkbox"/>
+<div class="w-9 h-5 bg-slate-300 rounded-full transition-colors switch-label">
+<div class="w-4 h-4 bg-white rounded-full m-0.5 transition-transform switch-dot shadow-sm"></div>
+</div>
+</label>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1 rounded border border-status-red bg-status-red-bg text-status-red font-semibold text-xs flex items-center gap-1 hover:bg-red-100 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>
+<span>Reactivar</span>
+</button>
+<button class="p-1 rounded hover:bg-slate-100 text-ink-muted hover:text-ink">
+<span class="material-symbols-outlined text-base" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- ROW 7: Esteban Rinaldi (Fiscal de Mesa) -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="py-3.5 px-4 text-center">
+<input class="rounded border-outline text-primary focus:ring-primary focus:ring-offset-0" type="checkbox"/>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-blue-100 text-primary-dark font-bold text-xs flex items-center justify-center shrink-0 border border-primary/20">
+                      ER
+                    </div>
+<div>
+<div class="font-bold text-ink">Esteban Rinaldi</div>
+<div class="text-[11px] text-ink-muted font-tabular">DNI 28.710.222 · Fiscal Asignado</div>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="font-medium text-ink">e.rinaldi@fap-padel.org.ar</div>
+<div class="text-[11px] text-ink-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-status-green" data-icon="chat">chat</span>
+<span>+54 9 11 4118-9032</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-sky-100 text-sky-900 border border-sky-200">
+<span class="material-symbols-outlined text-xs" data-icon="table_restaurant">table_restaurant</span>
+<span>Fiscal de Mesa (C1 y C2)</span>
+</span>
+</td>
+<td class="py-3.5 px-4 font-tabular">
+<div class="text-ink font-semibold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-status-green"></span>
+<span>Hace 40 min</span>
+</div>
+<div class="text-[10px] text-ink-muted">Carga de Resultados C1</div>
+</td>
+<td class="py-3.5 px-4 text-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only switch-checkbox" type="checkbox"/>
+<div class="w-9 h-5 bg-slate-300 rounded-full transition-colors switch-label">
+<div class="w-4 h-4 bg-white rounded-full m-0.5 transition-transform switch-dot shadow-sm"></div>
+</div>
+</label>
+</td>
+<td class="py-3.5 px-4 text-right">
+<div class="flex items-center justify-end gap-1.5">
+<button class="px-2.5 py-1 rounded border border-outline hover:bg-slate-100 text-ink font-medium text-xs flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-sm text-ink-muted" data-icon="lock_reset">lock_reset</span>
+<span>Clave</span>
+</button>
+<button class="p-1 rounded hover:bg-slate-100 text-ink-muted hover:text-ink">
+<span class="material-symbols-outlined text-base" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination & Table Footer -->
+<div class="px-5 py-3 border-t border-outline flex flex-col sm:flex-row items-center justify-between gap-3 text-xs bg-slate-50/50">
+<div class="flex items-center gap-4">
+<span class="text-ink-muted">
+              Mostrando <strong class="text-ink font-tabular">1 a 7</strong> de <strong class="text-ink font-tabular">1.420</strong> usuarios
+            </span>
+<div class="flex items-center gap-1.5">
+<span class="text-ink-muted">Filas por página:</span>
+<select class="bg-white border border-outline rounded text-xs py-1 px-2 text-ink font-medium focus:ring-primary focus:border-primary">
+<option>10</option>
+<option>25</option>
+<option>50</option>
+<option>100</option>
+</select>
+</div>
+</div>
+<!-- Page Navigation -->
+<div class="flex items-center gap-1">
+<button class="px-2.5 py-1.5 rounded border border-outline bg-white hover:bg-slate-100 text-ink-muted disabled:opacity-50 font-medium transition-colors" disabled="">
+              Anterior
+            </button>
+<button class="w-8 h-8 rounded bg-primary text-white font-bold flex items-center justify-center font-tabular shadow-sm">
+              1
+            </button>
+<button class="w-8 h-8 rounded border border-outline bg-white hover:bg-slate-100 text-ink font-bold flex items-center justify-center font-tabular transition-colors">
+              2
+            </button>
+<button class="w-8 h-8 rounded border border-outline bg-white hover:bg-slate-100 text-ink font-bold flex items-center justify-center font-tabular transition-colors">
+              3
+            </button>
+<span class="px-1 text-ink-muted">...</span>
+<button class="w-8 h-8 rounded border border-outline bg-white hover:bg-slate-100 text-ink font-bold flex items-center justify-center font-tabular transition-colors">
+              142
+            </button>
+<button class="px-2.5 py-1.5 rounded border border-outline bg-white hover:bg-slate-100 text-ink font-medium transition-colors">
+              Siguiente
+            </button>
+</div>
+</div>
+</section>
+<!-- Security Guideline Microbanner -->
+<div class="bg-primary-light border border-primary/20 rounded-lg p-3.5 flex items-center justify-between gap-4 text-xs">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-xl shrink-0" data-icon="security">security</span>
+<div>
+<span class="font-bold text-ink">Pauta de seguridad de fiscalía:</span>
+<span class="text-ink-muted ml-1">El restablecimiento de contraseña genera un enlace token seguro y temporal que se envía al WhatsApp o email del socio y expira automáticamente en 2 horas.</span>
+</div>
+</div>
+<a class="font-bold text-primary hover:underline whitespace-nowrap text-xs" href="#">Ver protocolo de accesos</a>
+</div>
+</main>
+</div>
+<!-- Micro-interactions for live toggle feedback -->
+<script>
+    document.querySelectorAll('.switch-checkbox').forEach(function(toggle) {
+      toggle.addEventListener('change', function(e) {
+        const row = e.target.closest('tr');
+        if (!e.target.checked) {
+          row.classList.add('opacity-75');
+        } else {
+          row.classList.remove('opacity-75');
+        }
+      });
+    });
+  </script>
+</body></html>

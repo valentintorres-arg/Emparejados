@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#eef2f8]" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Emparejados Pádel - Posiciones Torneo Aniversario</title>
+<!-- Google Fonts: Public Sans + Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=Archivo+Narrow:ital,wght@0,500;0,600;0,700;1,600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {},
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Public Sans", "sans-serif"],
+            display: ["Public Sans", "sans-serif"],
+            body: ["Public Sans", "sans-serif"],
+            label: ["Public Sans", "sans-serif"],
+            score: ["Archivo Narrow", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-1 {
+      font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .tabular-numbers {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-full font-body text-[#0e1b3d] bg-[#eef2f8] antialiased flex flex-col pb-28">
+<!-- 1. HEADER / TOPAPPBAR (Shared Component) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-4 h-14 bg-[#1846a3] border-b border-[#0c2357] shadow-sm">
+<div class="flex items-center gap-3">
+<!-- Back button -->
+<button aria-label="Volver atrás" class="text-white hover:bg-[#0c2357] p-1.5 rounded-lg transition-colors duration-150 active:scale-95 flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-white text-2xl" data-icon="sports_tennis">sports_tennis</span>
+<h1 class="font-headline text-lg font-bold tracking-tight text-white leading-none">Emparejados Pádel</h1>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button aria-label="Notificaciones" class="relative text-white hover:bg-[#0c2357] p-2 rounded-lg transition-colors duration-150 active:scale-95 flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl" data-icon="notifications">notifications</span>
+<!-- Contador de pendientes en amarillo pelota -->
+<span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-[#d9f03f] rounded-full ring-2 ring-[#1846a3]"></span>
+</button>
+</div>
+</header>
+<!-- MAIN CANVAS -->
+<main class="w-full max-w-2xl mx-auto pt-16 px-3.5 space-y-3.5">
+<!-- 2. BREADCRUMBS & ENCABEZADO DE TORNEO -->
+<section class="bg-white rounded-lg border border-[#d3dbe9] p-4 shadow-sm">
+<!-- Breadcrumb -->
+<div class="flex items-center gap-1 text-xs text-[#55627d] mb-2 font-medium">
+<span class="hover:text-[#1846a3] cursor-pointer">Torneos</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-[#0e1b3d] font-semibold">Torneo Aniversario</span>
+</div>
+<!-- Título y Badges -->
+<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5">
+<div>
+<div class="flex flex-wrap items-center gap-2 mb-1.5">
+<h2 class="text-xl font-headline font-bold text-[#0e1b3d] tracking-tight">Torneo Aniversario</h2>
+<!-- Badge en curso verde -->
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#e0f3ea] text-[#146c48]">
+<span class="w-2 h-2 rounded-full bg-[#146c48] animate-pulse"></span>
+              En curso
+            </span>
+</div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#e8eefb] text-[#1846a3] border border-[#d3dbe9]/60">
+            5ª CABALLEROS • ZONAS Y LLAVES
+          </div>
+</div>
+</div>
+<!-- Meta Datos -->
+<div class="mt-3.5 pt-3 border-t border-[#d3dbe9]/70 grid grid-cols-1 gap-2 text-xs text-[#55627d]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-[#1846a3]">calendar_today</span>
+<span class="text-[#0e1b3d] font-medium">10 al 12 de Octubre 2025</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-[#1846a3]">location_on</span>
+<span>Club El Monasterio Pádel (Flores, CABA)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-[#1846a3]">groups</span>
+<span class="font-medium text-[#0e1b3d]">16 parejas en competencia • 4 zonas de 4 duplas</span>
+</div>
+</div>
+</section>
+<!-- 3. BARRA HORIZONTAL DE PESTAÑAS DEL TORNEO -->
+<nav class="bg-white rounded-lg border border-[#d3dbe9] p-1 shadow-sm overflow-x-auto no-scrollbar">
+<div class="flex items-center gap-1 min-w-max">
+<button class="px-3.5 py-2 rounded text-xs font-semibold text-[#55627d] hover:text-[#1846a3] hover:bg-[#e8eefb] transition-colors">
+          Fixture
+        </button>
+<button class="px-3.5 py-2 rounded text-xs font-semibold text-[#55627d] hover:text-[#1846a3] hover:bg-[#e8eefb] transition-colors">
+          Llave
+        </button>
+<!-- Activa: Azul con fondo #1846a3 y texto blanco -->
+<button class="px-4 py-2 rounded text-xs font-bold bg-[#1846a3] text-white shadow-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm">leaderboard</span>
+          Posiciones
+        </button>
+<button class="px-3.5 py-2 rounded text-xs font-semibold text-[#55627d] hover:text-[#1846a3] hover:bg-[#e8eefb] transition-colors">
+          Parejas (16)
+        </button>
+<button class="px-3.5 py-2 rounded text-xs font-semibold text-[#55627d] hover:text-[#1846a3] hover:bg-[#e8eefb] transition-colors">
+          Reglamento
+        </button>
+</div>
+</nav>
+<!-- 4. SELECTOR DE ZONAS (Filtro rápido) -->
+<section class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+<span class="text-xs font-bold text-[#55627d] uppercase tracking-wider pl-1 pr-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">filter_alt</span>
+        Zona:
+      </span>
+<button class="px-3 py-1.5 rounded-full text-xs font-semibold bg-white border border-[#1846a3] text-[#1846a3] shadow-xs hover:bg-[#e8eefb] transition-colors">
+        Todas las zonas
+      </button>
+<button class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#1846a3] text-white shadow-xs">
+        Zona A
+      </button>
+<button class="px-3 py-1.5 rounded-full text-xs font-medium bg-white border border-[#d3dbe9] text-[#55627d] hover:bg-[#e8eefb] transition-colors">
+        Zona B
+      </button>
+<button class="px-3 py-1.5 rounded-full text-xs font-medium bg-white border border-[#d3dbe9] text-[#55627d] hover:bg-[#e8eefb] transition-colors">
+        Zona C
+      </button>
+<button class="px-3 py-1.5 rounded-full text-xs font-medium bg-white border border-[#d3dbe9] text-[#55627d] hover:bg-[#e8eefb] transition-colors">
+        Zona D
+      </button>
+</section>
+<!-- 5. TABLA DE POSICIONES - ZONA A -->
+<section class="bg-white rounded-lg border border-[#d3dbe9] overflow-hidden shadow-sm">
+<!-- Header de Zona -->
+<div class="px-4 py-3 bg-[#e8eefb] border-b border-[#d3dbe9] flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-[#1846a3]"></div>
+<h3 class="font-headline font-bold text-sm text-[#0e1b3d] tracking-tight">Zona A • Cancha 1 y 2</h3>
+</div>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#fcefd8] text-[#7d4a00] border border-[#7d4a00]/20">
+<span class="w-1.5 h-1.5 rounded-full bg-[#7d4a00]"></span>
+          En disputa
+        </span>
+</div>
+<!-- Contenedor scroll horizontal para tabla responsiva móvil -->
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs border-collapse">
+<thead>
+<tr class="bg-[#f8fafd] border-b border-[#d3dbe9] text-[#55627d] font-semibold text-[11px] uppercase tracking-wider">
+<th class="py-2.5 pl-3 pr-1 text-center w-8" scope="col">#</th>
+<th class="py-2.5 px-2" scope="col">Pareja</th>
+<th class="py-2.5 px-1.5 text-center font-bold" scope="col" title="Partidos Jugados">PJ</th>
+<th class="py-2.5 px-1.5 text-center" scope="col" title="Partidos Ganados">PG</th>
+<th class="py-2.5 px-2 text-center" scope="col" title="Sets Favor / Sets Contra">Sets</th>
+<th class="py-2.5 px-2 text-center" scope="col" title="Diferencia de Games">Dif. G</th>
+<th class="py-2.5 pr-3 pl-1.5 text-center font-bold text-[#1846a3]" scope="col" title="Puntos">Pts</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#d3dbe9]">
+<!-- Fila 1 (Clasificado - Barra azul requerida) -->
+<tr class="bg-[#f2f6fd] border-l-4 border-[#1846a3] hover:bg-[#e8eefb]/70 transition-colors">
+<td class="py-3 pl-2 pr-1 text-center font-bold font-score text-sm text-[#1846a3]">
+                1º
+              </td>
+<td class="py-3 px-2">
+<div class="font-bold text-[#0e1b3d] flex items-center gap-1">
+<span>M. Morales / F. Rossi</span>
+</div>
+<div class="flex items-center gap-1 mt-0.5">
+<span class="inline-block px-1.5 py-0.2 rounded text-[10px] font-bold bg-[#1846a3] text-white">
+                    Clasifica a Llave
+                  </span>
+</div>
+</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#0e1b3d] font-semibold">3</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#146c48] font-bold">3</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs text-[#0e1b3d]">
+                6-1 <span class="text-[10px] text-[#146c48] font-bold">(+5)</span>
+</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs font-bold text-[#146c48]">+14</td>
+<td class="py-3 pr-3 pl-1.5 text-center font-score tabular-numbers text-base font-bold text-[#1846a3] bg-[#e8eefb]">
+                6
+              </td>
+</tr>
+<!-- Fila 2 (Clasificado - Barra azul requerida) -->
+<tr class="bg-[#f2f6fd] border-l-4 border-[#1846a3] hover:bg-[#e8eefb]/70 transition-colors">
+<td class="py-3 pl-2 pr-1 text-center font-bold font-score text-sm text-[#1846a3]">
+                2º
+              </td>
+<td class="py-3 px-2">
+<div class="font-bold text-[#0e1b3d]">
+                  B. Acosta / H. Benítez
+                </div>
+<div class="flex items-center gap-1 mt-0.5">
+<span class="inline-block px-1.5 py-0.2 rounded text-[10px] font-bold bg-[#1846a3] text-white">
+                    Clasifica a Llave
+                  </span>
+</div>
+</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#0e1b3d] font-semibold">3</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#146c48] font-bold">2</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs text-[#0e1b3d]">
+                4-2 <span class="text-[10px] text-[#146c48] font-bold">(+2)</span>
+</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs font-bold text-[#146c48]">+6</td>
+<td class="py-3 pr-3 pl-1.5 text-center font-score tabular-numbers text-base font-bold text-[#1846a3] bg-[#e8eefb]">
+                5
+              </td>
+</tr>
+<!-- Fila 3 -->
+<tr class="border-l-4 border-transparent hover:bg-slate-50 transition-colors">
+<td class="py-3 pl-2 pr-1 text-center font-semibold font-score text-sm text-[#55627d]">
+                3º
+              </td>
+<td class="py-3 px-2">
+<div class="font-medium text-[#0e1b3d]">
+                  L. Di Santo / G. Pereyra
+                </div>
+<span class="text-[10px] text-[#55627d]">Fase de grupos</span>
+</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#55627d]">3</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#55627d]">1</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs text-[#55627d]">
+                2-5 <span class="text-[10px] text-[#b02d23]">(-3)</span>
+</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs text-[#b02d23] font-semibold">-8</td>
+<td class="py-3 pr-3 pl-1.5 text-center font-score tabular-numbers text-base font-bold text-[#0e1b3d]">
+                4
+              </td>
+</tr>
+<!-- Fila 4 -->
+<tr class="border-l-4 border-transparent hover:bg-slate-50 transition-colors">
+<td class="py-3 pl-2 pr-1 text-center font-semibold font-score text-sm text-[#55627d]">
+                4º
+              </td>
+<td class="py-3 px-2">
+<div class="font-medium text-[#0e1b3d]">
+                  J. Riquelme / M. Palermo
+                </div>
+<span class="text-[10px] text-[#55627d]">Fase de grupos</span>
+</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#55627d]">3</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#55627d]">0</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs text-[#55627d]">
+                1-6 <span class="text-[10px] text-[#b02d23]">(-5)</span>
+</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs text-[#b02d23] font-semibold">-12</td>
+<td class="py-3 pr-3 pl-1.5 text-center font-score tabular-numbers text-base font-bold text-[#0e1b3d]">
+                3
+              </td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pie de tabla Zona A -->
+<div class="p-2.5 bg-slate-50 border-t border-[#d3dbe9] flex items-center justify-between text-[11px] text-[#55627d]">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-xs bg-[#1846a3]"></span>
+<span>Clasifican a 4tos de final</span>
+</div>
+<span class="font-medium text-[#1846a3]">Todos los partidos disputados</span>
+</div>
+</section>
+<!-- 6. TABLA DE POSICIONES - ZONA B -->
+<section class="bg-white rounded-lg border border-[#d3dbe9] overflow-hidden shadow-sm">
+<!-- Header de Zona -->
+<div class="px-4 py-3 bg-[#e8eefb] border-b border-[#d3dbe9] flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-[#1846a3]"></div>
+<h3 class="font-headline font-bold text-sm text-[#0e1b3d] tracking-tight">Zona B • Cancha 3 y 4</h3>
+</div>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#e0f3ea] text-[#146c48]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#146c48]"></span>
+          Definida
+        </span>
+</div>
+<!-- Contenedor scroll horizontal para tabla responsiva móvil -->
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs border-collapse">
+<thead>
+<tr class="bg-[#f8fafd] border-b border-[#d3dbe9] text-[#55627d] font-semibold text-[11px] uppercase tracking-wider">
+<th class="py-2.5 pl-3 pr-1 text-center w-8" scope="col">#</th>
+<th class="py-2.5 px-2" scope="col">Pareja</th>
+<th class="py-2.5 px-1.5 text-center font-bold" scope="col" title="Partidos Jugados">PJ</th>
+<th class="py-2.5 px-1.5 text-center" scope="col" title="Partidos Ganados">PG</th>
+<th class="py-2.5 px-2 text-center" scope="col" title="Sets Favor / Sets Contra">Sets</th>
+<th class="py-2.5 px-2 text-center" scope="col" title="Diferencia de Games">Dif. G</th>
+<th class="py-2.5 pr-3 pl-1.5 text-center font-bold text-[#1846a3]" scope="col" title="Puntos">Pts</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#d3dbe9]">
+<!-- 1º ZONA B -->
+<tr class="bg-[#f2f6fd] border-l-4 border-[#1846a3] hover:bg-[#e8eefb]/70 transition-colors">
+<td class="py-3 pl-2 pr-1 text-center font-bold font-score text-sm text-[#1846a3]">
+                1º
+              </td>
+<td class="py-3 px-2">
+<div class="font-bold text-[#0e1b3d]">
+                  T. Silva / N. Domínguez
+                </div>
+<div class="flex items-center gap-1 mt-0.5">
+<span class="inline-block px-1.5 py-0.2 rounded text-[10px] font-bold bg-[#1846a3] text-white">
+                    Clasifica a Llave
+                  </span>
+</div>
+</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#0e1b3d] font-semibold">3</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#146c48] font-bold">3</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs text-[#0e1b3d]">
+                6-2 <span class="text-[10px] text-[#146c48] font-bold">(+4)</span>
+</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs font-bold text-[#146c48]">+11</td>
+<td class="py-3 pr-3 pl-1.5 text-center font-score tabular-numbers text-base font-bold text-[#1846a3] bg-[#e8eefb]">
+                6
+              </td>
+</tr>
+<!-- 2º ZONA B -->
+<tr class="bg-[#f2f6fd] border-l-4 border-[#1846a3] hover:bg-[#e8eefb]/70 transition-colors">
+<td class="py-3 pl-2 pr-1 text-center font-bold font-score text-sm text-[#1846a3]">
+                2º
+              </td>
+<td class="py-3 px-2">
+<div class="font-bold text-[#0e1b3d]">
+                  E. Gómez / P. Díaz
+                </div>
+<div class="flex items-center gap-1 mt-0.5">
+<span class="inline-block px-1.5 py-0.2 rounded text-[10px] font-bold bg-[#1846a3] text-white">
+                    Clasifica a Llave
+                  </span>
+</div>
+</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#0e1b3d] font-semibold">3</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#146c48] font-bold">2</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs text-[#0e1b3d]">
+                5-3 <span class="text-[10px] text-[#146c48] font-bold">(+2)</span>
+</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs font-bold text-[#146c48]">+5</td>
+<td class="py-3 pr-3 pl-1.5 text-center font-score tabular-numbers text-base font-bold text-[#1846a3] bg-[#e8eefb]">
+                5
+              </td>
+</tr>
+<!-- 3º ZONA B -->
+<tr class="border-l-4 border-transparent hover:bg-slate-50 transition-colors">
+<td class="py-3 pl-2 pr-1 text-center font-semibold font-score text-sm text-[#55627d]">
+                3º
+              </td>
+<td class="py-3 px-2">
+<div class="font-medium text-[#0e1b3d]">
+                  F. López / G. Sosa
+                </div>
+<span class="text-[10px] text-[#55627d]">Fase de grupos</span>
+</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#55627d]">3</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#55627d]">1</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs text-[#55627d]">
+                3-4 <span class="text-[10px] text-[#b02d23]">(-1)</span>
+</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs text-[#b02d23] font-semibold">-2</td>
+<td class="py-3 pr-3 pl-1.5 text-center font-score tabular-numbers text-base font-bold text-[#0e1b3d]">
+                4
+              </td>
+</tr>
+<!-- 4º ZONA B -->
+<tr class="border-l-4 border-transparent hover:bg-slate-50 transition-colors">
+<td class="py-3 pl-2 pr-1 text-center font-semibold font-score text-sm text-[#55627d]">
+                4º
+              </td>
+<td class="py-3 px-2">
+<div class="font-medium text-[#0e1b3d]">
+                  M. Carrizo / L. Benítez
+                </div>
+<span class="text-[10px] text-[#55627d]">Fase de grupos</span>
+</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#55627d]">3</td>
+<td class="py-3 px-1.5 text-center font-score tabular-numbers text-xs text-[#55627d]">0</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs text-[#55627d]">
+                1-6 <span class="text-[10px] text-[#b02d23]">(-5)</span>
+</td>
+<td class="py-3 px-2 text-center font-score tabular-numbers text-xs text-[#b02d23] font-semibold">-14</td>
+<td class="py-3 pr-3 pl-1.5 text-center font-score tabular-numbers text-base font-bold text-[#0e1b3d]">
+                3
+              </td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pie de tabla Zona B -->
+<div class="p-2.5 bg-slate-50 border-t border-[#d3dbe9] flex items-center justify-between text-[11px] text-[#55627d]">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-xs bg-[#1846a3]"></span>
+<span>Clasifican a 4tos de final</span>
+</div>
+<span class="font-medium text-[#1846a3]">Clasificación cerrada</span>
+</div>
+</section>
+<!-- 7. CUADRO EXPLICATIVO DE CRITERIOS Y PUNTUACIÓN -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] p-4 shadow-sm space-y-3">
+<div class="flex items-center gap-2 text-[#1846a3]">
+<span class="material-symbols-outlined text-xl">info</span>
+<h4 class="font-headline font-bold text-sm text-[#0e1b3d]">Criterios de clasificación y puntuación:</h4>
+</div>
+<div class="text-xs text-[#0e1b3d] leading-relaxed bg-[#eef2f8] p-3 rounded border border-[#d3dbe9]/60">
+<p class="font-medium">
+          Partido ganado suma 2 puntos; perdido, 1; no presentarse, 0. Los dos primeros de cada zona pasan a la llave.
+        </p>
+</div>
+<div class="text-xs text-[#55627d] space-y-1">
+<p class="font-semibold text-[#0e1b3d]">Desempate:</p>
+<p class="leading-snug">
+          En caso de empate en puntos se define por: 
+          <span class="font-medium text-[#0e1b3d]">1) Sistema olímpico</span> (partido entre sí), 
+          <span class="font-medium text-[#0e1b3d]">2) Diferencia de sets</span>, 
+          <span class="font-medium text-[#0e1b3d]">3) Diferencia de games</span>.
+        </p>
+</div>
+<div class="pt-2 border-t border-[#d3dbe9]/70">
+<button class="w-full min-h-[44px] flex items-center justify-center gap-2 px-4 py-2.5 rounded border border-[#1846a3] text-[#1846a3] font-semibold text-xs hover:bg-[#e8eefb] transition-colors active:scale-95">
+<span class="material-symbols-outlined text-base">menu_book</span>
+          Ver reglamento completo de competencia
+        </button>
+</div>
+</article>
+<!-- 8. BOTÓN FLOTANTE / ACCIÓN CONTEXTUAL -->
+<div class="pt-1 pb-4 flex flex-col sm:flex-row gap-2.5">
+<button class="flex-1 min-h-[44px] flex items-center justify-center gap-2 px-4 py-3 rounded bg-[#1846a3] text-white font-bold text-xs shadow-sm hover:bg-[#0c2357] transition-all active:scale-95">
+<span class="material-symbols-outlined text-base">picture_as_pdf</span>
+        Descargar planilla de posiciones (PDF)
+      </button>
+<button class="min-h-[44px] flex items-center justify-center gap-2 px-4 py-3 rounded bg-white border border-[#d3dbe9] text-[#0e1b3d] font-semibold text-xs hover:bg-[#eef2f8] transition-all active:scale-95">
+<span class="material-symbols-outlined text-base text-[#1846a3]">share</span>
+        Compartir tabla
+      </button>
+</div>
+</main>
+<!-- 9. BOTTOMNAVBAR (Shared Component) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 bg-white border-t border-[#d3dbe9]">
+<!-- Destino 1: Inicio (Inactivo) -->
+<a class="flex flex-col items-center justify-center text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95 flex-1 text-center" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="home">home</span>
+<span class="font-label text-xs font-semibold mt-0.5">Inicio</span>
+</a>
+<!-- Destino 2: Parejas (Inactivo) -->
+<a class="flex flex-col items-center justify-center text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95 flex-1 text-center" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="group">group</span>
+<span class="font-label text-xs font-semibold mt-0.5">Parejas</span>
+</a>
+<!-- Destino 3: Partidos (Inactivo) -->
+<a class="flex flex-col items-center justify-center text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95 flex-1 text-center" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="sports_tennis">sports_tennis</span>
+<span class="font-label text-xs font-semibold mt-0.5">Partidos</span>
+</a>
+<!-- Destino 4: Torneos (ACTIVO: pantalla actual de Torneo Aniversario) -->
+<a class="flex flex-col items-center justify-center text-[#1846a3] font-bold py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95 flex-1 text-center" href="#">
+<span class="material-symbols-outlined text-2xl fill-1" data-icon="emoji_events" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+<span class="font-label text-xs font-semibold mt-0.5">Torneos</span>
+</a>
+<!-- Destino 5: Mis datos (Inactivo) -->
+<a class="flex flex-col items-center justify-center text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95 flex-1 text-center" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="person">person</span>
+<span class="font-label text-xs font-semibold mt-0.5">Mis datos</span>
+</a>
+</nav>
+</body></html>

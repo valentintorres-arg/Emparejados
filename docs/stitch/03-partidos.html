@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#eef2f8]" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Emparejados Pádel - Partidos</title>
+<!-- Material Symbols Google -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Public Sans & Archivo Narrow (Display marcador) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,600;0,700;1,700&amp;family=Public+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: "#1846a3",
+              dark: "#0c2357",
+              light: "#e8eefb",
+              ink: "#0e1b3d",
+              muted: "#55627d",
+              bg: "#eef2f8",
+              border: "#d3dbe9",
+              ball: "#d9f03f"
+            },
+            status: {
+              live: "#146c48",
+              liveBg: "#e0f3ea",
+              danger: "#b02d23",
+              dangerBg: "#fbe9e7",
+              pending: "#7d4a00",
+              pendingBg: "#fcefd8"
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["'Public Sans'", "sans-serif"],
+            display: ["'Public Sans'", "sans-serif"],
+            body: ["'Public Sans'", "sans-serif"],
+            label: ["'Public Sans'", "sans-serif"],
+            score: ["'Archivo Narrow'", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+    }
+    .material-symbols-fill {
+      font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Estilo de cifras tabulares para marcadores de pádel */
+    .tabular-score {
+      font-variant-numeric: tabular-nums;
+      font-family: 'Archivo Narrow', sans-serif;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#eef2f8] text-[#0e1b3d] font-body min-h-full flex flex-col antialiased selection:bg-[#1846a3] selection:text-white pb-24">
+<!-- TOP APP BAR (Shared Component Anchor) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-4 h-14 bg-[#1846a3] border-b border-[#0c2357] shadow-sm select-none">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-white text-2xl" data-icon="sports_tennis">sports_tennis</span>
+<span class="font-headline text-lg font-bold tracking-tight text-white">Emparejados Pádel</span>
+</div>
+<div class="flex items-center gap-1.5">
+<button aria-label="Buscar o ayuda" class="w-9 h-9 flex items-center justify-center rounded-full text-white/85 hover:bg-[#0c2357] active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-xl" data-icon="search">search</span>
+</button>
+<button aria-label="Notificaciones" class="relative w-9 h-9 flex items-center justify-center rounded-full text-white/90 hover:bg-[#0c2357] active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-2xl" data-icon="notifications">notifications</span>
+<!-- Contador de pendientes/alertas en amarillo pelota -->
+<span class="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#d9f03f] text-[#0e1b3d] text-[10px] font-bold tabular-nums">2</span>
+</button>
+</div>
+</header>
+<!-- ESPACIADOR SUPERIOR PARA FIXED HEADER -->
+<div class="h-14"></div>
+<!-- SUBHEADER / CONTEXT BAR (Filtros de pádel argentino & categoría) -->
+<section class="bg-white border-b border-[#d3dbe9] px-4 py-2.5 sticky top-14 z-40 shadow-xs">
+<div class="max-w-md mx-auto flex items-center justify-between gap-2">
+<!-- Badge de identidad del jugador -->
+<div class="flex items-center gap-2 min-w-0">
+<div class="w-7 h-7 rounded-full bg-[#1846a3] text-white flex items-center justify-center font-bold text-xs shrink-0 ring-2 ring-[#e8eefb]">
+          MM
+        </div>
+<div class="truncate">
+<p class="text-xs font-bold text-[#0e1b3d] leading-none truncate">Martín Morales</p>
+<span class="inline-block text-[11px] font-medium text-[#55627d]">6ª Caballeros · San Isidro</span>
+</div>
+</div>
+<!-- Indicador de filtro rápido / botón cambio -->
+<div class="shrink-0 flex items-center bg-[#e8eefb] px-2.5 py-1 rounded-full text-[#1846a3] text-xs font-bold gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="tune">tune</span>
+<span>Oficiales</span>
+</div>
+</div>
+<!-- Pestañas de estado / Switcher rápido de vista -->
+<div class="max-w-md mx-auto flex items-center gap-1.5 mt-2.5 overflow-x-auto no-scrollbar pb-0.5">
+<button class="px-3 py-1 rounded-full bg-[#1846a3] text-white text-xs font-semibold whitespace-nowrap active:scale-95 transition-transform flex items-center gap-1">
+<span>Todos</span>
+<span class="bg-white/20 text-white rounded-full px-1.5 py-0.2 text-[10px] tabular-nums font-bold">5</span>
+</button>
+<button class="px-3 py-1 rounded-full bg-white border border-[#d3dbe9] text-[#55627d] hover:text-[#0e1b3d] hover:border-[#1846a3] text-xs font-medium whitespace-nowrap active:scale-95 transition-all flex items-center gap-1">
+<span>Torneo Oficial</span>
+<span class="bg-[#eef2f8] text-[#55627d] rounded-full px-1.5 py-0.2 text-[10px] tabular-nums font-bold">3</span>
+</button>
+<button class="px-3 py-1 rounded-full bg-white border border-[#d3dbe9] text-[#55627d] hover:text-[#0e1b3d] hover:border-[#1846a3] text-xs font-medium whitespace-nowrap active:scale-95 transition-all flex items-center gap-1">
+<span>Desafíos &amp; Amistosos</span>
+<span class="bg-[#eef2f8] text-[#55627d] rounded-full px-1.5 py-0.2 text-[10px] tabular-nums font-bold">2</span>
+</button>
+</div>
+</section>
+<!-- CONTENEDOR PRINCIPAL MOBILE FIRST -->
+<main class="max-w-md mx-auto w-full px-3.5 py-4 flex-1 flex flex-col gap-5">
+<!-- SECCIÓN 1: PARTIDOS EN CURSO Y PRÓXIMOS -->
+<section>
+<div class="flex items-center justify-between mb-2.5 px-0.5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#1846a3]"></span>
+<h2 class="text-xs uppercase tracking-wider font-extrabold text-[#55627d]">Por jugar / En cancha</h2>
+</div>
+<span class="text-xs font-semibold text-[#1846a3]">3 encuentros</span>
+</div>
+<div class="flex flex-col gap-3.5">
+<!-- PARTIDO 1: EN VIVO / DESTACADO CON AMARILLO PELOTA -->
+<article class="bg-white rounded-lg border-2 border-[#1846a3] overflow-hidden shadow-sm transition-all relative">
+<!-- Franja superior de torneo e instancia con canchero info -->
+<div class="bg-[#1846a3] text-white px-3 py-1.5 flex items-center justify-between text-xs font-semibold">
+<span class="truncate tracking-wide font-medium flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-[#d9f03f]" data-icon="emoji_events">emoji_events</span>
+              COPA PRIMAVERA 2025 · FASE DE GRUPOS
+            </span>
+<span class="bg-white/15 px-2 py-0.5 rounded text-[11px] font-bold text-white shrink-0 ml-1">
+              Cancha 2 (Cristal)
+            </span>
+</div>
+<!-- Banner de estado EN VIVO con amarillo de atención y pulso -->
+<div class="bg-[#eef2f8] px-3.5 py-2 border-b border-[#d3dbe9] flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-600"></span>
+</span>
+<span class="text-xs font-black uppercase text-[#146c48] tracking-wider">En juego</span>
+<span class="text-[11px] text-[#55627d]">· 2º Set en disputa</span>
+</div>
+<!-- Indicador Saque en curso -->
+<div class="flex items-center gap-1 text-[11px] font-bold text-[#0e1b3d] bg-white px-2 py-0.5 rounded border border-[#d3dbe9]">
+<span class="w-2 h-2 rounded-full bg-[#d9f03f] inline-block ring-1 ring-[#0e1b3d]/30"></span>
+<span>Saque: F. Morales</span>
+</div>
+</div>
+<!-- TABLA DE MARCADOR EN VIVO -->
+<div class="p-3.5">
+<div class="grid grid-cols-12 items-center gap-1 pb-2.5 border-b border-[#d3dbe9]/70">
+<!-- Pareja 1: Usuario -->
+<div class="col-span-7 flex items-center gap-2 min-w-0">
+<div class="flex -space-x-1.5 shrink-0">
+<div class="w-6 h-6 rounded-full bg-[#1846a3] text-white flex items-center justify-center font-bold text-[10px] ring-2 ring-white">MM</div>
+<div class="w-6 h-6 rounded-full bg-[#0c2357] text-white flex items-center justify-center font-bold text-[10px] ring-2 ring-white">FM</div>
+</div>
+<div class="truncate">
+<div class="flex items-center gap-1">
+<p class="text-sm font-bold text-[#0e1b3d] truncate leading-tight">Vos &amp; F. Morales</p>
+<span class="text-[10px] bg-[#d9f03f] text-[#0e1b3d] font-bold px-1 rounded leading-none py-0.5">TU DUPLA</span>
+</div>
+<span class="text-[11px] text-[#55627d]">Club Náutico San Isidro</span>
+</div>
+</div>
+<!-- Tanteadores Set 1, Set 2, Game actual -->
+<div class="col-span-5 flex items-center justify-end gap-2 text-right">
+<div class="w-7 text-center font-score text-base font-bold text-[#0e1b3d] bg-[#eef2f8] rounded py-0.5">6</div>
+<div class="w-7 text-center font-score text-base font-bold text-[#0e1b3d] bg-[#eef2f8] rounded py-0.5">3</div>
+<div class="w-8 text-center font-score text-base font-black text-[#0e1b3d] bg-[#d9f03f] rounded py-0.5 shadow-xs ring-1 ring-black/10">40</div>
+</div>
+</div>
+<div class="grid grid-cols-12 items-center gap-1 pt-2.5">
+<!-- Pareja 2: Rivales -->
+<div class="col-span-7 flex items-center gap-2 min-w-0">
+<div class="flex -space-x-1.5 shrink-0">
+<div class="w-6 h-6 rounded-full bg-[#55627d] text-white flex items-center justify-center font-bold text-[10px] ring-2 ring-white">BA</div>
+<div class="w-6 h-6 rounded-full bg-[#55627d] text-white flex items-center justify-center font-bold text-[10px] ring-2 ring-white">HB</div>
+</div>
+<div class="truncate">
+<p class="text-sm font-medium text-[#0e1b3d] truncate leading-tight">B. Acosta &amp; H. Benítez</p>
+<span class="text-[11px] text-[#55627d]">El Balcón Pádel (6ª)</span>
+</div>
+</div>
+<!-- Tanteadores Set 1, Set 2, Game actual -->
+<div class="col-span-5 flex items-center justify-end gap-2 text-right">
+<div class="w-7 text-center font-score text-base font-medium text-[#55627d] bg-[#eef2f8] rounded py-0.5">4</div>
+<div class="w-7 text-center font-score text-base font-bold text-[#0e1b3d] bg-[#eef2f8] rounded py-0.5">5</div>
+<div class="w-8 text-center font-score text-base font-black text-[#0e1b3d] bg-[#eef2f8] rounded py-0.5">30</div>
+</div>
+</div>
+</div>
+<!-- ACCIONES RÁPIDAS AL COSTADO DE LA CANCHA -->
+<div class="bg-[#f8fafc] px-3.5 py-3 border-t border-[#d3dbe9] flex items-center gap-2">
+<button class="flex-1 h-11 bg-[#1846a3] hover:bg-[#0c2357] text-white rounded font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit_note">edit_note</span>
+<span>Cargar punto / Tanteador</span>
+</button>
+<button class="h-11 px-3 bg-white border border-[#d3dbe9] hover:bg-[#eef2f8] text-[#1846a3] rounded font-semibold text-xs flex items-center justify-center gap-1 active:scale-95 transition-all" title="Ver planilla">
+<span class="material-symbols-outlined text-[18px]" data-icon="receipt_long">receipt_long</span>
+<span class="hidden xs:inline">Planilla</span>
+</button>
+</div>
+</article>
+<!-- PARTIDO 2: PROGRAMADO (TORNEO OFICIAL - CUARTOS DE FINAL) -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] overflow-hidden shadow-xs">
+<!-- Instancia y torneo -->
+<div class="px-3.5 py-2 bg-[#f8fafc] border-b border-[#d3dbe9] flex items-center justify-between">
+<div class="flex items-center gap-1.5 truncate">
+<span class="material-symbols-outlined text-[16px] text-[#1846a3]" data-icon="trophy">trophy</span>
+<span class="text-xs font-bold text-[#0e1b3d] truncate">TORNEO CLAUSURA 6ª · CUARTOS</span>
+</div>
+<span class="bg-[#fcefd8] text-[#7d4a00] font-bold text-[11px] px-2 py-0.5 rounded-full shrink-0">
+              Por jugar
+            </span>
+</div>
+<!-- Info día, hora y cancha -->
+<div class="px-3.5 pt-3 pb-1 flex items-center justify-between text-xs text-[#55627d]">
+<div class="flex items-center gap-1.5 font-semibold text-[#0e1b3d]">
+<span class="material-symbols-outlined text-[16px] text-[#1846a3]" data-icon="schedule">schedule</span>
+<span>Mañana · 20:30 hs</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="stadium">stadium</span>
+<span>Cancha 4 (Techada) · Asturiano</span>
+</div>
+</div>
+<!-- Enfrentamiento de parejas -->
+<div class="p-3.5 space-y-2.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-[#1846a3] text-white flex items-center justify-center font-bold text-[10px]">MM</div>
+<div>
+<p class="text-sm font-bold text-[#0e1b3d] leading-none">Vos &amp; Facundo Morales</p>
+<span class="text-[11px] text-[#55627d]">Categoría 6ª · 1º de Zona A</span>
+</div>
+</div>
+<span class="text-xs font-bold text-[#146c48] bg-[#e0f3ea] px-2 py-0.5 rounded">Confirmados</span>
+</div>
+<div class="flex items-center justify-center my-1 relative">
+<div class="w-full border-t border-[#d3dbe9]"></div>
+<span class="absolute bg-white px-2 text-[10px] font-bold text-[#55627d]">VS</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-[#55627d] text-white flex items-center justify-center font-bold text-[10px]">LD</div>
+<div>
+<p class="text-sm font-semibold text-[#0e1b3d] leading-none">Lucas Di Santo &amp; Gonzalo Pereyra</p>
+<span class="text-[11px] text-[#55627d]">Categoría 6ª · 2º de Zona C</span>
+</div>
+</div>
+<span class="text-[11px] font-semibold text-[#55627d]">Pareja rival</span>
+</div>
+</div>
+<!-- Acciones de preparación -->
+<div class="bg-[#f8fafc] px-3.5 py-2.5 border-t border-[#d3dbe9] flex items-center justify-between gap-2">
+<button class="h-10 px-3 flex-1 bg-[#1846a3] hover:bg-[#0c2357] text-white rounded font-bold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[17px]" data-icon="check_circle">check_circle</span>
+<span>Confirmar presencia</span>
+</button>
+<button class="h-10 px-3 bg-white border border-[#d3dbe9] hover:bg-[#e8eefb] text-[#1846a3] rounded font-semibold text-xs flex items-center justify-center gap-1 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[17px]" data-icon="schema">schema</span>
+<span>Cuadro</span>
+</button>
+</div>
+</article>
+<!-- PARTIDO 3: AMISTOSO / DESAFÍO EN ESPERA -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] p-3.5 shadow-xs">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[11px] font-bold tracking-wide uppercase text-[#55627d] bg-[#eef2f8] px-2 py-0.5 rounded">
+              Desafío Amistoso · Por los puntos
+            </span>
+<span class="text-[11px] font-semibold text-[#7d4a00] bg-[#fcefd8] px-2 py-0.5 rounded-full">
+              Falta 1 confirmación
+            </span>
+</div>
+<div class="flex items-center justify-between text-xs mb-3">
+<span class="font-bold text-[#0e1b3d] flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-[#1846a3]" data-icon="event">event</span>
+              Sábado 15:00 hs
+            </span>
+<span class="text-[#55627d]">Club Náutico San Isidro · Cancha 1</span>
+</div>
+<div class="bg-[#eef2f8] p-2.5 rounded text-xs flex items-center justify-between">
+<span class="font-semibold text-[#0e1b3d]">Vos &amp; Martín Morales vs F. López &amp; G. Sosa</span>
+<button class="text-xs font-bold text-[#1846a3] hover:underline flex items-center gap-0.5">
+<span>Gestionar</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</article>
+</div>
+</section>
+<!-- SECCIÓN 2: HISTORIAL RECIENTE (JUGADOS) -->
+<section class="mt-2">
+<div class="flex items-center justify-between mb-2.5 px-0.5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#55627d]"></span>
+<h2 class="text-xs uppercase tracking-wider font-extrabold text-[#55627d]">Jugados recientemente</h2>
+</div>
+<a class="text-xs font-bold text-[#1846a3] hover:underline" href="#historial">Ver todo</a>
+</div>
+<div class="flex flex-col gap-3">
+<!-- PARTIDO HISTORIAL 1: VICTORIA -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] overflow-hidden shadow-xs">
+<!-- Encabezado con status de victoria -->
+<div class="px-3.5 py-2 bg-[#f8fafc] border-b border-[#d3dbe9] flex items-center justify-between">
+<span class="text-xs font-bold text-[#0e1b3d]">TORNEO APERTURA 2025 · ZONA B</span>
+<span class="bg-[#e0f3ea] text-[#146c48] font-bold text-[11px] px-2 py-0.5 rounded-full flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#146c48]"></span>
+              Victoria
+            </span>
+</div>
+<div class="p-3.5">
+<!-- Pareja Ganadora (Usuario) con punto amarillo de diseño -->
+<div class="flex items-center justify-between pb-2 border-b border-[#d3dbe9]/60">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#d9f03f] ring-1 ring-[#0e1b3d]/30" title="Ganador"></span>
+<span class="text-sm font-extrabold text-[#0e1b3d]">Vos &amp; Bruno Acosta</span>
+</div>
+<!-- Tanteador -->
+<div class="flex items-center gap-2 font-score text-base font-extrabold text-[#0e1b3d]">
+<span class="w-6 text-center tabular-score">6</span>
+<span class="w-6 text-center tabular-score">7</span>
+</div>
+</div>
+<!-- Pareja Perdedora -->
+<div class="flex items-center justify-between pt-2">
+<div class="flex items-center gap-2 pl-4">
+<span class="text-sm font-normal text-[#55627d]">M. Palermo &amp; J. Riquelme</span>
+</div>
+<!-- Tanteador rival -->
+<div class="flex items-center gap-2 font-score text-base font-normal text-[#55627d]">
+<span class="w-6 text-center tabular-score">3</span>
+<span class="w-6 text-center tabular-score">5</span>
+</div>
+</div>
+</div>
+<!-- Footer con impacto de ranking y CTA -->
+<div class="bg-[#e8eefb]/50 px-3.5 py-2 border-t border-[#d3dbe9] flex items-center justify-between text-xs">
+<span class="font-bold text-[#1846a3] flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]" data-icon="trending_up">trending_up</span>
+              +45 pts para el ranking oficial
+            </span>
+<button class="font-semibold text-[#1846a3] hover:underline flex items-center gap-0.5">
+<span>Detalles</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- PARTIDO HISTORIAL 2: DERROTA AJUSTADA -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] overflow-hidden shadow-xs">
+<!-- Encabezado con status de derrota -->
+<div class="px-3.5 py-2 bg-[#f8fafc] border-b border-[#d3dbe9] flex items-center justify-between">
+<span class="text-xs font-bold text-[#0e1b3d]">MASTER SERIES FINAL 2024 · SEMIFINAL</span>
+<span class="bg-[#fbe9e7] text-[#b02d23] font-bold text-[11px] px-2 py-0.5 rounded-full">
+              Derrota
+            </span>
+</div>
+<div class="p-3.5">
+<!-- Ganadores rivales con punto amarillo -->
+<div class="flex items-center justify-between pb-2 border-b border-[#d3dbe9]/60">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-[#d9f03f] ring-1 ring-[#0e1b3d]/30" title="Ganador"></span>
+<span class="text-sm font-bold text-[#0e1b3d]">Hernán Benítez &amp; Lucas Morales</span>
+</div>
+<div class="flex items-center gap-2 font-score text-base font-bold text-[#0e1b3d]">
+<span class="w-6 text-center tabular-score">6</span>
+<span class="w-6 text-center tabular-score">4</span>
+<span class="w-6 text-center tabular-score">6</span>
+</div>
+</div>
+<!-- Perdedores (Usuario) -->
+<div class="flex items-center justify-between pt-2">
+<div class="flex items-center gap-2 pl-4">
+<span class="text-sm font-medium text-[#55627d]">Vos &amp; Facundo Morales</span>
+</div>
+<div class="flex items-center gap-2 font-score text-base font-medium text-[#55627d]">
+<span class="w-6 text-center tabular-score">4</span>
+<span class="w-6 text-center tabular-score">6</span>
+<span class="w-6 text-center tabular-score">4</span>
+</div>
+</div>
+</div>
+<!-- Metadata de partido -->
+<div class="bg-[#f8fafc] px-3.5 py-2 border-t border-[#d3dbe9] flex items-center justify-between text-xs text-[#55627d]">
+<span>Duración: 1h 48m · Club El Balcón</span>
+<span class="font-medium text-[#0e1b3d]">12 de Nov 2024</span>
+</div>
+</article>
+</div>
+</section>
+<!-- BANNER DE SOPORTE / FISCALES DE MESA (Castellano Rioplatense) -->
+<aside class="bg-white rounded-lg border border-[#d3dbe9] p-3.5 flex items-start gap-3 mt-1">
+<div class="w-9 h-9 rounded bg-[#e8eefb] text-[#1846a3] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-xl" data-icon="qr_code_scanner">qr_code_scanner</span>
+</div>
+<div class="text-xs">
+<p class="font-bold text-[#0e1b3d] leading-snug">¿Sos fiscal de mesa o árbitro oficial?</p>
+<p class="text-[#55627d] mt-0.5">Validá los resultados oficiales escaneando el código QR del club al finalizar cada set.</p>
+<button class="mt-2 text-[#1846a3] font-bold inline-flex items-center gap-1 hover:underline">
+<span>Abrir lector de cancha</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</aside>
+</main>
+<!-- BOTTOM NAVIGATION BAR (Shared Component Anchor) -->
+<!-- Contextual check: Partidos es la pantalla activa, se resalta con style_active_navigation -->
+<nav aria-label="Navegación principal" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 bg-white border-t border-[#d3dbe9] select-none">
+<!-- Destino 1: Inicio -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95 transition-transform duration-100 flex-1" href="#inicio">
+<span class="material-symbols-outlined text-2xl" data-icon="home">home</span>
+<span class="font-label text-xs font-semibold mt-0.5">Inicio</span>
+</a>
+<!-- Destino 2: Parejas -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95 transition-transform duration-100 flex-1" href="#parejas">
+<span class="material-symbols-outlined text-2xl" data-icon="group">group</span>
+<span class="font-label text-xs font-semibold mt-0.5">Parejas</span>
+</a>
+<!-- Destino 3: Partidos (ACTIVO según la pantalla solicitada) -->
+<a class="flex flex-col items-center justify-center text-[#1846a3] dark:text-[#1846a3] font-bold py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95 transition-transform duration-100 flex-1" href="#partidos">
+<span class="material-symbols-outlined text-2xl material-symbols-fill" data-icon="sports_tennis" style="font-variation-settings: 'FILL' 1;">sports_tennis</span>
+<span class="font-label text-xs font-semibold mt-0.5">Partidos</span>
+</a>
+<!-- Destino 4: Torneos -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95 transition-transform duration-100 flex-1" href="#torneos">
+<span class="material-symbols-outlined text-2xl" data-icon="emoji_events">emoji_events</span>
+<span class="font-label text-xs font-semibold mt-0.5">Torneos</span>
+</a>
+<!-- Destino 5: Mis datos -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95 transition-transform duration-100 flex-1" href="#mis-datos">
+<span class="material-symbols-outlined text-2xl" data-icon="person">person</span>
+<span class="font-label text-xs font-semibold mt-0.5">Mis datos</span>
+</a>
+</nav>
+<!-- Script ligero para interacción táctil rápida de pestañas sin recargar -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Feedback táctil suave para botones
+      const buttons = document.querySelectorAll('button');
+      buttons.forEach(btn => {
+        btn.addEventListener('touchstart', () => {}, {passive: true});
+      });
+    });
+  </script>
+</body></html>

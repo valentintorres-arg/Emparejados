@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nuevo Torneo - Emparejados Pádel</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Fonts: Archivo Narrow (Display/Tableros) & Public Sans (Body/UI) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600;700&amp;family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            // Emparejados Pádel Official Tokens
+            primary: "#1846a3",            // Azul pista
+            "primary-dark": "#0c2357",       // Azul oscuro profundo
+            "primary-light": "#e8eefb",      // Azul muy claro contenedor
+            ink: "#0e1b3d",                // Tinta para texto general
+            "ink-muted": "#55627d",         // Gris para texto secundario
+            surface: "#ffffff",            // Tarjetas blancas
+            canvas: "#eef2f8",             // Fondo general #eef2f8
+            "border-ui": "#d3dbe9",        // Bordes suaves
+            ball: "#d9f03f",               // Amarillo pelota APA
+            status: {
+              approved: "#146c48",
+              "approved-bg": "#e0f3ea",
+              danger: "#b02d23",
+              "danger-bg": "#fbe9e7",
+              warning: "#7d4a00",
+              "warning-bg": "#fcefd8"
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["'Public Sans'", "sans-serif"],
+            display: ["'Archivo Narrow'", "sans-serif"],
+            body: ["'Public Sans'", "sans-serif"],
+            label: ["'Public Sans'", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: 0.6;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator:hover,
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink font-body h-full antialiased flex">
+<!-- ========================================================================= -->
+<!-- SIDEBAR LATERAL FIJA (240px / Azul Profundo #0c2357)                     -->
+<!-- ========================================================================= -->
+<aside class="fixed top-0 left-0 h-screen w-60 z-40 bg-primary-dark border-r border-border-ui/20 flex flex-col justify-between p-4 select-none">
+<!-- Top Brand & Hierarchy Header -->
+<div class="space-y-5">
+<div class="pt-1">
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-ball flex items-center justify-center text-primary-dark shadow-sm">
+<span class="material-symbols-outlined material-symbols-fill text-2xl" data-icon="sports_tennis">sports_tennis</span>
+</div>
+<div>
+<span class="font-display font-bold text-lg tracking-tight text-white block uppercase leading-tight">EMPAREJADOS PÁDEL</span>
+<span class="text-xs text-blue-200/80 font-medium block">Club Náutico San Isidro</span>
+</div>
+</div>
+<!-- Fiscal Chip -->
+<div class="mt-3.5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-status-approved-bg/20 text-[#6ee7b7] text-[11px] font-semibold tracking-wide border border-emerald-500/30">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          FISCALÍA OFICIAL
+        </div>
+</div>
+<!-- Main Navigation Links -->
+<nav class="space-y-1">
+<!-- 1. Inicio -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium text-xs transition-colors duration-150 active:scale-[0.98]" href="#inicio">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+<span>Inicio</span>
+</a>
+<!-- 2. Aprobaciones (Badge 5) -->
+<a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium text-xs transition-colors duration-150 active:scale-[0.98]" href="#aprobaciones">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]" data-icon="how_to_reg">how_to_reg</span>
+<span>Aprobaciones</span>
+</div>
+<span class="inline-flex items-center justify-center w-5 h-5 text-[11px] font-bold bg-ball text-ink rounded-full shadow-sm">5</span>
+</a>
+<!-- 3. Torneos (ACTIVE ITEM) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white text-primary font-bold text-xs shadow-sm active:scale-[0.98] transition-transform duration-100" href="#torneos">
+<span class="material-symbols-outlined material-symbols-fill text-[20px]" data-icon="emoji_events">emoji_events</span>
+<span>Torneos</span>
+</a>
+<!-- 4. Jugadores -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium text-xs transition-colors duration-150 active:scale-[0.98]" href="#jugadores">
+<span class="material-symbols-outlined text-[20px]" data-icon="groups">groups</span>
+<span>Jugadores</span>
+</a>
+<!-- 5. Sedes y Canchas -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium text-xs transition-colors duration-150 active:scale-[0.98]" href="#sedes">
+<span class="material-symbols-outlined text-[20px]" data-icon="stadium">stadium</span>
+<span>Sedes y Canchas</span>
+</a>
+<!-- 6. Usuarios -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium text-xs transition-colors duration-150 active:scale-[0.98]" href="#usuarios">
+<span class="material-symbols-outlined text-[20px]" data-icon="manage_accounts">manage_accounts</span>
+<span>Usuarios</span>
+</a>
+<!-- 7. Auditoría -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium text-xs transition-colors duration-150 active:scale-[0.98]" href="#auditoria">
+<span class="material-symbols-outlined text-[20px]" data-icon="history">history</span>
+<span>Auditoría</span>
+</a>
+</nav>
+</div>
+<!-- Sidebar Bottom: CTA & User Profile -->
+<div class="pt-4 border-t border-white/10 space-y-3">
+<!-- CTA Escanear Pareja -->
+<button class="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-ball text-ink hover:bg-lime-300 font-bold text-xs uppercase tracking-wider transition-all duration-150 shadow-sm active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined text-lg font-bold" data-icon="qr_code_scanner">qr_code_scanner</span>
+<span>Escanear Pareja</span>
+</button>
+<!-- Fiscal General Info -->
+<div class="flex items-center gap-2.5 p-2 rounded-lg bg-white/5 border border-white/10">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-white text-xs ring-1 ring-white/30 shrink-0">
+          FG
+        </div>
+<div class="truncate text-left min-w-0">
+<p class="text-xs font-semibold text-white leading-tight truncate">Fiscal General</p>
+<p class="text-[10px] text-blue-200/70 truncate">fiscalia@nauticosanisidro.com.ar</p>
+</div>
+</div>
+<!-- Logout Action -->
+<a class="flex items-center gap-2.5 px-2 py-1.5 text-xs font-medium text-white/70 hover:text-red-300 transition-colors" href="#logout">
+<span class="material-symbols-outlined text-sm" data-icon="logout">logout</span>
+<span>Cerrar sesión</span>
+</a>
+</div>
+</aside>
+<!-- ========================================================================= -->
+<!-- MAIN WRAPPER: Top Bar + Content Canvas                                  -->
+<!-- ========================================================================= -->
+<div class="ml-60 w-[calc(100%-15rem)] min-h-screen flex flex-col bg-canvas">
+<!-- TOP BAR -->
+<header class="sticky top-0 z-30 bg-surface border-b border-border-ui px-8 py-3.5 flex justify-between items-center shadow-xs">
+<!-- Left: Breadcrumb & Circuit Tag -->
+<div class="flex items-center gap-4">
+<nav class="flex items-center gap-1.5 text-xs text-ink-muted">
+<a class="hover:text-primary transition-colors" href="#organizacion">Organización</a>
+<span class="material-symbols-outlined text-xs text-border-ui" data-icon="chevron_right">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#torneos">Torneos</a>
+<span class="material-symbols-outlined text-xs text-border-ui" data-icon="chevron_right">chevron_right</span>
+<span class="font-semibold text-ink">Crear nuevo torneo</span>
+</nav>
+<span class="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-light text-primary border border-primary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+          Temporada 2025 · Circuito Oficial APA
+        </span>
+</div>
+<!-- Right: Venue Selector & Actions -->
+<div class="flex items-center gap-3">
+<!-- Venue Selector -->
+<div class="flex items-center gap-2 bg-canvas hover:bg-slate-200/70 px-3 py-1.5 rounded-lg border border-border-ui transition-colors text-xs font-medium cursor-pointer">
+<span class="material-symbols-outlined text-primary text-base" data-icon="stadium">stadium</span>
+<span class="font-semibold text-ink">CNSI - Sede Central</span>
+<span class="material-symbols-outlined text-xs text-ink-muted" data-icon="expand_more">expand_more</span>
+</div>
+<div class="h-4 w-px bg-border-ui mx-1"></div>
+<!-- Notifications -->
+<button aria-label="Notificaciones" class="relative p-2 text-ink-muted hover:text-ink hover:bg-canvas rounded-lg transition-colors" type="button">
+<span class="material-symbols-outlined text-xl" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-status-danger ring-2 ring-white"></span>
+</button>
+<!-- Help -->
+<button aria-label="Ayuda" class="p-2 text-ink-muted hover:text-ink hover:bg-canvas rounded-lg transition-colors" type="button">
+<span class="material-symbols-outlined text-xl" data-icon="help_outline">help_outline</span>
+</button>
+</div>
+</header>
+<!-- CONTENT CANVAS -->
+<main class="flex-1 px-8 py-7 max-w-5xl mx-auto w-full">
+<!-- Header Section: Return & Title -->
+<div class="mb-6">
+<a class="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-dark mb-2.5 group transition-colors" href="#torneos">
+<span class="material-symbols-outlined text-base group-hover:-translate-x-0.5 transition-transform" data-icon="arrow_back">arrow_back</span>
+          Volver a Torneos
+        </a>
+<div class="flex flex-wrap items-baseline justify-between gap-4">
+<div>
+<h1 class="font-display text-3xl font-bold tracking-tight text-ink uppercase">Nuevo torneo</h1>
+<p class="text-ink-muted text-sm mt-1 max-w-3xl">
+              Configurá las bases de la competencia, definí las categorías habilitadas y abrí la convocatoria para las duplas del circuito.
+            </p>
+</div>
+<div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border-ui text-xs font-medium text-ink-muted">
+<span class="material-symbols-outlined text-primary text-base" data-icon="verified">verified</span>
+            Fiscalización reglamentaria APA
+          </div>
+</div>
+</div>
+<!-- Quick Info / Fiscal Banner -->
+<div class="mb-6 p-4 rounded-lg bg-primary-light border border-blue-200 flex items-start gap-3.5">
+<span class="material-symbols-outlined text-primary text-2xl shrink-0 mt-0.5 material-symbols-fill" data-icon="info">info</span>
+<div class="text-xs text-ink space-y-1">
+<p class="font-bold text-primary text-sm">Pauta de validación de parejas en el club</p>
+<p class="text-ink-muted leading-relaxed">
+            Recordá que los jugadores pueden armar su dupla escaneando el código QR entre ellos, pero la inscripción formal en la llave quedará en estado <span class="font-semibold text-status-warning bg-status-warning-bg px-1.5 py-0.5 rounded">Pendiente</span> hasta que la fiscalía del torneo certifique el pago y el nivel federado.
+          </p>
+</div>
+</div>
+<!-- MAIN FORM CARD -->
+<form class="bg-surface rounded-lg border border-border-ui shadow-sm overflow-hidden mb-12" id="tournament-form" onsubmit="event.preventDefault();">
+<div class="p-6 md:p-8 space-y-8">
+<!-- TWO-COLUMN GRID -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- ================= COLUMN 1: Datos del torneo y sede ================= -->
+<div class="space-y-6">
+<div class="flex items-center gap-2 pb-2 border-b border-border-ui">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="sports_score">sports_score</span>
+<h2 class="font-display font-bold text-base uppercase tracking-wide text-ink">1. Datos del torneo y sede</h2>
+</div>
+<!-- Nombre del torneo -->
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5" for="tournament-name">
+                  Nombre del torneo <span class="text-status-danger">*</span>
+</label>
+<input class="w-full text-sm font-medium text-ink bg-white border border-border-ui rounded-lg px-3.5 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" id="tournament-name" placeholder="Ej. Torneo Apertura Caballeros" required="" type="text" value="Copa Clausura San Isidro 2025"/>
+<span class="text-[11px] text-ink-muted mt-1 block">Aparecerá en la cabecera de la app y en los carnet digitales.</span>
+</div>
+<!-- Sede de disputa -->
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5" for="venue">
+                  Sede de disputa <span class="text-status-danger">*</span>
+</label>
+<div class="relative">
+<select class="w-full appearance-none text-sm font-medium text-ink bg-white border border-border-ui rounded-lg px-3.5 py-2.5 pr-10 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition cursor-pointer" id="venue">
+<option selected="">Club Náutico San Isidro (Canchas 1 a 4 - Cristal techado)</option>
+<option>Club Náutico San Isidro (Canchas 5 a 8 - Descubiertas)</option>
+<option>Sede Náutica Dársena Padel</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3 text-ink-muted pointer-events-none text-base" data-icon="unfold_more">unfold_more</span>
+</div>
+</div>
+<!-- Rama de competencia (Radio Pills) -->
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                  Rama de competencia <span class="text-status-danger">*</span>
+</label>
+<div class="grid grid-cols-3 gap-2.5">
+<label class="cursor-pointer">
+<input checked="" class="peer sr-only" name="gender-branch" type="radio" value="caballeros"/>
+<div class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg border border-border-ui text-xs font-semibold text-ink-muted peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all text-center">
+<span class="material-symbols-outlined text-base" data-icon="male">male</span>
+<span>Caballeros</span>
+</div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="gender-branch" type="radio" value="damas"/>
+<div class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg border border-border-ui text-xs font-semibold text-ink-muted peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all text-center">
+<span class="material-symbols-outlined text-base" data-icon="female">female</span>
+<span>Damas</span>
+</div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="gender-branch" type="radio" value="mixto"/>
+<div class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg border border-border-ui text-xs font-semibold text-ink-muted peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all text-center">
+<span class="material-symbols-outlined text-base" data-icon="group">group</span>
+<span>Mixto</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Categoría federada APA -->
+<div>
+<div class="flex justify-between items-center mb-1.5">
+<label class="block text-xs font-bold uppercase tracking-wider text-ink" for="category">
+                    Categoría federada APA <span class="text-status-danger">*</span>
+</label>
+<span class="text-[11px] font-semibold text-primary">Nivel intermedio</span>
+</div>
+<div class="relative">
+<select class="w-full appearance-none text-sm font-medium text-ink bg-white border border-border-ui rounded-lg px-3.5 py-2.5 pr-10 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition cursor-pointer" id="category">
+<option>4ª Categoría (Avanzada)</option>
+<option>5ª Categoría (Intermedia alta)</option>
+<option selected="">6ª Categoría (Predeterminada - Amateur)</option>
+<option>7ª Categoría (Iniciación / Promocional)</option>
+<option>Suma 12 (Libre puntuación)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3 text-ink-muted pointer-events-none text-base" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Formato de juego -->
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5" for="game-format">
+                  Formato de juego <span class="text-status-danger">*</span>
+</label>
+<div class="relative">
+<select class="w-full appearance-none text-sm font-medium text-ink bg-white border border-border-ui rounded-lg px-3.5 py-2.5 pr-10 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition cursor-pointer" id="game-format">
+<option selected="">Zonas y llaves (Recomendado - 3 parejas x zona)</option>
+<option>Eliminación directa con ronda de consuelo</option>
+<option>Todos contra todos / Round Robin (Todos juegan)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3 text-ink-muted pointer-events-none text-base" data-icon="schema">schema</span>
+</div>
+</div>
+</div>
+<!-- ================= COLUMN 2: Fechas, cupo y convocatoria ================= -->
+<div class="space-y-6">
+<div class="flex items-center gap-2 pb-2 border-b border-border-ui">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="calendar_month">calendar_month</span>
+<h2 class="font-display font-bold text-base uppercase tracking-wide text-ink">2. Fechas, cupo y arancel</h2>
+</div>
+<!-- Fechas Inicio / Fin (Row) -->
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5" for="start-date">
+                    Fecha de inicio <span class="text-status-danger">*</span>
+</label>
+<div class="relative">
+<input class="w-full text-sm font-medium text-ink bg-white border border-border-ui rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none" id="start-date" type="date" value="2025-11-14"/>
+</div>
+</div>
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5" for="end-date">
+                    Fecha finalización <span class="text-status-danger">*</span>
+</label>
+<div class="relative">
+<input class="w-full text-sm font-medium text-ink bg-white border border-border-ui rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none" id="end-date" type="date" value="2025-11-16"/>
+</div>
+</div>
+</div>
+<!-- Cierre de inscripciones -->
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5" for="deadline-date">
+                  Cierre de inscripciones <span class="text-status-danger">*</span>
+</label>
+<div class="relative">
+<input class="w-full text-sm font-medium text-ink bg-white border border-border-ui rounded-lg px-3.5 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none" id="deadline-date" type="text" value="12/11/2025 - 20:00 hs"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-ink-muted text-base" data-icon="alarm">alarm</span>
+</div>
+<span class="text-[11px] text-ink-muted mt-1 block">Pasada esta hora, no se admiten cambios de compañero por código QR.</span>
+</div>
+<!-- Cupo máximo de parejas -->
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                  Cupo máximo de parejas <span class="text-status-danger">*</span>
+</label>
+<div class="grid grid-cols-3 gap-2.5">
+<label class="cursor-pointer">
+<input class="peer sr-only" name="quota" type="radio" value="16"/>
+<div class="py-2.5 px-3 rounded-lg border border-border-ui text-center peer-checked:border-primary peer-checked:bg-primary-light transition-all">
+<span class="font-display font-bold text-base block text-ink">16 duplas</span>
+<span class="text-[10px] text-ink-muted font-medium">4 zonas de 4</span>
+</div>
+</label>
+<label class="cursor-pointer">
+<input checked="" class="peer sr-only" name="quota" type="radio" value="24"/>
+<div class="py-2.5 px-3 rounded-lg border border-border-ui text-center peer-checked:border-primary peer-checked:bg-primary-light transition-all ring-1 peer-checked:ring-primary">
+<span class="font-display font-bold text-base block text-ink">24 duplas</span>
+<span class="text-[10px] text-primary font-bold">8 zonas de 3</span>
+</div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="quota" type="radio" value="32"/>
+<div class="py-2.5 px-3 rounded-lg border border-border-ui text-center peer-checked:border-primary peer-checked:bg-primary-light transition-all">
+<span class="font-display font-bold text-base block text-ink">32 duplas</span>
+<span class="text-[10px] text-ink-muted font-medium">Cuadro mayor</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Costo de inscripción por dupla -->
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5" for="fee">
+                  Costo de inscripción por dupla
+                </label>
+<div class="relative">
+<input class="w-full text-sm font-medium text-ink bg-white border border-border-ui rounded-lg px-3.5 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none" id="fee" type="text" value="$32.000 / pareja - Incluye pelotas y remera"/>
+<span class="material-symbols-outlined absolute right-3 top-3 text-ink-muted text-base" data-icon="payments">payments</span>
+</div>
+</div>
+</div>
+</div>
+<!-- ================= FULL WIDTH SECTION: Reglamento y Configuración ================= -->
+<div class="pt-6 border-t border-border-ui space-y-5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="gavel">gavel</span>
+<h2 class="font-display font-bold text-base uppercase tracking-wide text-ink">3. Reglamento y pautas de fiscalización</h2>
+</div>
+<!-- Textarea Reglamento -->
+<div>
+<label class="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5" for="tournament-rules">
+                Bases particulares de la sede y tolerancia
+              </label>
+<textarea class="w-full text-sm font-medium text-ink bg-white border border-border-ui rounded-lg p-3.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none leading-relaxed resize-none" id="tournament-rules" rows="4">Partidos al mejor de 3 sets con super tie-break en el tercero (a 10 puntos). Tolerancia de 15 minutos en cancha. Todo jugador debe contar con apto médico vigente y cuota social al día. Las duplas deben presentarse 20 minutos antes de su turno asignado.</textarea>
+<span class="text-[11px] text-ink-muted mt-1 block">Esta información se despliega en la solapa de ayuda para los jugadores anotados.</span>
+</div>
+<!-- Checkboxes de publicación -->
+<div class="bg-canvas rounded-lg p-4 border border-border-ui space-y-3.5">
+<label class="flex items-start gap-3 cursor-pointer">
+<input checked="" class="mt-0.5 rounded border-border-ui text-primary focus:ring-primary w-4 h-4 cursor-pointer" type="checkbox"/>
+<div class="text-xs">
+<span class="font-bold text-ink block">Publicar automáticamente en la cartelera de la app al guardar</span>
+<span class="text-ink-muted">Los socios del club podrán buscar compañero y enviar la preinscripción desde el móvil.</span>
+</div>
+</label>
+<label class="flex items-start gap-3 cursor-pointer">
+<input checked="" class="mt-0.5 rounded border-border-ui text-primary focus:ring-primary w-4 h-4 cursor-pointer" type="checkbox"/>
+<div class="text-xs">
+<span class="font-bold text-ink block">Habilitar lista de espera cuando se complete el cupo</span>
+<span class="text-ink-muted">Asigna turnos por orden de escaneo en caso de bajas de último momento antes del cuadro principal.</span>
+</div>
+</label>
+</div>
+</div>
+</div>
+<!-- ================= ACTIONS FOOTER (Fixed within card) ================= -->
+<div class="bg-slate-50 px-6 py-4 border-t border-border-ui flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center gap-2 text-xs text-ink-muted">
+<span class="material-symbols-outlined text-sm text-status-approved" data-icon="check_circle">check_circle</span>
+<span>Los cambios impactan en tiempo real en los celulares vinculados</span>
+</div>
+<div class="flex items-center gap-3">
+<!-- Cancelar -->
+<a class="min-h-[44px] px-5 py-2.5 rounded-lg border border-border-ui text-ink hover:bg-canvas font-bold text-xs uppercase tracking-wider transition-colors duration-150 inline-flex items-center justify-center" href="#torneos">
+              Cancelar
+            </a>
+<!-- Primario: Guardar / Habilitar -->
+<button class="min-h-[44px] px-6 py-2.5 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold text-xs uppercase tracking-wider shadow-sm transition-all duration-150 inline-flex items-center gap-2 active:scale-[0.98]" type="submit">
+<span class="material-symbols-outlined text-base material-symbols-fill" data-icon="emoji_events">emoji_events</span>
+<span>Crear y habilitar inscripciones</span>
+</button>
+</div>
+</div>
+</form>
+</main>
+</div>
+</body></html>

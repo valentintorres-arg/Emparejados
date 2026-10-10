@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#eef2f8]" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Copa Primavera 2025 - 6ª Caballeros | Emparejados Pádel</title>
+<!-- Google Fonts: Public Sans & Archivo Narrow -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,600;0,700;1,700&amp;family=Public+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: "#1846a3",
+              dark: "#0c2357",
+              light: "#e8eefb",
+              ball: "#d9f03f",
+              ink: "#0e1b3d",
+              muted: "#55627d",
+              border: "#d3dbe9",
+              canvas: "#eef2f8"
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Archivo Narrow", "Public Sans", "sans-serif"],
+            display: ["Archivo Narrow", "Public Sans", "sans-serif"],
+            body: ["Public Sans", "sans-serif"],
+            label: ["Public Sans", "sans-serif"],
+            score: ["Archivo Narrow", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .score-cell {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="h-full font-body text-brand-ink antialiased selection:bg-brand-ball selection:text-brand-ink">
+<!-- ================= TOP APP BAR (Shared Component) ================= -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-4 h-14 bg-[#1846a3] text-white border-b border-[#0c2357]">
+<div class="flex items-center gap-3">
+<button aria-label="Volver a Torneos" class="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-[#0c2357] transition-colors active:scale-95" type="button">
+<span class="material-symbols-outlined text-white text-xl">arrow_back</span>
+</button>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-brand-ball text-xl" style="font-variation-settings: 'FILL' 1;">sports_tennis</span>
+<span class="font-headline text-lg font-bold tracking-tight text-white">Emparejados Pádel</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button aria-label="Notificaciones" class="relative w-9 h-9 rounded-lg flex items-center justify-center hover:bg-[#0c2357] transition-colors active:scale-95" type="button">
+<span class="material-symbols-outlined text-white text-xl">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-brand-ball ring-2 ring-[#1846a3]"></span>
+</button>
+</div>
+</header>
+<!-- ================= MAIN SCROLL CANVAS ================= -->
+<main class="pt-14 pb-24 min-h-screen bg-[#eef2f8] max-w-lg mx-auto">
+<!-- SUBHEADER / BREADCRUMB -->
+<nav class="px-4 py-2.5 bg-white border-b border-brand-border flex items-center gap-1.5 text-xs font-medium text-brand-muted">
+<a class="hover:text-brand-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-sm">emoji_events</span>
+<span>Torneos</span>
+</a>
+<span class="material-symbols-outlined text-xs text-brand-muted">chevron_right</span>
+<span class="text-brand-ink font-semibold truncate">Copa Primavera 2025</span>
+</nav>
+<!-- TOURNAMENT HERO INFO -->
+<section class="bg-white border-b border-brand-border px-4 pt-4 pb-5">
+<div class="flex items-start justify-between gap-3">
+<div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#e0f3ea] text-[#146c48] mb-1.5 border border-[#146c48]/15">
+<span class="w-1.5 h-1.5 rounded-full bg-[#146c48]"></span>
+            Finalizado
+          </div>
+<h1 class="font-headline text-2xl font-bold tracking-tight text-brand-ink leading-tight">
+            Copa Primavera 2025
+          </h1>
+<p class="text-xs font-semibold text-brand-primary uppercase tracking-wider mt-0.5">
+            6ª Caballeros • Oficial
+          </p>
+</div>
+<div class="w-12 h-12 rounded-xl bg-brand-light border border-brand-primary/20 flex flex-col items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-brand-primary text-2xl" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+</div>
+</div>
+<!-- Detalle Club & Fechas -->
+<div class="mt-3.5 space-y-1.5 text-xs text-brand-muted border-t border-brand-border/60 pt-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-brand-primary shrink-0">location_on</span>
+<span class="text-brand-ink font-medium">Club Náutico San Isidro</span>
+<span class="text-brand-muted">• San Isidro, Bs. As.</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-brand-primary shrink-0">calendar_today</span>
+<span>15 al 17 de Marzo 2025</span>
+<span class="text-brand-muted">• Canchas 1, 2 y 3 (Cristal)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-brand-primary shrink-0">groups</span>
+<span>16 parejas en competencia • Cuadro de 16</span>
+</div>
+</div>
+<!-- Acciones Rápidas -->
+<div class="grid grid-cols-2 gap-2 mt-4">
+<button class="h-10 px-3 bg-brand-light text-brand-primary hover:bg-[#d9e5fa] active:scale-95 transition-all text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 border border-brand-primary/20" type="button">
+<span class="material-symbols-outlined text-base">share</span>
+          Compartir resultados
+        </button>
+<button class="h-10 px-3 bg-white text-brand-ink hover:bg-slate-50 active:scale-95 transition-all text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 border border-brand-border" type="button">
+<span class="material-symbols-outlined text-base text-brand-primary">photo_library</span>
+          Ver fotos / podio
+        </button>
+</div>
+</section>
+<!-- TABS DE TORNEO -->
+<section class="bg-white border-b border-brand-border px-4 py-2 sticky top-14 z-40">
+<div class="flex items-center gap-1 p-1 bg-brand-canvas rounded-lg overflow-x-auto no-scrollbar">
+<button class="flex-1 py-1.5 px-3 rounded-md text-xs font-medium text-brand-muted hover:text-brand-ink transition-colors whitespace-nowrap text-center" type="button">
+          Fixture
+        </button>
+<button aria-current="page" class="flex-1 py-1.5 px-3 rounded-md text-xs font-bold bg-brand-primary text-white shadow-sm whitespace-nowrap text-center" type="button">
+          Llave
+        </button>
+<button class="flex-1 py-1.5 px-3 rounded-md text-xs font-medium text-brand-muted hover:text-brand-ink transition-colors whitespace-nowrap text-center" type="button">
+          Parejas (16)
+        </button>
+<button class="flex-1 py-1.5 px-3 rounded-md text-xs font-medium text-brand-muted hover:text-brand-ink transition-colors whitespace-nowrap text-center" type="button">
+          Reglamento
+        </button>
+</div>
+</section>
+<!-- BANDA DESTACADA DE CAMPEONES -->
+<section class="p-4">
+<div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#0c2357] via-[#1846a3] to-[#0c2357] p-4 text-white border-2 border-brand-ball/70 shadow-sm">
+<!-- Badge corona -->
+<div class="flex items-center justify-between">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-ball text-brand-ink text-[11px] font-extrabold tracking-wide uppercase">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+            ¡Campeones de la Copa Primavera!
+          </div>
+<span class="text-[11px] font-medium text-white/70">Final • 17 Mar</span>
+</div>
+<div class="mt-3.5 flex items-center justify-between gap-3">
+<div class="flex-1">
+<div class="flex items-center gap-2">
+<span class="inline-block w-3 h-3 rounded-full bg-brand-ball shadow-[0_0_8px_rgba(217,240,63,0.8)] shrink-0"></span>
+<h2 class="font-headline text-xl font-bold tracking-tight text-white leading-tight">
+                Martín Morales / Facundo Rossi
+              </h2>
+</div>
+<p class="text-xs text-white/80 mt-1 pl-5">
+              CN San Isidro • 1.200 pts de ranking
+            </p>
+</div>
+<div class="bg-black/30 backdrop-blur-sm border border-white/20 rounded-lg px-2.5 py-1.5 text-center shrink-0">
+<div class="text-[10px] text-brand-ball font-bold uppercase tracking-wider">Marcador</div>
+<div class="font-headline text-lg font-bold text-white tracking-wider score-cell">6-4 / 7-5</div>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-white/15 flex items-center justify-between text-xs text-white/80">
+<div class="flex items-center gap-1.5">
+<span class="text-[11px] uppercase font-semibold text-white/60">Subcampeones:</span>
+<span class="font-medium text-white">H. Benítez / B. Acosta</span>
+</div>
+<span class="text-[11px] text-white/70">Duración: 1h 48m</span>
+</div>
+</div>
+</section>
+<!-- CUADRO DE ELIMINACIÓN DIRECTA (BRACKET DESPLAZABLE) -->
+<section class="mt-1">
+<div class="px-4 flex items-center justify-between mb-2">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-brand-primary text-base">account_tree</span>
+<h3 class="font-headline text-base font-bold uppercase tracking-wide text-brand-ink">Cuadro Principal</h3>
+</div>
+<span class="text-[11px] font-medium text-brand-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">swipe</span>
+          Deslizá horizontalmente
+        </span>
+</div>
+<!-- Contenedor scroll horizontal con ancho total para ver las 3 rondas -->
+<div class="overflow-x-auto no-scrollbar px-4 pb-4">
+<div class="min-w-[780px] grid grid-cols-3 gap-6 relative py-2">
+<!-- ================= COLUMNA: CUARTOS DE FINAL ================= -->
+<div class="flex flex-col">
+<div class="text-center pb-2 mb-3 border-b-2 border-brand-border">
+<span class="font-headline text-xs font-bold uppercase tracking-wider text-brand-muted">Cuartos de final</span>
+<span class="block text-[10px] text-brand-muted font-normal">Sábado 15 Mar</span>
+</div>
+<div class="flex flex-col gap-4">
+<!-- QF 1 -->
+<div class="bg-white rounded-lg border border-brand-border p-2.5 shadow-sm text-xs relative">
+<div class="flex justify-between items-center text-[10px] text-brand-muted mb-1 pb-1 border-b border-brand-border/40">
+<span>QF1 • Cancha 1</span>
+<span class="text-[#146c48] font-bold">FINAL</span>
+</div>
+<!-- Dupla 1 (Ganadora) -->
+<div class="flex items-center justify-between py-1 font-bold text-brand-ink bg-brand-light/40 -mx-1 px-1 rounded">
+<div class="flex items-center gap-1.5 truncate">
+<span class="w-2 h-2 rounded-full bg-brand-ball shrink-0"></span>
+<span class="truncate">M. Morales / F. Rossi</span>
+</div>
+<div class="flex items-center gap-1 pl-2 font-headline text-sm tabular-nums">
+<span class="w-5 h-5 flex items-center justify-center bg-white border border-brand-border rounded font-bold">6</span>
+<span class="w-5 h-5 flex items-center justify-center bg-white border border-brand-border rounded font-bold">6</span>
+</div>
+</div>
+<!-- Dupla 2 -->
+<div class="flex items-center justify-between py-1 text-brand-muted">
+<div class="flex items-center gap-1.5 truncate pl-3.5">
+<span class="truncate">L. Di Santo / G. Pereyra</span>
+</div>
+<div class="flex items-center gap-1 pl-2 font-headline text-sm tabular-nums">
+<span class="w-5 h-5 flex items-center justify-center text-brand-muted">3</span>
+<span class="w-5 h-5 flex items-center justify-center text-brand-muted">4</span>
+</div>
+</div>
+</div>
+<!-- QF 2 -->
+<div class="bg-white rounded-lg border border-brand-border p-2.5 shadow-sm text-xs relative">
+<div class="flex justify-between items-center text-[10px] text-brand-muted mb-1 pb-1 border-b border-brand-border/40">
+<span>QF2 • Cancha 2</span>
+<span class="text-[#146c48] font-bold">FINAL</span>
+</div>
+<!-- Dupla 1 (Ganadora) -->
+<div class="flex items-center justify-between py-1 font-bold text-brand-ink bg-brand-light/40 -mx-1 px-1 rounded">
+<div class="flex items-center gap-1.5 truncate">
+<span class="w-2 h-2 rounded-full bg-brand-ball shrink-0"></span>
+<span class="truncate">J. Riquelme / M. Palermo</span>
+</div>
+<div class="flex items-center gap-1 pl-2 font-headline text-sm tabular-nums">
+<span class="w-5 h-5 flex items-center justify-center bg-white border border-brand-border rounded font-bold">7</span>
+<span class="w-5 h-5 flex items-center justify-center bg-white border border-brand-border rounded font-bold">6</span>
+</div>
+</div>
+<!-- Dupla 2 -->
+<div class="flex items-center justify-between py-1 text-brand-muted">
+<div class="flex items-center gap-1.5 truncate pl-3.5">
+<span class="truncate">T. Silva / N. Domínguez</span>
+</div>
+<div class="flex items-center gap-1 pl-2 font-headline text-sm tabular-nums">
+<span class="w-5 h-5 flex items-center justify-center text-brand-muted">6</span>
+<span class="w-5 h-5 flex items-center justify-center text-brand-muted">3</span>
+</div>
+</div>
+</div>
+<!-- QF 3 -->
+<div class="bg-white rounded-lg border border-brand-border p-2.5 shadow-sm text-xs relative">
+<div class="flex justify-between items-center text-[10px] text-brand-muted mb-1 pb-1 border-b border-brand-border/40">
+<span>QF3 • Cancha 1</span>
+<span class="text-[#146c48] font-bold">FINAL</span>
+</div>
+<!-- Dupla 1 (Ganadora) -->
+<div class="flex items-center justify-between py-1 font-bold text-brand-ink bg-brand-light/40 -mx-1 px-1 rounded">
+<div class="flex items-center gap-1.5 truncate">
+<span class="w-2 h-2 rounded-full bg-brand-ball shrink-0"></span>
+<span class="truncate">H. Benítez / B. Acosta</span>
+</div>
+<div class="flex items-center gap-1 pl-2 font-headline text-sm tabular-nums">
+<span class="w-5 h-5 flex items-center justify-center bg-white border border-brand-border rounded font-bold">6</span>
+<span class="w-5 h-5 flex items-center justify-center bg-white border border-brand-border rounded font-bold">3</span>
+<span class="w-5 h-5 flex items-center justify-center bg-white border border-brand-border rounded font-bold">6</span>
+</div>
+</div>
+<!-- Dupla 2 -->
+<div class="flex items-center justify-between py-1 text-brand-muted">
+<div class="flex items-center gap-1.5 truncate pl-3.5">
+<span class="truncate">E. Gómez / P. Díaz</span>
+</div>
+<div class="flex items-center gap-1 pl-2 font-headline text-sm tabular-nums">
+<span class="w-5 h-5 flex items-center justify-center text-brand-muted">4</span>
+<span class="w-5 h-5 flex items-center justify-center text-brand-muted">6</span>
+<span class="w-5 h-5 flex items-center justify-center text-brand-muted">2</span>
+</div>
+</div>
+</div>
+<!-- QF 4 -->
+<div class="bg-white rounded-lg border border-brand-border p-2.5 shadow-sm text-xs relative">
+<div class="flex justify-between items-center text-[10px] text-brand-muted mb-1 pb-1 border-b border-brand-border/40">
+<span>QF4 • Cancha 3</span>
+<span class="text-[#146c48] font-bold">FINAL</span>
+</div>
+<!-- Dupla 1 (Ganadora) -->
+<div class="flex items-center justify-between py-1 font-bold text-brand-ink bg-brand-light/40 -mx-1 px-1 rounded">
+<div class="flex items-center gap-1.5 truncate">
+<span class="w-2 h-2 rounded-full bg-brand-ball shrink-0"></span>
+<span class="truncate">C. Fernández / A. Ruiz</span>
+</div>
+<div class="flex items-center gap-1 pl-2 font-headline text-sm tabular-nums">
+<span class="w-5 h-5 flex items-center justify-center bg-white border border-brand-border rounded font-bold">6</span>
+<span class="w-5 h-5 flex items-center justify-center bg-white border border-brand-border rounded font-bold">6</span>
+</div>
+</div>
+<!-- Dupla 2 -->
+<div class="flex items-center justify-between py-1 text-brand-muted">
+<div class="flex items-center gap-1.5 truncate pl-3.5">
+<span class="truncate">M. Castro / S. Romero</span>
+</div>
+<div class="flex items-center gap-1 pl-2 font-headline text-sm tabular-nums">
+<span class="w-5 h-5 flex items-center justify-center text-brand-muted">2</span>
+<span class="w-5 h-5 flex items-center justify-center text-brand-muted">1</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ================= COLUMNA: SEMIFINALES ================= -->
+<div class="flex flex-col">
+<div class="text-center pb-2 mb-3 border-b-2 border-brand-border">
+<span class="font-headline text-xs font-bold uppercase tracking-wider text-brand-muted">Semifinales</span>
+<span class="block text-[10px] text-brand-muted font-normal">Domingo 16 Mar</span>
+</div>
+<div class="flex flex-col justify-around h-full gap-8 py-4">
+<!-- SF 1 -->
+<div class="bg-white rounded-lg border-2 border-brand-border p-2.5 shadow-sm text-xs relative">
+<div class="flex justify-between items-center text-[10px] text-brand-muted mb-1 pb-1 border-b border-brand-border/40">
+<span>SF1 • Cancha Central</span>
+<span class="text-[#146c48] font-bold">FINAL</span>
+</div>
+<!-- Morales / Rossi -->
+<div class="flex items-center justify-between py-1 font-bold text-brand-ink bg-brand-light/50 -mx-1 px-1 rounded">
+<div class="flex items-center gap-1.5 truncate">
+<span class="w-2 h-2 rounded-full bg-brand-ball shrink-0"></span>
+<span class="truncate">Morales / Rossi</span>
+</div>
+<div class="flex items-center gap-1 pl-2 font-headline text-sm tabular-nums">
+<span class="w-5 h-5 flex items-center justify-center bg-white border border-brand-border rounded font-bold">6</span>
+<span class="w-5 h-5 flex items-center justify-center bg-white border border-brand-border rounded font-bold">6</span>
+</div>
+</div>
+<!-- Riquelme / Palermo -->
+<div class="flex items-center justify-between py-1 text-brand-muted">
+<div class="flex items-center gap-1.5 truncate pl-3.5">
+<span class="truncate">Riquelme / Palermo</span>
+</div>
+<div class="flex items-center gap-1 pl-2 font-headline text-sm tabular-nums">
+<span class="w-5 h-5 flex items-center justify-center text-brand-muted">3</span>
+<span class="w-5 h-5 flex items-center justify-center text-brand-muted">4</span>
+</div>
+</div>
+</div>
+<!-- SF 2 -->
+<div class="bg-white rounded-lg border-2 border-brand-border p-2.5 shadow-sm text-xs relative">
+<div class="flex justify-between items-center text-[10px] text-brand-muted mb-1 pb-1 border-b border-brand-border/40">
+<span>SF2 • Cancha Central</span>
+<span class="text-[#146c48] font-bold">FINAL</span>
+</div>
+<!-- Benítez / Acosta -->
+<div class="flex items-center justify-between py-1 font-bold text-brand-ink bg-brand-light/50 -mx-1 px-1 rounded">
+<div class="flex items-center gap-1.5 truncate">
+<span class="w-2 h-2 rounded-full bg-brand-ball shrink-0"></span>
+<span class="truncate">Benítez / Acosta</span>
+</div>
+<div class="flex items-center gap-1 pl-2 font-headline text-sm tabular-nums">
+<span class="w-5 h-5 flex items-center justify-center bg-white border border-brand-border rounded font-bold">7</span>
+<span class="w-5 h-5 flex items-center justify-center bg-white border border-brand-border rounded font-bold">6</span>
+</div>
+</div>
+<!-- Fernández / Ruiz -->
+<div class="flex items-center justify-between py-1 text-brand-muted">
+<div class="flex items-center gap-1.5 truncate pl-3.5">
+<span class="truncate">Fernández / Ruiz</span>
+</div>
+<div class="flex items-center gap-1 pl-2 font-headline text-sm tabular-nums">
+<span class="w-5 h-5 flex items-center justify-center text-brand-muted">5</span>
+<span class="w-5 h-5 flex items-center justify-center text-brand-muted">3</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ================= COLUMNA: GRAN FINAL ================= -->
+<div class="flex flex-col">
+<div class="text-center pb-2 mb-3 border-b-2 border-brand-ball">
+<span class="font-headline text-xs font-bold uppercase tracking-wider text-brand-primary">Gran Final</span>
+<span class="block text-[10px] text-brand-muted font-normal">Lunes 17 Mar • 19:30 hs</span>
+</div>
+<div class="flex flex-col justify-center h-full">
+<!-- TARJETA FINAL DESTACADA -->
+<div class="bg-white rounded-xl border-2 border-brand-primary p-3 shadow-md text-xs relative ring-2 ring-brand-ball/50">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-primary text-brand-ball px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wide shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+                  Partido Definitorio
+                </div>
+<div class="flex justify-between items-center text-[10px] text-brand-muted mt-1.5 mb-2 pb-1.5 border-b border-brand-border">
+<span>Cancha 1 (Cristal)</span>
+<span class="px-1.5 py-0.5 rounded bg-[#e0f3ea] text-[#146c48] font-bold">OFICIAL</span>
+</div>
+<!-- CAMPEÓN FINAL -->
+<div class="flex items-center justify-between py-2 font-bold text-brand-ink bg-brand-light rounded px-2 mb-1.5 border border-brand-primary/20">
+<div class="flex items-center gap-2 truncate">
+<span class="w-2.5 h-2.5 rounded-full bg-brand-ball shrink-0 shadow-sm"></span>
+<div>
+<div class="truncate text-xs font-extrabold text-brand-primary">Morales / Rossi</div>
+<div class="text-[10px] text-brand-muted font-normal">Campeones 2025</div>
+</div>
+</div>
+<div class="flex items-center gap-1 pl-2 font-headline text-base tabular-nums">
+<span class="w-6 h-6 flex items-center justify-center bg-white border border-brand-border rounded font-bold text-brand-primary shadow-xs">6</span>
+<span class="w-6 h-6 flex items-center justify-center bg-white border border-brand-border rounded font-bold text-brand-primary shadow-xs">7</span>
+</div>
+</div>
+<!-- SUBCAMPEÓN FINAL -->
+<div class="flex items-center justify-between py-2 text-brand-muted px-2">
+<div class="flex items-center gap-2 truncate pl-4">
+<div>
+<div class="truncate text-xs font-semibold text-brand-ink">Benítez / Acosta</div>
+<div class="text-[10px] text-brand-muted font-normal">Subcampeones</div>
+</div>
+</div>
+<div class="flex items-center gap-1 pl-2 font-headline text-base tabular-nums">
+<span class="w-6 h-6 flex items-center justify-center text-brand-muted">4</span>
+<span class="w-6 h-6 flex items-center justify-center text-brand-muted">5</span>
+</div>
+</div>
+<div class="mt-2 pt-2 border-t border-brand-border/60 flex items-center justify-between text-[10px] text-brand-muted">
+<span>Árbitro: R. Varela (APA)</span>
+<span class="font-medium text-brand-primary">Planilla cerrada</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- RESUMEN DEL TORNEO & PREMIACIÓN -->
+<section class="px-4 mt-2 space-y-3">
+<div class="bg-white rounded-lg border border-brand-border p-4">
+<h4 class="font-headline text-sm font-bold uppercase tracking-wider text-brand-ink mb-3 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-brand-primary text-base">workspace_premium</span>
+          Premios y distinciones
+        </h4>
+<div class="space-y-3 text-xs">
+<div class="flex items-start gap-3 p-2.5 rounded-lg bg-brand-canvas/70 border border-brand-border">
+<span class="material-symbols-outlined text-brand-primary text-xl shrink-0 mt-0.5">trophy</span>
+<div class="flex-1">
+<span class="font-bold text-brand-ink block">1° Puesto (Campeones)</span>
+<span class="text-brand-muted text-[11px] block mt-0.5">2 Paletas Bullpadel Vertex 04 + Trofeos oficiales + 1.200 pts de ranking APA amateur.</span>
+</div>
+</div>
+<div class="flex items-start gap-3 p-2.5 rounded-lg bg-brand-canvas/70 border border-brand-border">
+<span class="material-symbols-outlined text-brand-muted text-xl shrink-0 mt-0.5">military_tech</span>
+<div class="flex-1">
+<span class="font-bold text-brand-ink block">2° Puesto (Subcampeones)</span>
+<span class="text-brand-muted text-[11px] block mt-0.5">2 Bolsos Paleteros Siux Pro + Medallas de plata + 800 pts de ranking.</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1 text-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-amber-600 text-base" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-semibold text-brand-ink">MVP del Torneo:</span>
+</div>
+<span class="font-bold text-brand-primary">Facundo Rossi (Revés)</span>
+</div>
+</div>
+</div>
+<!-- BOTÓN DESCARGAR PLANILLA -->
+<button class="w-full h-12 bg-white hover:bg-slate-50 border border-brand-primary text-brand-primary active:scale-[0.99] transition-all rounded-lg font-semibold text-xs flex items-center justify-center gap-2 shadow-xs" type="button">
+<span class="material-symbols-outlined text-lg">picture_as_pdf</span>
+        Descargar planilla oficial firmada (PDF)
+      </button>
+<!-- NOTA DE CIERRE -->
+<div class="text-center py-2">
+<p class="text-[11px] text-brand-muted">
+          Organizado por Club Náutico San Isidro. Fiscalizado por Circuito Bonaerense de Pádel.
+        </p>
+</div>
+</section>
+</main>
+<!-- ================= BOTTOM NAVIGATION BAR (Shared Component) ================= -->
+<!-- Contextual Lock: Torneos is strictly ACTIVE -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 bg-white border-t border-[#d3dbe9]">
+<!-- Inicio -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-xl">home</span>
+<span class="font-label text-xs font-semibold mt-0.5">Inicio</span>
+</a>
+<!-- Parejas -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-xl">group</span>
+<span class="font-label text-xs font-semibold mt-0.5">Parejas</span>
+</a>
+<!-- Partidos -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-xl">sports_tennis</span>
+<span class="font-label text-xs font-semibold mt-0.5">Partidos</span>
+</a>
+<!-- Torneos (ACTIVE ITEM) -->
+<a aria-current="page" class="flex flex-col items-center justify-center text-[#1846a3] dark:text-[#1846a3] font-bold py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+<span class="font-label text-xs font-semibold mt-0.5">Torneos</span>
+</a>
+<!-- Mis datos -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-xl">person</span>
+<span class="font-label text-xs font-semibold mt-0.5">Mis datos</span>
+</a>
+</nav>
+</body></html>

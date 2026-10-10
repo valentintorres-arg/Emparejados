@@ -1,0 +1,22 @@
+{
+  "code:apps/api/src/app.module.ts": "Núcleo de la API NestJS",
+  "code:apps/web/src/lib/tipos.ts": "Pantallas web y formato",
+  "code:apps/web/src/components/ui.tsx": "Componentes base y sesión web",
+  "doc:docs/stitch-prompt.md": "Producto, reglas y maquetas",
+  "code:apps/api/src/comun/password.ts::hashearPassword": "Contraseñas, altas e integración",
+  "code:apps/api/src/avisos/avisos.service.ts": "Avisos en vivo y push",
+  "code:apps/api/src/torneos/torneos.service.ts::TorneosService": "Torneos, sorteo y fixture",
+  "code:apps/web/scripts/generar-iconos.mjs": "Marca, íconos y PWA",
+  "code:apps/api/src/parejas/parejas.service.ts::ParejasService": "Servicio de parejas y listados",
+  "code:apps/web/src/components/esqueletos.tsx": "Esqueletos de carga",
+  "code:apps/api/src/partidos/partidos.service.ts::PartidosService": "Partidos y resultados",
+  "code:apps/web/src/lib/notificaciones.ts": "Notificaciones en la web",
+  "code:apps/api/src/jugadores/jugadores.controller.ts::JugadoresController": "Endpoints de jugadores",
+  "code:apps/api/src/auth/auth.controller.ts::AuthController": "Endpoints de sesión",
+  "code:apps/web/src/components/qr.tsx": "Código y escáner QR",
+  "code:apps/api/src/parejas/parejas.controller.ts::ParejasController": "Endpoints de parejas",
+  "code:apps/api/src/torneos/torneos.controller.ts::TorneosController": "Endpoints de torneos",
+  "code:apps/api/src/catalogos/catalogos.controller.ts::CatalogosController": "Catálogos",
+  "code:apps/api/src/comun/filtro-errores.ts": "Traducción de errores",
+  "code:apps/web/eslint.config.mjs": "Configuración de ESLint"
+}

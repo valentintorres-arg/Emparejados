@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Emparejados Pádel - Mis datos</title>
+<!-- Google Fonts: Public Sans & Archivo Narrow -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,500;0,600;0,700;1,600&amp;family=Public+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: '#1846a3',
+              dark: '#0c2357',
+              light: '#e8eefb',
+              accent: '#d9f03f',
+              ink: '#0e1b3d',
+              muted: '#55627d',
+              border: '#d3dbe9',
+              bg: '#eef2f8',
+              success: '#146c48',
+              'success-bg': '#e0f3ea',
+              danger: '#b02d23',
+              'danger-bg': '#fbe9e7',
+              warning: '#7d4a00',
+              'warning-bg': '#fcefd8'
+            }
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Public Sans", "sans-serif"],
+            display: ["Archivo Narrow", "sans-serif"],
+            body: ["Public Sans", "sans-serif"],
+            label: ["Public Sans", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #eef2f8;
+      color: #0e1b3d;
+      font-family: 'Public Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .font-condensed {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-feature-settings: "tnum";
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen pb-24 antialiased selection:bg-[#1846a3] selection:text-white">
+<!-- ==================== TOP APP BAR (Shared Component Anchor) ==================== -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-4 h-14 bg-[#1846a3] text-white border-b border-[#0c2357]">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]">sports_tennis</span>
+</div>
+<span class="font-headline text-lg font-bold tracking-tight text-white">Emparejados Pádel</span>
+</div>
+<div class="flex items-center gap-1.5">
+<button aria-label="Notificaciones" class="relative w-9 h-9 rounded-full flex items-center justify-center text-white/90 hover:bg-[#0c2357] transition-colors duration-150 active:scale-95" type="button">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+<!-- Indicador con amarillo pelota de pádel -->
+<span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#d9f03f] ring-2 ring-[#1846a3]"></span>
+</button>
+</div>
+</header>
+<!-- ==================== MAIN CONTENT WRAPPER ==================== -->
+<main class="pt-16 max-w-2xl mx-auto px-4 sm:px-6">
+<!-- Screen Title & Context Bar -->
+<div class="py-4 flex items-center justify-between">
+<div>
+<h1 class="text-xl font-bold tracking-tight text-[#0e1b3d] font-condensed uppercase tracking-wide">Tus datos personales</h1>
+<p class="text-xs text-[#55627d] mt-0.5">Revisá y administrá tu ficha de jugador amateur</p>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#e0f3ea] border border-[#146c48]/20 text-[#146c48]">
+<span class="w-2 h-2 rounded-full bg-[#146c48] animate-pulse"></span>
+<span class="text-xs font-semibold">Federado 2025</span>
+</div>
+</div>
+<!-- ==================== PERFIL & CARNET DIGITAL ==================== -->
+<section class="bg-white rounded-lg border border-[#d3dbe9] p-4 sm:p-5 mb-4 relative overflow-hidden">
+<!-- Decoración cancha sutil de fondo -->
+<div class="absolute -top-12 -right-12 w-36 h-36 rounded-full border-[10px] border-[#e8eefb] pointer-events-none opacity-40"></div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<!-- Avatar y Datos Principales -->
+<div class="flex items-start sm:items-center gap-3.5">
+<div class="relative">
+<div class="w-16 h-16 rounded-full bg-[#1846a3] text-white flex items-center justify-center font-bold text-xl tracking-wider shadow-sm ring-4 ring-[#e8eefb]">
+              MM
+            </div>
+<!-- Badge categoría en avatar -->
+<span class="absolute -bottom-1 -right-1 bg-[#d9f03f] text-[#0e1b3d] text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[#0e1b3d]/10 font-condensed">
+              6ª
+            </span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="text-lg font-bold text-[#0e1b3d] leading-snug">Martín Morales</h2>
+<span class="material-symbols-outlined text-[18px] text-[#1846a3]" style="font-variation-settings: 'FILL' 1;" title="Jugador validado">verified</span>
+</div>
+<p class="text-xs font-medium text-[#55627d] flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px] text-[#1846a3]">location_on</span>
+              Club Náutico San Isidro
+            </p>
+<div class="flex flex-wrap items-center gap-2 mt-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#e8eefb] text-[#1846a3] border border-[#1846a3]/20">
+                6ª Caballeros
+              </span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#e0f3ea] text-[#146c48] border border-[#146c48]/20">
+                Habilitado para competir
+              </span>
+</div>
+</div>
+</div>
+<!-- Botón primario de edición -->
+<button class="w-full sm:w-auto h-11 px-4 bg-[#1846a3] hover:bg-[#0c2357] text-white text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-colors duration-150 active:scale-95 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span>Modificá tu perfil</span>
+</button>
+</div>
+<!-- Carnet Digital Federado ID -->
+<div class="mt-4 pt-3.5 border-t border-[#d3dbe9] flex flex-wrap items-center justify-between gap-2 text-xs bg-[#eef2f8]/60 p-2.5 rounded-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-[#55627d]">badge</span>
+<span class="text-[#55627d]">Carnet N°:</span>
+<span class="font-bold text-[#0e1b3d] font-condensed tracking-wider text-sm">#8821-APA</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[11px] text-[#55627d]">Circuito oficial Zona Norte</span>
+<span class="w-1.5 h-1.5 rounded-full bg-[#146c48]"></span>
+<span class="text-[11px] font-semibold text-[#146c48]">Al día</span>
+</div>
+</div>
+</section>
+<!-- ==================== BENTO DE DATOS PERSONALES & DEPORTIVOS ==================== -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+<!-- Card: Datos Personales -->
+<div class="bg-white rounded-lg border border-[#d3dbe9] p-4 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between border-b border-[#d3dbe9] pb-2.5 mb-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-[#e8eefb] text-[#1846a3] flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px]">person</span>
+</div>
+<h3 class="font-bold text-sm text-[#0e1b3d]">Ficha personal</h3>
+</div>
+<span class="text-[11px] text-[#55627d]">DNI validado</span>
+</div>
+<div class="space-y-3 text-xs">
+<div>
+<span class="text-[#55627d] block text-[11px]">Nombre completo</span>
+<p class="font-semibold text-[#0e1b3d] mt-0.5">Martín Morales</p>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<div>
+<span class="text-[#55627d] block text-[11px]">DNI</span>
+<p class="font-semibold text-[#0e1b3d] font-condensed text-sm mt-0.5">38.452.190</p>
+</div>
+<div>
+<span class="text-[#55627d] block text-[11px]">Género</span>
+<p class="font-semibold text-[#0e1b3d] mt-0.5">Masculino</p>
+</div>
+</div>
+<div>
+<span class="text-[#55627d] block text-[11px]">Nacimiento y edad</span>
+<p class="font-semibold text-[#0e1b3d] mt-0.5">14 de mayo de 1994 <span class="text-[#55627d] font-normal">(30 años)</span></p>
+</div>
+<div class="pt-1">
+<span class="text-[#55627d] block text-[11px]">Teléfono de contacto / WhatsApp</span>
+<div class="flex items-center justify-between mt-1 p-2 rounded bg-[#eef2f8] border border-[#d3dbe9]/80">
+<span class="font-bold text-[#0e1b3d] font-condensed tracking-wide">+54 9 11 5824-9102</span>
+<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#146c48]">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                  Verificado
+                </span>
+</div>
+</div>
+</div>
+</div>
+<p class="text-[11px] text-[#55627d] mt-3 pt-2.5 border-t border-dashed border-[#d3dbe9]">
+          Para cambiar tu DNI debés solicitarlo en secretaría del club.
+        </p>
+</div>
+<!-- Card: Datos Deportivos y Cancha -->
+<div class="bg-white rounded-lg border border-[#d3dbe9] p-4 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between border-b border-[#d3dbe9] pb-2.5 mb-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-[#e8eefb] text-[#1846a3] flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px]">sports_tennis</span>
+</div>
+<h3 class="font-bold text-sm text-[#0e1b3d]">Perfil de juego</h3>
+</div>
+<span class="inline-block w-2.5 h-2.5 rounded-full bg-[#d9f03f] border border-[#0e1b3d]/30" title="Activo en ranking"></span>
+</div>
+<div class="space-y-3 text-xs">
+<div>
+<span class="text-[#55627d] block text-[11px]">Categoría oficial</span>
+<p class="font-bold text-[#0e1b3d] mt-0.5 text-sm">6ª Categoría Caballeros</p>
+<p class="text-[11px] text-[#55627d]">Asociación Pádel Argentino (APA) · 2025</p>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<div class="p-2 rounded bg-[#eef2f8] border border-[#d3dbe9]/80">
+<span class="text-[#55627d] block text-[10px] font-semibold uppercase">Mano hábil</span>
+<p class="font-bold text-[#0e1b3d] mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-[#1846a3]">front_hand</span>
+                  Diestro
+                </p>
+</div>
+<div class="p-2 rounded bg-[#eef2f8] border border-[#d3dbe9]/80">
+<span class="text-[#55627d] block text-[10px] font-semibold uppercase">Posición en cancha</span>
+<p class="font-bold text-[#0e1b3d] mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-[#1846a3]">swap_horiz</span>
+                  Drive (derecha)
+                </p>
+</div>
+</div>
+<div>
+<span class="text-[#55627d] block text-[11px]">Club habitual</span>
+<p class="font-semibold text-[#0e1b3d] mt-0.5">Club Náutico San Isidro</p>
+<span class="text-[11px] text-[#55627d]">San Isidro, Buenos Aires</span>
+</div>
+<div>
+<span class="text-[#55627d] block text-[11px]">Compañero habitual</span>
+<div class="flex items-center gap-2 mt-1">
+<div class="w-5 h-5 rounded-full bg-[#0c2357] text-white text-[10px] flex items-center justify-center font-bold">FR</div>
+<span class="font-medium text-[#0e1b3d]">Facundo Rossi (6ª Cat.)</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-dashed border-[#d3dbe9] flex items-center justify-between text-[11px]">
+<span class="text-[#55627d]">Estado de ranking:</span>
+<span class="font-bold text-[#1846a3]">Posición 14° ZN</span>
+</div>
+</div>
+</div>
+<!-- ==================== SEGURIDAD Y CONTRASEÑA ==================== -->
+<section class="bg-white rounded-lg border border-[#d3dbe9] p-4 mb-4">
+<div class="flex items-center justify-between border-b border-[#d3dbe9] pb-3 mb-3.5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-[#fcefd8] text-[#7d4a00] flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px]">lock</span>
+</div>
+<div>
+<h3 class="font-bold text-sm text-[#0e1b3d]">Seguridad de la cuenta</h3>
+<p class="text-[11px] text-[#55627d]">Actualizá tu clave de acceso a Emparejados</p>
+</div>
+</div>
+<span class="text-[11px] text-[#7d4a00] bg-[#fcefd8] px-2 py-0.5 rounded font-medium">Modificada hace 3 meses</span>
+</div>
+<form class="space-y-3" onsubmit="event.preventDefault();">
+<!-- Contraseña actual -->
+<div>
+<label class="block text-xs font-semibold text-[#0e1b3d] mb-1">Contraseña actual</label>
+<div class="relative">
+<input class="w-full h-11 px-3 pr-10 text-xs rounded-lg border border-[#d3dbe9] focus:outline-none focus:ring-2 focus:ring-[#1846a3] focus:border-[#1846a3] bg-white text-[#0e1b3d]" id="input-current-pass" placeholder="Ingresá tu clave actual" type="password" value="••••••••••••"/>
+<button aria-label="Mostrar contraseña" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#55627d] hover:text-[#0e1b3d] p-1" onclick="togglePassVisibility('input-current-pass', this)" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</div>
+<!-- Nueva contraseña -->
+<div>
+<label class="block text-xs font-semibold text-[#0e1b3d] mb-1">Nueva contraseña</label>
+<div class="relative">
+<input class="w-full h-11 px-3 pr-10 text-xs rounded-lg border border-[#d3dbe9] focus:outline-none focus:ring-2 focus:ring-[#1846a3] focus:border-[#1846a3] bg-white text-[#0e1b3d]" id="input-new-pass" placeholder="Mínimo 8 caracteres alfanuméricos" type="password"/>
+<button aria-label="Mostrar nueva contraseña" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#55627d] hover:text-[#0e1b3d] p-1" onclick="togglePassVisibility('input-new-pass', this)" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+<p class="text-[10px] text-[#55627d] mt-1">Debe incluir letras, números y al menos 8 caracteres para torneos oficiales.</p>
+</div>
+<!-- Botón Guardar / Actualizar -->
+<div class="pt-1.5 flex flex-col sm:flex-row items-center gap-2">
+<button class="w-full sm:w-auto h-11 px-5 bg-white border border-[#1846a3] text-[#1846a3] hover:bg-[#e8eefb] text-xs font-bold rounded-lg flex items-center justify-center gap-2 transition-colors duration-150 active:scale-95" type="submit">
+<span class="material-symbols-outlined text-[17px]">key</span>
+<span>Actualizar contraseña</span>
+</button>
+<span class="text-[11px] text-[#55627d] italic">Guardá los cambios antes de salir.</span>
+</div>
+</form>
+</section>
+<!-- ==================== ACCESOS PWA & PREFERENCIAS ==================== -->
+<section class="space-y-3 mb-6">
+<!-- Banner Instalar PWA -->
+<div class="bg-[#1846a3] text-white rounded-lg p-3.5 sm:p-4 flex items-center justify-between gap-3 shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-white/10 flex-shrink-0 flex items-center justify-center text-[#d9f03f]">
+<span class="material-symbols-outlined text-[24px]">install_mobile</span>
+</div>
+<div>
+<h4 class="font-bold text-xs sm:text-sm text-white">Instalá la app en tu celular</h4>
+<p class="text-[11px] text-white/80 line-clamp-1 sm:line-clamp-none">Accedé más rápido, fijate tus partidos al costado de la cancha y recibí avisos sin demoras.</p>
+</div>
+</div>
+<button class="flex-shrink-0 h-9 px-3.5 bg-[#d9f03f] hover:bg-[#c9df30] text-[#0e1b3d] text-xs font-bold rounded-md flex items-center gap-1.5 transition-colors duration-150 active:scale-95" type="button">
+<span>Instalar</span>
+</button>
+</div>
+<!-- Preferencias de Avisos / Notificaciones Rápidas -->
+<div class="bg-white rounded-lg border border-[#d3dbe9] p-4">
+<h4 class="font-bold text-xs text-[#0e1b3d] uppercase tracking-wide font-condensed mb-2.5">Avisos de partidos y torneos</h4>
+<div class="divide-y divide-[#d3dbe9]">
+<div class="py-2.5 flex items-center justify-between">
+<div class="pr-2">
+<p class="text-xs font-semibold text-[#0e1b3d]">Notificaciones por WhatsApp</p>
+<p class="text-[11px] text-[#55627d]">Avisos cuando se asigne cancha o cambie el horario del partido.</p>
+</div>
+<!-- Switch toggle -->
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-[#d3dbe9] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1846a3]"></div>
+</label>
+</div>
+<div class="py-2.5 flex items-center justify-between">
+<div class="pr-2">
+<p class="text-xs font-semibold text-[#0e1b3d]">Invitaciones de pareja</p>
+<p class="text-[11px] text-[#55627d]">Recibir solicitudes de otros jugadores que escaneen tu QR.</p>
+</div>
+<!-- Switch toggle -->
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-[#d3dbe9] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#1846a3]"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Botón Cerrar Sesión & Info de versión -->
+<div class="pt-1 flex flex-col items-center gap-3">
+<button class="w-full h-11 px-4 rounded-lg bg-[#fbe9e7] hover:bg-[#fadad7] text-[#b02d23] text-xs font-bold border border-[#b02d23]/20 flex items-center justify-center gap-2 transition-colors duration-150 active:scale-95" type="button">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+<span>Cerrar sesión</span>
+</button>
+<p class="text-[11px] text-[#55627d] text-center font-condensed tracking-wide">
+          Versión 1.4.2 · Circuito APA Amateur · Club Náutico San Isidro
+        </p>
+</div>
+</section>
+</main>
+<!-- ==================== BOTTOM NAV BAR (Shared Component Anchor) ==================== -->
+<!-- Contextual Lock: 'Mis datos' activo según JSON & jerarquía de pantalla -->
+<nav aria-label="Navegación principal" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 bg-white border-t border-[#d3dbe9]">
+<!-- 1. Inicio -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]">home</span>
+<span class="font-label text-xs font-semibold mt-0.5">Inicio</span>
+</a>
+<!-- 2. Parejas -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]">group</span>
+<span class="font-label text-xs font-semibold mt-0.5">Parejas</span>
+</a>
+<!-- 3. Partidos -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]">sports_tennis</span>
+<span class="font-label text-xs font-semibold mt-0.5">Partidos</span>
+</a>
+<!-- 4. Torneos -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]">emoji_events</span>
+<span class="font-label text-xs font-semibold mt-0.5">Torneos</span>
+</a>
+<!-- 5. Mis datos (ACTIVO MANDATORIO) -->
+<a aria-current="page" class="flex flex-col items-center justify-center text-[#1846a3] dark:text-[#1846a3] font-bold py-1 active:scale-95 transition-transform duration-100" href="#">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label text-xs font-semibold mt-0.5">Mis datos</span>
+<!-- Indicador activo sutil -->
+<span class="w-1.5 h-1.5 rounded-full bg-[#1846a3] mt-0.5"></span>
+</a>
+</nav>
+<!-- Script para interactividad ligera de visualización de contraseña -->
+<script>
+    function togglePassVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const icon = btn.querySelector('.material-symbols-outlined');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.textContent = 'visibility_off';
+      } else {
+        input.type = 'password';
+        icon.textContent = 'visibility';
+      }
+    }
+  </script>
+</body></html>

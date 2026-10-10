@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#eef2f8]" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sedes y Canchas - Emparejados Pádel</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Fonts: Public Sans & Archivo Narrow -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,500;0,600;0,700;1,600&amp;family=Public+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#1846a3",
+            "primary-dark": "#0c2357",
+            "primary-light": "#e8eefb",
+            ink: "#0e1b3d",
+            "ink-muted": "#55627d",
+            surface: "#ffffff",
+            background: "#eef2f8",
+            outline: "#d3dbe9",
+            "accent-ball": "#d9f03f",
+            "status-green-text": "#146c48",
+            "status-green-bg": "#e0f3ea",
+            "status-red-text": "#b02d23",
+            "status-red-bg": "#fbe9e7",
+            "status-amber-text": "#7d4a00",
+            "status-amber-bg": "#fcefd8",
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Archivo Narrow", "Public Sans", "sans-serif"],
+            display: ["Archivo Narrow", "Public Sans", "sans-serif"],
+            body: ["Public Sans", "sans-serif"],
+            label: ["Public Sans", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="h-full bg-background font-body text-ink antialiased flex">
+<!-- 1. Menú lateral izquierdo fijo (SideNavBar azul marino #1846a3) -->
+<aside class="fixed top-0 left-0 h-screen w-60 z-40 bg-primary border-r border-[#103480] flex flex-col justify-between p-4 text-white select-none">
+<div class="flex flex-col gap-5">
+<!-- Header / Marca -->
+<div class="px-2 pt-1">
+<div class="flex items-center gap-2.5 mb-1.5">
+<div class="w-8 h-8 rounded-lg bg-[#d9f03f] flex items-center justify-center text-[#0e1b3d] shadow-sm">
+<span class="material-symbols-outlined material-symbols-fill text-xl">sports_tennis</span>
+</div>
+<div>
+<h1 class="font-headline text-lg font-black tracking-tight leading-none text-white">EMPAREJADOS PÁDEL</h1>
+<p class="text-[11px] font-medium text-white/70 tracking-wide mt-0.5">Club San Isidro</p>
+</div>
+</div>
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 mt-1 rounded bg-[#0c2357]/60 border border-white/10 text-[10px] font-bold text-[#d9f03f] tracking-wider uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-[#d9f03f]"></span>
+          Fiscalía Oficial
+        </div>
+</div>
+<!-- Quick Action CTA -->
+<button class="w-full flex items-center justify-center gap-2 bg-[#d9f03f] text-[#0e1b3d] py-2.5 px-3 rounded-lg font-headline font-bold uppercase tracking-wider text-xs shadow hover:bg-[#c9e030] active:scale-[0.98] transition-all duration-150" type="button">
+<span class="material-symbols-outlined text-lg">qr_code_scanner</span>
+<span>Escanear Pareja</span>
+</button>
+<!-- Vertical Navigation -->
+<nav aria-label="Menú principal" class="flex flex-col gap-1 text-sm font-label">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span>Inicio</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium transition-colors" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-xl">how_to_reg</span>
+<span>Aprobaciones</span>
+</div>
+<span class="inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold font-headline rounded-full bg-[#d9f03f] text-[#0e1b3d]">
+            5
+          </span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">emoji_events</span>
+<span>Torneos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">groups</span>
+<span>Jugadores</span>
+</a>
+<!-- ITEM ACTIVO: Sedes y Canchas -->
+<a aria-current="page" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white text-primary font-bold shadow-sm" href="#">
+<span class="material-symbols-outlined material-symbols-fill text-xl text-primary">stadium</span>
+<span>Sedes y Canchas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">manage_accounts</span>
+<span>Usuarios</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/10 hover:text-white font-medium transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">history</span>
+<span>Auditoría</span>
+</a>
+</nav>
+</div>
+<!-- Footer SideNav -->
+<div class="pt-4 border-t border-white/15 flex flex-col gap-2">
+<!-- Usuario fiscal -->
+<div class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg bg-black/15">
+<div class="w-8 h-8 rounded-full bg-[#e8eefb] text-primary flex items-center justify-center font-bold text-xs tracking-wider">
+          FG
+        </div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-semibold text-white truncate">Fiscal General</p>
+<p class="text-[10px] text-white/70 truncate">fiscalia@nauticosanisidro.com.ar</p>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs text-white/70 pt-1">
+<a class="flex items-center gap-1.5 hover:text-white py-1" href="#">
+<span class="material-symbols-outlined text-base">settings</span>
+<span>Configuración</span>
+</a>
+<a class="flex items-center gap-1 hover:text-white py-1 text-white/80" href="#">
+<span class="material-symbols-outlined text-base">logout</span>
+<span>Cerrar sesión</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Contenedor Principal (con margen izquierdo para el sidebar) -->
+<div class="flex-1 ml-60 flex flex-col min-h-screen">
+<!-- 2. Barra Superior (Top bar) -->
+<header class="sticky top-0 z-30 bg-surface border-b border-outline px-8 py-3.5 flex justify-between items-center">
+<!-- Breadcrumb & Club Activo Selector -->
+<div class="flex items-center gap-4">
+<nav class="flex items-center gap-2 text-xs font-medium text-ink-muted">
+<span>Organización</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="font-semibold text-ink">Sedes y Canchas</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-ink-muted">Clubes afiliados</span>
+</nav>
+<span class="h-4 w-px bg-outline"></span>
+<div class="flex items-center gap-2">
+<div class="relative">
+<button class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-outline bg-background hover:bg-white text-xs font-bold text-ink transition-colors" type="button">
+<span class="material-symbols-outlined text-sm text-primary">location_city</span>
+<span>CNSI - Sede Central</span>
+<span class="material-symbols-outlined text-sm text-ink-muted">expand_more</span>
+</button>
+</div>
+<span class="text-xs text-ink-muted font-medium bg-[#e8eefb] text-primary px-2.5 py-1 rounded-full border border-[#cbd8f5]">
+            Temporada 2025 · Circuito Oficial APA
+          </span>
+</div>
+</div>
+<!-- Actions & Perfil -->
+<div class="flex items-center gap-3">
+<button class="p-2 text-ink-muted hover:text-ink hover:bg-background rounded-lg relative transition-colors" title="Notificaciones" type="button">
+<span class="material-symbols-outlined text-xl">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#b02d23] ring-2 ring-white"></span>
+</button>
+<button class="p-2 text-ink-muted hover:text-ink hover:bg-background rounded-lg transition-colors" title="Centro de ayuda" type="button">
+<span class="material-symbols-outlined text-xl">help_outline</span>
+</button>
+<div class="h-5 w-px bg-outline"></div>
+<button class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-primary text-white text-xs font-headline font-bold uppercase tracking-wider hover:bg-primary-dark transition-colors" type="button">
+<span class="material-symbols-outlined text-base">add</span>
+<span>Nuevo Torneo</span>
+</button>
+</div>
+</header>
+<!-- 3. Contenido Principal -->
+<main class="flex-1 p-8 max-w-[1280px] mx-auto w-full space-y-6">
+<!-- Encabezado de Página -->
+<div class="space-y-1">
+<div class="flex items-center justify-between">
+<h2 class="font-headline text-3xl font-extrabold tracking-tight text-ink uppercase">
+            Sedes y Canchas
+          </h2>
+<div class="flex items-center gap-2">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline bg-white hover:bg-[#f4f7fc] text-xs font-semibold text-ink transition-colors" type="button">
+<span class="material-symbols-outlined text-base text-ink-muted">download</span>
+<span>Exportar Padrón</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-outline bg-white hover:bg-[#f4f7fc] text-xs font-semibold text-ink transition-colors" type="button">
+<span class="material-symbols-outlined text-base text-ink-muted">map</span>
+<span>Vista Mapa</span>
+</button>
+</div>
+</div>
+<p class="text-sm text-ink-muted max-w-3xl leading-relaxed">
+          Administrá los complejos y clubes habilitados para las etapas del circuito. Configurá la superficie, tipo de cerramiento y disponibilidad de cada cancha para la programación automática de fixtures.
+        </p>
+</div>
+<!-- Tarjetas Resumen Métricas -->
+<section aria-label="Métricas de sedes y canchas" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Card 1 -->
+<div class="bg-surface rounded-lg border border-outline p-4 flex items-center justify-between">
+<div>
+<p class="text-xs font-semibold uppercase tracking-wider text-ink-muted">Clubes registrados</p>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline text-2xl font-bold tabular-nums text-ink">6</span>
+<span class="text-xs text-ink-muted">sedes activas</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-lg bg-primary-light flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">apartment</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface rounded-lg border border-outline p-4 flex items-center justify-between">
+<div>
+<p class="text-xs font-semibold uppercase tracking-wider text-ink-muted">Canchas disponibles</p>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline text-2xl font-bold tabular-nums text-ink">22</span>
+<span class="text-xs text-ink-muted">habilitadas APA</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-lg bg-[#e0f3ea] flex items-center justify-center text-[#146c48]">
+<span class="material-symbols-outlined text-2xl">sports_tennis</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface rounded-lg border border-outline p-4 flex items-center justify-between">
+<div>
+<p class="text-xs font-semibold uppercase tracking-wider text-ink-muted">Superficie predominante</p>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-headline text-lg font-bold text-ink truncate">Césped sintético</span>
+</div>
+<span class="text-[11px] text-ink-muted">c/ arena de sílice</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-background flex items-center justify-center text-ink-muted border border-outline">
+<span class="material-symbols-outlined text-2xl">layers</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface rounded-lg border border-outline p-4 flex items-center justify-between">
+<div>
+<p class="text-xs font-semibold uppercase tracking-wider text-ink-muted">Cristal techado</p>
+<div class="flex items-baseline gap-2 mt-1">
+<span class="font-headline text-2xl font-bold tabular-nums text-ink">14</span>
+<span class="text-xs text-[#146c48] font-medium bg-[#e0f3ea] px-1.5 py-0.5 rounded text-[11px]">63% del total</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-lg bg-[#fcefd8] flex items-center justify-center text-[#7d4a00]">
+<span class="material-symbols-outlined text-2xl">roofing</span>
+</div>
+</div>
+</section>
+<!-- 4. Formulario en línea: Agregar un club -->
+<section aria-label="Dar de alta un club" class="bg-surface rounded-lg border border-outline p-5">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary text-xl">add_business</span>
+<h3 class="font-headline text-base font-bold text-ink uppercase tracking-wide">
+            Dar de alta un club o complejo
+          </h3>
+</div>
+<form class="space-y-3" onsubmit="event.preventDefault();">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+<!-- Nombre -->
+<div class="md:col-span-4">
+<label class="block text-xs font-semibold text-ink mb-1" for="club-name">
+                Nombre del club <span class="text-[#b02d23]">*</span>
+</label>
+<input class="w-full h-11 px-3 rounded-lg border border-outline text-sm text-ink placeholder:text-ink-muted/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-background/50" id="club-name" placeholder="ej. Club San Jorge Pádel" type="text"/>
+</div>
+<!-- Localidad / Partido -->
+<div class="md:col-span-3">
+<label class="block text-xs font-semibold text-ink mb-1" for="club-locality">
+                Localidad / Partido <span class="text-[#b02d23]">*</span>
+</label>
+<input class="w-full h-11 px-3 rounded-lg border border-outline text-sm text-ink placeholder:text-ink-muted/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-background/50" id="club-locality" placeholder="ej. San Isidro, Vicente López, CABA..." type="text"/>
+</div>
+<!-- Dirección -->
+<div class="md:col-span-3">
+<label class="block text-xs font-semibold text-ink mb-1" for="club-address">
+                Dirección <span class="text-[#b02d23]">*</span>
+</label>
+<input class="w-full h-11 px-3 rounded-lg border border-outline text-sm text-ink placeholder:text-ink-muted/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-background/50" id="club-address" placeholder="ej. Av. del Libertador 14500" type="text"/>
+</div>
+<!-- Botón de Envío -->
+<div class="md:col-span-2">
+<button class="w-full h-11 bg-primary text-white font-headline font-bold text-xs uppercase tracking-wider rounded-lg flex items-center justify-center gap-1.5 hover:bg-primary-dark active:scale-[0.98] transition-all" type="submit">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+<span>+ Agregar club</span>
+</button>
+</div>
+</div>
+<!-- Opción adicional de alta -->
+<div class="flex items-center gap-2 pt-1 text-xs text-ink-muted">
+<input checked="" class="rounded border-outline text-primary focus:ring-primary h-4 w-4" id="immediate-assign" type="checkbox"/>
+<label class="cursor-pointer select-none" for="immediate-assign">
+              Habilitar para asignación inmediata en torneos oficiales y cálculo automático de disponibilidad horaria.
+            </label>
+</div>
+</form>
+</section>
+<!-- 5. Listado de Clubes y sus Canchas -->
+<section aria-label="Listado de sedes">
+<!-- Filtros Rápidos y Buscador -->
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4">
+<div class="relative flex-1 max-w-md">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-muted text-xl">search</span>
+<input class="w-full h-10 pl-10 pr-4 rounded-lg border border-outline bg-white text-xs text-ink placeholder:text-ink-muted focus:outline-none focus:border-primary" placeholder="Buscar por club, localidad o calle..." type="search"/>
+</div>
+<!-- Chips de Filtro -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+<span class="text-xs font-semibold text-ink-muted mr-1">Filtros:</span>
+<button class="px-3 py-1.5 rounded-full border border-primary bg-primary text-white text-xs font-semibold hover:bg-primary-dark transition-colors" type="button">
+              Todas (6)
+            </button>
+<button class="px-3 py-1.5 rounded-full border border-outline bg-white text-ink text-xs font-medium hover:border-ink-muted transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-sm text-ink-muted">roofing</span>
+              Techadas
+            </button>
+<button class="px-3 py-1.5 rounded-full border border-outline bg-white text-ink text-xs font-medium hover:border-ink-muted transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-sm text-ink-muted">grid_view</span>
+              Cristal
+            </button>
+<button class="px-3 py-1.5 rounded-full border border-outline bg-white text-ink text-xs font-medium hover:border-ink-muted transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-sm text-ink-muted">wallpaper</span>
+              Muro
+            </button>
+</div>
+</div>
+<!-- Tarjetas de Clubes Detalladas -->
+<div class="space-y-4">
+<!-- Tarjeta 1: Sede Principal (CNSI) -->
+<article class="bg-surface rounded-lg border-2 border-primary/40 shadow-sm overflow-hidden">
+<div class="p-5">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-outline">
+<div class="space-y-1">
+<div class="flex items-center flex-wrap gap-2.5">
+<h3 class="font-headline text-xl font-black text-ink tracking-tight">
+                      Club Náutico San Isidro (CNSI)
+                    </h3>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#e0f3ea] text-[#146c48] font-bold text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-[#146c48]"></span>
+                      Sede oficial cabecera
+                    </span>
+<span class="px-2 py-0.5 rounded bg-background border border-outline font-headline font-bold text-xs text-ink-muted">
+                      CNSI-01
+                    </span>
+</div>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-4 text-xs text-ink-muted pt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base text-primary">pin_drop</span>
+                      San Isidro, Pcia. de Buenos Aires
+                    </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base">signpost</span>
+                      Av. Mitre 1999 (Borde ribereño)
+                    </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base">call</span>
+                      (011) 4743-1200
+                    </span>
+</div>
+</div>
+<!-- Acciones Cabecera de Tarjeta -->
+<div class="flex items-center gap-2 self-start lg:self-center">
+<button class="h-9 px-3 rounded-lg border border-outline hover:bg-background text-xs font-semibold text-ink flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-base text-ink-muted">edit</span>
+<span>Editar sede</span>
+</button>
+<button class="h-9 px-3 rounded-lg bg-primary-light hover:bg-[#d8e4f8] text-xs font-semibold text-primary flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-base">calendar_month</span>
+<span>Ver horarios y disponibilidad</span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline hover:bg-background text-ink-muted hover:text-ink transition-colors" title="Más opciones" type="button">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Listado de Canchas Registradas -->
+<div class="pt-4">
+<div class="flex items-center justify-between mb-2.5">
+<span class="text-xs font-headline font-bold uppercase tracking-wider text-ink-muted">
+                    Canchas registradas (4 pistas habilitadas)
+                  </span>
+<span class="text-[11px] text-ink-muted">Superficie reglamentaria FAP</span>
+</div>
+<div class="flex flex-wrap items-center gap-2.5">
+<!-- Cancha 1 -->
+<div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-outline hover:border-primary/50 transition-colors">
+<span class="w-2 h-2 rounded-full bg-[#146c48]"></span>
+<div>
+<p class="text-xs font-bold text-ink leading-none">Cancha 1</p>
+<p class="text-[11px] text-ink-muted mt-0.5">Cristal Panorámica · Techada</p>
+</div>
+</div>
+<!-- Cancha 2 -->
+<div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-outline hover:border-primary/50 transition-colors">
+<span class="w-2 h-2 rounded-full bg-[#146c48]"></span>
+<div>
+<p class="text-xs font-bold text-ink leading-none">Cancha 2</p>
+<p class="text-[11px] text-ink-muted mt-0.5">Cristal Blindex · Techada</p>
+</div>
+</div>
+<!-- Cancha 3 -->
+<div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-outline hover:border-primary/50 transition-colors">
+<span class="w-2 h-2 rounded-full bg-[#7d4a00]"></span>
+<div>
+<p class="text-xs font-bold text-ink leading-none">Cancha 3</p>
+<p class="text-[11px] text-ink-muted mt-0.5">Cristal · Descubierta</p>
+</div>
+</div>
+<!-- Cancha 4 -->
+<div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-outline hover:border-primary/50 transition-colors">
+<span class="w-2 h-2 rounded-full bg-[#146c48]"></span>
+<div>
+<p class="text-xs font-bold text-ink leading-none">Cancha 4</p>
+<p class="text-[11px] text-ink-muted mt-0.5">Muro tradicional · Techada</p>
+</div>
+</div>
+<!-- Botón Agregar Cancha Nueva -->
+<button class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-dashed border-primary/50 bg-[#e8eefb]/40 hover:bg-[#e8eefb] text-primary text-xs font-bold transition-colors" type="button">
+<span class="material-symbols-outlined text-base">add</span>
+<span>+ Agregar cancha</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Tarjeta 2: El Monasterio Pádel Club -->
+<article class="bg-surface rounded-lg border border-outline shadow-sm overflow-hidden">
+<div class="p-5">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-outline">
+<div class="space-y-1">
+<div class="flex items-center flex-wrap gap-2.5">
+<h3 class="font-headline text-xl font-black text-ink tracking-tight">
+                      El Monasterio Pádel Club
+                    </h3>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-background border border-outline text-ink-muted font-bold text-xs">
+                      Sede asociada
+                    </span>
+<span class="px-2 py-0.5 rounded bg-background border border-outline font-headline font-bold text-xs text-ink-muted">
+                      MONAS-02
+                    </span>
+</div>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-4 text-xs text-ink-muted pt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base text-primary">pin_drop</span>
+                      Flores / Parque Chacabuco, CABA
+                    </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base">signpost</span>
+                      Curapaligüe 760
+                    </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base">call</span>
+                      (011) 4632-8811
+                    </span>
+</div>
+</div>
+<!-- Acciones Cabecera de Tarjeta -->
+<div class="flex items-center gap-2 self-start lg:self-center">
+<button class="h-9 px-3 rounded-lg border border-outline hover:bg-background text-xs font-semibold text-ink flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-base text-ink-muted">edit</span>
+<span>Editar sede</span>
+</button>
+<button class="h-9 px-3 rounded-lg bg-background hover:bg-outline/40 text-xs font-semibold text-ink flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-base text-ink-muted">calendar_today</span>
+<span>Ver disponibilidad</span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline hover:bg-background text-ink-muted hover:text-ink transition-colors" title="Más opciones" type="button">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Listado de Canchas Registradas -->
+<div class="pt-4">
+<div class="flex items-center justify-between mb-2.5">
+<span class="text-xs font-headline font-bold uppercase tracking-wider text-ink-muted">
+                    Canchas registradas (4 pistas habilitadas)
+                  </span>
+<span class="text-[11px] text-ink-muted">Cerramiento perimetral verificado</span>
+</div>
+<div class="flex flex-wrap items-center gap-2.5">
+<!-- Pista 1 -->
+<div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-outline hover:border-primary/50 transition-colors">
+<span class="w-2 h-2 rounded-full bg-[#146c48]"></span>
+<div>
+<p class="text-xs font-bold text-ink leading-none">Pista 1</p>
+<p class="text-[11px] text-ink-muted mt-0.5">Cristal Pro · Techada</p>
+</div>
+</div>
+<!-- Pista 2 -->
+<div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-outline hover:border-primary/50 transition-colors">
+<span class="w-2 h-2 rounded-full bg-[#146c48]"></span>
+<div>
+<p class="text-xs font-bold text-ink leading-none">Pista 2</p>
+<p class="text-[11px] text-ink-muted mt-0.5">Cristal Pro · Techada</p>
+</div>
+</div>
+<!-- Pista 3 -->
+<div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-outline hover:border-primary/50 transition-colors">
+<span class="w-2 h-2 rounded-full bg-[#146c48]"></span>
+<div>
+<p class="text-xs font-bold text-ink leading-none">Pista 3</p>
+<p class="text-[11px] text-ink-muted mt-0.5">Cristal · Techada</p>
+</div>
+</div>
+<!-- Pista 4 -->
+<div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-outline hover:border-primary/50 transition-colors">
+<span class="w-2 h-2 rounded-full bg-[#146c48]"></span>
+<div>
+<p class="text-xs font-bold text-ink leading-none">Pista 4</p>
+<p class="text-[11px] text-ink-muted mt-0.5">Césped y Muro · Techada</p>
+</div>
+</div>
+<!-- Botón Agregar Cancha Nueva -->
+<button class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-dashed border-outline hover:border-primary hover:bg-[#e8eefb]/30 text-ink-muted hover:text-primary text-xs font-semibold transition-colors" type="button">
+<span class="material-symbols-outlined text-base">add</span>
+<span>+ Agregar cancha</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Tarjeta 3: Asturiano Pádel Club -->
+<article class="bg-surface rounded-lg border border-outline shadow-sm overflow-hidden">
+<div class="p-5">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-outline">
+<div class="space-y-1">
+<div class="flex items-center flex-wrap gap-2.5">
+<h3 class="font-headline text-xl font-black text-ink tracking-tight">
+                      Asturiano Pádel Club
+                    </h3>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-background border border-outline text-ink-muted font-bold text-xs">
+                      Sede asociada
+                    </span>
+<span class="px-2 py-0.5 rounded bg-background border border-outline font-headline font-bold text-xs text-ink-muted">
+                      AST-03
+                    </span>
+</div>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-4 text-xs text-ink-muted pt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base text-primary">pin_drop</span>
+                      Vicente López, Zona Norte
+                    </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base">signpost</span>
+                      Libertador 1081
+                    </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base">call</span>
+                      (011) 4791-2345
+                    </span>
+</div>
+</div>
+<!-- Acciones Cabecera de Tarjeta -->
+<div class="flex items-center gap-2 self-start lg:self-center">
+<button class="h-9 px-3 rounded-lg border border-outline hover:bg-background text-xs font-semibold text-ink flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-base text-ink-muted">edit</span>
+<span>Editar sede</span>
+</button>
+<button class="h-9 px-3 rounded-lg bg-background hover:bg-outline/40 text-xs font-semibold text-ink flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-base text-ink-muted">calendar_today</span>
+<span>Ver disponibilidad</span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline hover:bg-background text-ink-muted hover:text-ink transition-colors" title="Más opciones" type="button">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Listado de Canchas Registradas -->
+<div class="pt-4">
+<div class="flex items-center justify-between mb-2.5">
+<span class="text-xs font-headline font-bold uppercase tracking-wider text-ink-muted">
+                    Canchas registradas (3 pistas habilitadas)
+                  </span>
+<span class="text-[11px] text-ink-muted">Iluminación LED de alta potencia</span>
+</div>
+<div class="flex flex-wrap items-center gap-2.5">
+<!-- Cancha Central -->
+<div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-outline hover:border-primary/50 transition-colors">
+<span class="w-2 h-2 rounded-full bg-[#146c48]"></span>
+<div>
+<p class="text-xs font-bold text-ink leading-none">Cancha Central</p>
+<p class="text-[11px] text-ink-muted mt-0.5">Cristal LED · Gradería</p>
+</div>
+</div>
+<!-- Cancha 2 -->
+<div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-outline hover:border-primary/50 transition-colors">
+<span class="w-2 h-2 rounded-full bg-[#146c48]"></span>
+<div>
+<p class="text-xs font-bold text-ink leading-none">Cancha 2</p>
+<p class="text-[11px] text-ink-muted mt-0.5">Cristal · Techada</p>
+</div>
+</div>
+<!-- Cancha 3 -->
+<div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-outline hover:border-primary/50 transition-colors">
+<span class="w-2 h-2 rounded-full bg-[#146c48]"></span>
+<div>
+<p class="text-xs font-bold text-ink leading-none">Cancha 3</p>
+<p class="text-[11px] text-ink-muted mt-0.5">Muro · Techada</p>
+</div>
+</div>
+<!-- Botón Agregar Cancha Nueva -->
+<button class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-dashed border-outline hover:border-primary hover:bg-[#e8eefb]/30 text-ink-muted hover:text-primary text-xs font-semibold transition-colors" type="button">
+<span class="material-symbols-outlined text-base">add</span>
+<span>+ Agregar cancha</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Tarjeta 4: La Quinta Pádel Olivos -->
+<article class="bg-surface rounded-lg border border-outline shadow-sm overflow-hidden">
+<div class="p-5">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-outline">
+<div class="space-y-1">
+<div class="flex items-center flex-wrap gap-2.5">
+<h3 class="font-headline text-xl font-black text-ink tracking-tight">
+                      La Quinta Pádel Olivos
+                    </h3>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-background border border-outline text-ink-muted font-bold text-xs">
+                      Sede asociada
+                    </span>
+<span class="px-2 py-0.5 rounded bg-background border border-outline font-headline font-bold text-xs text-ink-muted">
+                      LQ-OLV
+                    </span>
+</div>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-4 text-xs text-ink-muted pt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base text-primary">pin_drop</span>
+                      Olivos, Pcia. de Buenos Aires
+                    </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-base">signpost</span>
+                      Pelliza 2850
+                    </span>
+</div>
+</div>
+<!-- Acciones Cabecera de Tarjeta -->
+<div class="flex items-center gap-2 self-start lg:self-center">
+<button class="h-9 px-3 rounded-lg border border-outline hover:bg-background text-xs font-semibold text-ink flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-base text-ink-muted">edit</span>
+<span>Editar sede</span>
+</button>
+<button class="h-9 px-3 rounded-lg bg-background hover:bg-outline/40 text-xs font-semibold text-ink flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-base text-ink-muted">calendar_today</span>
+<span>Ver disponibilidad</span>
+</button>
+<button class="w-9 h-9 flex items-center justify-center rounded-lg border border-outline hover:bg-background text-ink-muted hover:text-ink transition-colors" title="Más opciones" type="button">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Listado de Canchas Registradas -->
+<div class="pt-4">
+<div class="flex items-center justify-between mb-2.5">
+<span class="text-xs font-headline font-bold uppercase tracking-wider text-ink-muted">
+                    Canchas registradas (2 pistas habilitadas)
+                  </span>
+<span class="text-[11px] text-ink-muted">Sede habilitada para fase de grupos</span>
+</div>
+<div class="flex flex-wrap items-center gap-2.5">
+<!-- Cancha 1 -->
+<div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-outline hover:border-primary/50 transition-colors">
+<span class="w-2 h-2 rounded-full bg-[#146c48]"></span>
+<div>
+<p class="text-xs font-bold text-ink leading-none">Cancha 1</p>
+<p class="text-[11px] text-ink-muted mt-0.5">Cristal · Techada</p>
+</div>
+</div>
+<!-- Cancha 2 -->
+<div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-background border border-outline hover:border-primary/50 transition-colors">
+<span class="w-2 h-2 rounded-full bg-[#146c48]"></span>
+<div>
+<p class="text-xs font-bold text-ink leading-none">Cancha 2</p>
+<p class="text-[11px] text-ink-muted mt-0.5">Cristal · Techada</p>
+</div>
+</div>
+<!-- Botón Agregar Cancha Nueva -->
+<button class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-dashed border-outline hover:border-primary hover:bg-[#e8eefb]/30 text-ink-muted hover:text-primary text-xs font-semibold transition-colors" type="button">
+<span class="material-symbols-outlined text-base">add</span>
+<span>+ Agregar cancha</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- Nota de pie informativa rioplatense -->
+<footer class="pt-4 pb-8 border-t border-outline flex flex-col sm:flex-row items-center justify-between text-xs text-ink-muted gap-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-primary">verified</span>
+<span>Reglamento de Sedes Oficiales · Asociación Pádel Argentino (APA) · Temporada 2025</span>
+</div>
+<p class="text-[11px]">Emparejados Pádel · Desarrollado para clubes y fiscales de circuito</p>
+</footer>
+</main>
+</div>
+</body></html>

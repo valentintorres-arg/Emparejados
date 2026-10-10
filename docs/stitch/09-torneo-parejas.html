@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#eef2f8]" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Mixto de Verano - Emparejados Pádel</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600;700;800&amp;family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: '#1846a3',
+              dark: '#0c2357',
+              light: '#e8eefb',
+              canvas: '#eef2f8',
+              border: '#d3dbe9',
+              ink: '#0e1b3d',
+              muted: '#55627d',
+              yellow: '#d9f03f',
+              stateGreenBg: '#e0f3ea',
+              stateGreenText: '#146c48',
+              stateAmberBg: '#fcefd8',
+              stateAmberText: '#7d4a00',
+              stateRedBg: '#fbe9e7',
+              stateRedText: '#b02d23'
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Archivo Narrow", "sans-serif"],
+            display: ["Archivo Narrow", "sans-serif"],
+            body: ["Public Sans", "sans-serif"],
+            label: ["Public Sans", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .font-condensed {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-feature-settings: 'tnum' 1;
+    }
+    body {
+      font-family: 'Public Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#eef2f8] text-[#0e1b3d] antialiased min-h-full flex flex-col pb-24 selection:bg-[#1846a3] selection:text-white">
+<!-- 1. TopAppBar (Shared Component Implementation) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-4 h-14 bg-[#1846a3] text-white select-none shadow-sm">
+<div class="flex items-center gap-2">
+<button aria-label="Volver atrás" class="flex items-center justify-center w-9 h-9 rounded-lg hover:bg-[#0c2357] transition-colors duration-150 active:scale-95 text-white">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<div class="flex items-center gap-1.5 font-headline text-lg font-bold tracking-tight text-white">
+<span class="material-symbols-outlined text-[20px] text-white">sports_tennis</span>
+<span>Emparejados Pádel</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button aria-label="Notificaciones" class="flex items-center justify-center w-9 h-9 rounded-lg hover:bg-[#0c2357] transition-colors duration-150 active:scale-95 text-white relative">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+<!-- Badge alerta sutil -->
+<span class="absolute top-2 right-2 w-2 h-2 bg-[#d9f03f] rounded-full ring-2 ring-[#1846a3]"></span>
+</button>
+</div>
+</header>
+<!-- Main Scrollable Canvas -->
+<main class="w-full max-w-2xl mx-auto pt-16 px-3.5 sm:px-5 flex-1 flex flex-col gap-4">
+<!-- 2. Subheader / Migas & Detalle del Torneo -->
+<section class="bg-white rounded-lg border border-[#d3dbe9] p-4 mt-2 shadow-none">
+<!-- Breadcrumb & Badge Estado -->
+<div class="flex items-center justify-between gap-2 mb-2.5">
+<div class="flex items-center text-xs text-[#55627d] font-semibold gap-1 truncate">
+<span>Torneos</span>
+<span class="material-symbols-outlined text-sm text-[#55627d]">chevron_right</span>
+<span class="text-[#1846a3] font-bold truncate">Mixto de Verano</span>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wide uppercase bg-[#e0f3ea] text-[#146c48] shrink-0 border border-[#b8e4ce]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#146c48] animate-pulse"></span>
+          Inscripción abierta
+        </span>
+</div>
+<!-- Título & Categoría -->
+<h1 class="font-condensed text-2xl sm:text-3xl font-extrabold text-[#0e1b3d] uppercase tracking-tight leading-tight">
+        Mixto de Verano
+      </h1>
+<p class="text-xs font-bold tracking-wider text-[#55627d] uppercase mt-0.5">
+        CATEGORÍA MIXTO B • FASE DE ZONAS Y LLAVE
+      </p>
+<!-- Grid Datos Prácticos -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-3.5 pt-3 border-t border-[#eef2f8] text-xs">
+<div class="flex items-center gap-2 text-[#0e1b3d]">
+<span class="material-symbols-outlined text-[18px] text-[#1846a3] shrink-0">calendar_today</span>
+<span><strong>Fechas:</strong> 21 al 23 de Noviembre 2025</span>
+</div>
+<div class="flex items-center gap-2 text-[#0e1b3d]">
+<span class="material-symbols-outlined text-[18px] text-[#1846a3] shrink-0">location_on</span>
+<span><strong>Lugar:</strong> Club San Jorge Pádel (Palermo)</span>
+</div>
+</div>
+<!-- Cupo con Barra de Progreso -->
+<div class="mt-3.5 bg-[#eef2f8] p-3 rounded-lg border border-[#d3dbe9]">
+<div class="flex items-center justify-between text-xs mb-1.5">
+<span class="font-bold text-[#0e1b3d]">12 confirmadas de 16 parejas</span>
+<span class="font-bold text-[#1846a3] bg-[#e8eefb] px-2 py-0.5 rounded text-[11px]">Quedan 4 cupos</span>
+</div>
+<div class="w-full bg-[#d3dbe9] h-2 rounded-full overflow-hidden">
+<div class="bg-[#1846a3] h-full rounded-full transition-all duration-300" style="width: 75%;"></div>
+</div>
+</div>
+<!-- Acciones Rápidas (Chips / Botones secundarios) -->
+<div class="flex items-center gap-2 mt-3 pt-1">
+<button class="flex-1 inline-flex items-center justify-center gap-1.5 h-10 px-3 bg-white border border-[#d3dbe9] text-[#1846a3] rounded-lg text-xs font-semibold hover:bg-[#e8eefb] active:scale-95 transition" type="button">
+<span class="material-symbols-outlined text-[17px]">share</span>
+<span>Compartir torneo</span>
+</button>
+<button class="flex-1 inline-flex items-center justify-center gap-1.5 h-10 px-3 bg-white border border-[#d3dbe9] text-[#1846a3] rounded-lg text-xs font-semibold hover:bg-[#e8eefb] active:scale-95 transition" type="button">
+<span class="material-symbols-outlined text-[17px]">download</span>
+<span>Descargar bases</span>
+</button>
+</div>
+</section>
+<!-- 3. Pestañas de Navegación Secundaria -->
+<div class="bg-white rounded-lg p-1 border border-[#d3dbe9] flex gap-1">
+<button class="flex-1 py-2 px-3 rounded-md text-xs sm:text-sm font-condensed font-bold uppercase tracking-wide bg-[#1846a3] text-white flex items-center justify-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[17px]">groups</span>
+<span>Parejas (12)</span>
+</button>
+<button class="flex-1 py-2 px-3 rounded-md text-xs sm:text-sm font-condensed font-bold uppercase tracking-wide text-[#55627d] hover:bg-[#eef2f8] transition flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-[17px]">description</span>
+<span>Reglamento</span>
+</button>
+</div>
+<!-- 4. CTA Card de Inscripción Rápida con Pareja Sugerida -->
+<section class="bg-[#e8eefb] border border-[#b3cdfb] rounded-lg p-4 relative overflow-hidden">
+<div class="flex items-start justify-between gap-3">
+<div class="space-y-1">
+<div class="inline-flex items-center gap-1 text-[11px] font-bold text-[#1846a3] uppercase tracking-wider">
+<span class="material-symbols-outlined text-[15px]">how_to_reg</span>
+<span>Anotate en este torneo</span>
+</div>
+<h2 class="font-condensed text-lg sm:text-xl font-bold text-[#0c2357] leading-tight">
+            Vas a jugar con Martina Solís (6ª Damas)
+          </h2>
+<p class="text-xs text-[#55627d] leading-relaxed">
+            La inscripción cierra el viernes 20 de noviembre a las 20:00. La organización tiene que aprobarla antes de entrar a zonas.
+          </p>
+</div>
+</div>
+<div class="mt-3.5 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+<button class="flex-1 min-h-[44px] px-4 bg-[#1846a3] hover:bg-[#0c2357] active:scale-98 text-white rounded-lg font-condensed text-base font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition shadow-none">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<span>Inscribirme con Martina</span>
+</button>
+<button class="min-h-[44px] px-3.5 bg-white border border-[#b3cdfb] text-[#1846a3] rounded-lg text-xs font-semibold hover:bg-white/80 active:scale-95 transition flex items-center justify-center">
+          Cambiar de pareja
+        </button>
+</div>
+</section>
+<!-- 5. Encabezado de la Lista de Inscriptas & Buscador -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
+<div class="flex items-baseline gap-2">
+<h3 class="font-condensed text-xl font-extrabold uppercase text-[#0e1b3d] tracking-tight">
+          Inscriptas (12)
+        </h3>
+<span class="text-xs text-[#55627d] font-medium">4 plazas vacantes en zona</span>
+</div>
+<!-- Barra de Búsqueda Rápida -->
+<div class="relative w-full sm:w-64">
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[18px] text-[#55627d]">search</span>
+<input class="w-full pl-8 pr-3 py-1.5 bg-white border border-[#d3dbe9] rounded-lg text-xs text-[#0e1b3d] placeholder-[#55627d] focus:outline-none focus:border-[#1846a3] focus:ring-1 focus:ring-[#1846a3] transition" placeholder="Buscar pareja o club..." type="text"/>
+</div>
+</div>
+<!-- 6. Lista de Parejas Inscriptas -->
+<div class="space-y-2.5">
+<!-- CABEZAS DE SERIE (1 AL 4) -->
+<!-- CS 1 -->
+<article class="bg-white rounded-lg border-2 border-[#1846a3]/30 hover:border-[#1846a3] p-3.5 transition flex flex-col gap-2.5 relative">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-[#1846a3] text-white flex items-center justify-center font-condensed font-extrabold text-xs">
+              1
+            </span>
+<span class="bg-[#1846a3] text-white text-[10px] font-condensed font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+              Cabeza de serie 1
+            </span>
+</div>
+<span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#146c48] bg-[#e0f3ea] px-2 py-0.5 rounded-full border border-[#b8e4ce]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#146c48]"></span>
+            Confirmada por club
+          </span>
+</div>
+<div class="flex items-center justify-between gap-3 pt-0.5">
+<div class="flex items-center gap-3">
+<div class="flex -space-x-2 overflow-hidden shrink-0">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#1846a3] text-white font-condensed font-bold text-xs border-2 border-white">MS</span>
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#0c2357] text-white font-condensed font-bold text-xs border-2 border-white">MM</span>
+</div>
+<div>
+<p class="font-condensed text-base font-bold text-[#0e1b3d] leading-snug">
+                Martina Solís <span class="text-xs font-normal text-[#55627d]">(6ª)</span> &amp; Martín Morales <span class="text-xs font-normal text-[#55627d]">(5ª)</span>
+</p>
+<p class="text-xs text-[#55627d] flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">sports_tennis</span>
+<span>Club San Jorge / Náutico San Isidro</span>
+</p>
+</div>
+</div>
+<span class="shrink-0 font-condensed text-xs font-extrabold bg-[#e8eefb] text-[#1846a3] px-2 py-1 rounded">
+            CS 1
+          </span>
+</div>
+</article>
+<!-- CS 2 -->
+<article class="bg-white rounded-lg border-2 border-[#1846a3]/30 hover:border-[#1846a3] p-3.5 transition flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-[#1846a3] text-white flex items-center justify-center font-condensed font-extrabold text-xs">
+              2
+            </span>
+<span class="bg-[#1846a3] text-white text-[10px] font-condensed font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+              Cabeza de serie 2
+            </span>
+</div>
+<span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#146c48] bg-[#e0f3ea] px-2 py-0.5 rounded-full border border-[#b8e4ce]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#146c48]"></span>
+            Confirmada por club
+          </span>
+</div>
+<div class="flex items-center justify-between gap-3 pt-0.5">
+<div class="flex items-center gap-3">
+<div class="flex -space-x-2 overflow-hidden shrink-0">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#1846a3] text-white font-condensed font-bold text-xs border-2 border-white">FP</span>
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#0c2357] text-white font-condensed font-bold text-xs border-2 border-white">GP</span>
+</div>
+<div>
+<p class="font-condensed text-base font-bold text-[#0e1b3d] leading-snug">
+                Florencia Peña <span class="text-xs font-normal text-[#55627d]">(5ª)</span> &amp; Gonzalo Pereyra <span class="text-xs font-normal text-[#55627d]">(5ª)</span>
+</p>
+<p class="text-xs text-[#55627d] flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">sports_tennis</span>
+<span>El Monasterio Pádel</span>
+</p>
+</div>
+</div>
+<span class="shrink-0 font-condensed text-xs font-extrabold bg-[#e8eefb] text-[#1846a3] px-2 py-1 rounded">
+            CS 2
+          </span>
+</div>
+</article>
+<!-- CS 3 -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] hover:border-[#1846a3] p-3.5 transition flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-[#1846a3] text-white flex items-center justify-center font-condensed font-extrabold text-xs">
+              3
+            </span>
+<span class="bg-[#e8eefb] text-[#1846a3] text-[10px] font-condensed font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+              Cabeza de serie 3
+            </span>
+</div>
+<span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#146c48] bg-[#e0f3ea] px-2 py-0.5 rounded-full border border-[#b8e4ce]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#146c48]"></span>
+            Aprobada
+          </span>
+</div>
+<div class="flex items-center justify-between gap-3 pt-0.5">
+<div class="flex items-center gap-3">
+<div class="flex -space-x-2 overflow-hidden shrink-0">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#1846a3] text-white font-condensed font-bold text-xs border-2 border-white">CR</span>
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#0c2357] text-white font-condensed font-bold text-xs border-2 border-white">LD</span>
+</div>
+<div>
+<p class="font-condensed text-base font-bold text-[#0e1b3d] leading-snug">
+                Camila Rossi <span class="text-xs font-normal text-[#55627d]">(6ª)</span> &amp; Lucas Di Santo <span class="text-xs font-normal text-[#55627d]">(6ª)</span>
+</p>
+<p class="text-xs text-[#55627d] flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">sports_tennis</span>
+<span>Asturiano Pádel Club</span>
+</p>
+</div>
+</div>
+<span class="shrink-0 font-condensed text-xs font-extrabold bg-[#e8eefb] text-[#1846a3] px-2 py-1 rounded">
+            CS 3
+          </span>
+</div>
+</article>
+<!-- CS 4 -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] hover:border-[#1846a3] p-3.5 transition flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-[#1846a3] text-white flex items-center justify-center font-condensed font-extrabold text-xs">
+              4
+            </span>
+<span class="bg-[#e8eefb] text-[#1846a3] text-[10px] font-condensed font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+              Cabeza de serie 4
+            </span>
+</div>
+<span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#146c48] bg-[#e0f3ea] px-2 py-0.5 rounded-full border border-[#b8e4ce]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#146c48]"></span>
+            Aprobada
+          </span>
+</div>
+<div class="flex items-center justify-between gap-3 pt-0.5">
+<div class="flex items-center gap-3">
+<div class="flex -space-x-2 overflow-hidden shrink-0">
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#1846a3] text-white font-condensed font-bold text-xs border-2 border-white">LB</span>
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#0c2357] text-white font-condensed font-bold text-xs border-2 border-white">BA</span>
+</div>
+<div>
+<p class="font-condensed text-base font-bold text-[#0e1b3d] leading-snug">
+                Lucía Benítez <span class="text-xs font-normal text-[#55627d]">(6ª)</span> &amp; Bruno Acosta <span class="text-xs font-normal text-[#55627d]">(6ª)</span>
+</p>
+<p class="text-xs text-[#55627d] flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">sports_tennis</span>
+<span>La Quinta Pádel (CABA)</span>
+</p>
+</div>
+</div>
+<span class="shrink-0 font-condensed text-xs font-extrabold bg-[#e8eefb] text-[#1846a3] px-2 py-1 rounded">
+            CS 4
+          </span>
+</div>
+</article>
+<!-- DUPLAS GENERALES (5 AL 12) -->
+<!-- 5 -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] p-3 flex items-center justify-between gap-3 hover:border-gray-400 transition">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-6 h-6 rounded-full bg-[#eef2f8] text-[#55627d] flex items-center justify-center font-condensed font-bold text-xs shrink-0">
+            5
+          </span>
+<div class="flex -space-x-1.5 overflow-hidden shrink-0">
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#e8eefb] text-[#1846a3] font-condensed font-bold text-[11px] border border-white">SG</span>
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#d3dbe9] text-[#0e1b3d] font-condensed font-bold text-[11px] border border-white">TS</span>
+</div>
+<div class="min-w-0">
+<p class="font-condensed text-sm sm:text-base font-bold text-[#0e1b3d] truncate leading-tight">
+              Sofía Gómez <span class="text-xs font-normal text-[#55627d]">(7ª)</span> &amp; Tomás Silva <span class="text-xs font-normal text-[#55627d]">(6ª)</span>
+</p>
+<p class="text-[11px] text-[#55627d] truncate">Club San Jorge • Cupo asegurado</p>
+</div>
+</div>
+<span class="shrink-0 text-[10px] font-bold text-[#146c48] bg-[#e0f3ea] px-2 py-0.5 rounded-full border border-[#b8e4ce]">
+          Aprobada
+        </span>
+</article>
+<!-- 6 -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] p-3 flex items-center justify-between gap-3 hover:border-gray-400 transition">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-6 h-6 rounded-full bg-[#eef2f8] text-[#55627d] flex items-center justify-center font-condensed font-bold text-xs shrink-0">
+            6
+          </span>
+<div class="flex -space-x-1.5 overflow-hidden shrink-0">
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#e8eefb] text-[#1846a3] font-condensed font-bold text-[11px] border border-white">VC</span>
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#d3dbe9] text-[#0e1b3d] font-condensed font-bold text-[11px] border border-white">FR</span>
+</div>
+<div class="min-w-0">
+<p class="font-condensed text-sm sm:text-base font-bold text-[#0e1b3d] truncate leading-tight">
+              Valentina Carrizo <span class="text-xs font-normal text-[#55627d]">(6ª)</span> &amp; Facundo Rossi <span class="text-xs font-normal text-[#55627d]">(6ª)</span>
+</p>
+<p class="text-[11px] text-[#55627d] truncate">Pádel Rincón • Cupo asegurado</p>
+</div>
+</div>
+<span class="shrink-0 text-[10px] font-bold text-[#146c48] bg-[#e0f3ea] px-2 py-0.5 rounded-full border border-[#b8e4ce]">
+          Aprobada
+        </span>
+</article>
+<!-- 7 -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] p-3 flex items-center justify-between gap-3 hover:border-gray-400 transition">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-6 h-6 rounded-full bg-[#eef2f8] text-[#55627d] flex items-center justify-center font-condensed font-bold text-xs shrink-0">
+            7
+          </span>
+<div class="flex -space-x-1.5 overflow-hidden shrink-0">
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#e8eefb] text-[#1846a3] font-condensed font-bold text-[11px] border border-white">AP</span>
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#d3dbe9] text-[#0e1b3d] font-condensed font-bold text-[11px] border border-white">JR</span>
+</div>
+<div class="min-w-0">
+<p class="font-condensed text-sm sm:text-base font-bold text-[#0e1b3d] truncate leading-tight">
+              Agustina Palermo <span class="text-xs font-normal text-[#55627d]">(7ª)</span> &amp; Juan Martín Riquelme <span class="text-xs font-normal text-[#55627d]">(6ª)</span>
+</p>
+<p class="text-[11px] text-[#55627d] truncate">Club Belgrano • Cupo asegurado</p>
+</div>
+</div>
+<span class="shrink-0 text-[10px] font-bold text-[#146c48] bg-[#e0f3ea] px-2 py-0.5 rounded-full border border-[#b8e4ce]">
+          Aprobada
+        </span>
+</article>
+<!-- 8 -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] p-3 flex items-center justify-between gap-3 hover:border-gray-400 transition">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-6 h-6 rounded-full bg-[#eef2f8] text-[#55627d] flex items-center justify-center font-condensed font-bold text-xs shrink-0">
+            8
+          </span>
+<div class="flex -space-x-1.5 overflow-hidden shrink-0">
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#e8eefb] text-[#1846a3] font-condensed font-bold text-[11px] border border-white">ML</span>
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#d3dbe9] text-[#0e1b3d] font-condensed font-bold text-[11px] border border-white">PD</span>
+</div>
+<div class="min-w-0">
+<p class="font-condensed text-sm sm:text-base font-bold text-[#0e1b3d] truncate leading-tight">
+              Micaela López <span class="text-xs font-normal text-[#55627d]">(6ª)</span> &amp; Patricio Díaz <span class="text-xs font-normal text-[#55627d]">(6ª)</span>
+</p>
+<p class="text-[11px] text-[#55627d] truncate">Asturiano Pádel • Cupo asegurado</p>
+</div>
+</div>
+<span class="shrink-0 text-[10px] font-bold text-[#146c48] bg-[#e0f3ea] px-2 py-0.5 rounded-full border border-[#b8e4ce]">
+          Aprobada
+        </span>
+</article>
+<!-- 9 -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] p-3 flex items-center justify-between gap-3 hover:border-gray-400 transition">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-6 h-6 rounded-full bg-[#eef2f8] text-[#55627d] flex items-center justify-center font-condensed font-bold text-xs shrink-0">
+            9
+          </span>
+<div class="flex -space-x-1.5 overflow-hidden shrink-0">
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#e8eefb] text-[#1846a3] font-condensed font-bold text-[11px] border border-white">PD</span>
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#d3dbe9] text-[#0e1b3d] font-condensed font-bold text-[11px] border border-white">EG</span>
+</div>
+<div class="min-w-0">
+<p class="font-condensed text-sm sm:text-base font-bold text-[#0e1b3d] truncate leading-tight">
+              Paula Domínguez <span class="text-xs font-normal text-[#55627d]">(7ª)</span> &amp; Emiliano Gómez <span class="text-xs font-normal text-[#55627d]">(6ª)</span>
+</p>
+<p class="text-[11px] text-[#55627d] truncate">San Isidro Pádel • Cupo asegurado</p>
+</div>
+</div>
+<span class="shrink-0 text-[10px] font-bold text-[#146c48] bg-[#e0f3ea] px-2 py-0.5 rounded-full border border-[#b8e4ce]">
+          Aprobada
+        </span>
+</article>
+<!-- 10 -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] p-3 flex items-center justify-between gap-3 hover:border-gray-400 transition">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-6 h-6 rounded-full bg-[#eef2f8] text-[#55627d] flex items-center justify-center font-condensed font-bold text-xs shrink-0">
+            10
+          </span>
+<div class="flex -space-x-1.5 overflow-hidden shrink-0">
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#e8eefb] text-[#1846a3] font-condensed font-bold text-[11px] border border-white">JS</span>
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#d3dbe9] text-[#0e1b3d] font-condensed font-bold text-[11px] border border-white">FM</span>
+</div>
+<div class="min-w-0">
+<p class="font-condensed text-sm sm:text-base font-bold text-[#0e1b3d] truncate leading-tight">
+              Julieta Sosa <span class="text-xs font-normal text-[#55627d]">(6ª)</span> &amp; Federico Méndez <span class="text-xs font-normal text-[#55627d]">(6ª)</span>
+</p>
+<p class="text-[11px] text-[#55627d] truncate">Club Náutico Olivos • Cupo asegurado</p>
+</div>
+</div>
+<span class="shrink-0 text-[10px] font-bold text-[#146c48] bg-[#e0f3ea] px-2 py-0.5 rounded-full border border-[#b8e4ce]">
+          Aprobada
+        </span>
+</article>
+<!-- 11 -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] p-3 flex items-center justify-between gap-3 hover:border-gray-400 transition">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-6 h-6 rounded-full bg-[#eef2f8] text-[#55627d] flex items-center justify-center font-condensed font-bold text-xs shrink-0">
+            11
+          </span>
+<div class="flex -space-x-1.5 overflow-hidden shrink-0">
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#e8eefb] text-[#1846a3] font-condensed font-bold text-[11px] border border-white">MP</span>
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#d3dbe9] text-[#0e1b3d] font-condensed font-bold text-[11px] border border-white">EB</span>
+</div>
+<div class="min-w-0">
+<p class="font-condensed text-sm sm:text-base font-bold text-[#0e1b3d] truncate leading-tight">
+              Marina Peralta <span class="text-xs font-normal text-[#55627d]">(6ª)</span> &amp; Esteban Benítez <span class="text-xs font-normal text-[#55627d]">(6ª)</span>
+</p>
+<p class="text-[11px] text-[#55627d] truncate">El Monasterio • Cupo asegurado</p>
+</div>
+</div>
+<span class="shrink-0 text-[10px] font-bold text-[#146c48] bg-[#e0f3ea] px-2 py-0.5 rounded-full border border-[#b8e4ce]">
+          Aprobada
+        </span>
+</article>
+<!-- 12 -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] p-3 flex items-center justify-between gap-3 hover:border-gray-400 transition">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="w-6 h-6 rounded-full bg-[#eef2f8] text-[#55627d] flex items-center justify-center font-condensed font-bold text-xs shrink-0">
+            12
+          </span>
+<div class="flex -space-x-1.5 overflow-hidden shrink-0">
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#e8eefb] text-[#1846a3] font-condensed font-bold text-[11px] border border-white">CV</span>
+<span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#d3dbe9] text-[#0e1b3d] font-condensed font-bold text-[11px] border border-white">MH</span>
+</div>
+<div class="min-w-0">
+<p class="font-condensed text-sm sm:text-base font-bold text-[#0e1b3d] truncate leading-tight">
+              Candela Vidal <span class="text-xs font-normal text-[#55627d]">(7ª)</span> &amp; Matías Herrera <span class="text-xs font-normal text-[#55627d]">(6ª)</span>
+</p>
+<p class="text-[11px] text-[#55627d] truncate">Club San Jorge • Cupo asegurado</p>
+</div>
+</div>
+<span class="shrink-0 text-[10px] font-bold text-[#146c48] bg-[#e0f3ea] px-2 py-0.5 rounded-full border border-[#b8e4ce]">
+          Aprobada
+        </span>
+</article>
+</div>
+<!-- 7. Banner Cartelera Jugadores Libres -->
+<section class="mt-2 bg-white rounded-lg border border-[#d3dbe9] p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-none">
+<div class="flex items-start gap-3">
+<div class="w-9 h-9 rounded-lg bg-[#fcefd8] text-[#7d4a00] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">person_search</span>
+</div>
+<div>
+<h4 class="font-condensed text-base font-bold text-[#0e1b3d] leading-snug">
+            ¿Querés jugar pero no tenés pareja?
+          </h4>
+<p class="text-xs text-[#55627d] mt-0.5 leading-relaxed">
+            Publicá tu búsqueda en la cartelera de jugadores libres del torneo y contactá a otros miembros.
+          </p>
+</div>
+</div>
+<button class="min-h-[44px] px-4 py-2 bg-white border border-[#1846a3] text-[#1846a3] rounded-lg text-xs font-condensed font-bold uppercase tracking-wider hover:bg-[#e8eefb] active:scale-95 transition shrink-0 flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">add_circle</span>
+<span>Buscar compa</span>
+</button>
+</section>
+</main>
+<!-- 8. BottomNavBar (Shared Component Execution: 'Torneos' is Active) -->
+<nav aria-label="Navegación principal" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 bg-white border-t border-[#d3dbe9] select-none shadow-[0_-2px_6px_rgba(0,0,0,0.03)]">
+<!-- Tab: Inicio -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#inicio">
+<span class="material-symbols-outlined text-[24px]">home</span>
+<span class="font-label text-xs font-semibold mt-0.5">Inicio</span>
+</a>
+<!-- Tab: Parejas -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#parejas">
+<span class="material-symbols-outlined text-[24px]">group</span>
+<span class="font-label text-xs font-semibold mt-0.5">Parejas</span>
+</a>
+<!-- Tab: Partidos -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#partidos">
+<span class="material-symbols-outlined text-[24px]">sports_tennis</span>
+<span class="font-label text-xs font-semibold mt-0.5">Partidos</span>
+</a>
+<!-- Tab: Torneos (ACTIVE DESTINATION) -->
+<a aria-current="page" class="flex flex-col items-center justify-center text-[#1846a3] dark:text-[#1846a3] font-bold py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#torneos">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+<span class="font-label text-xs font-semibold mt-0.5">Torneos</span>
+</a>
+<!-- Tab: Mis datos -->
+<a class="flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#mis-datos">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="font-label text-xs font-semibold mt-0.5">Mis datos</span>
+</a>
+</nav>
+</body></html>

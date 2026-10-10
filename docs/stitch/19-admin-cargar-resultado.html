@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#eef2f8]" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Cargar Resultado - Emparejados Pádel</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,500;0,600;0,700;1,600&amp;family=Public+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            pista: {
+              DEFAULT: "#1846a3",
+              dark: "#0c2357",
+              light: "#e8eefb",
+            },
+            tinta: "#0e1b3d",
+            grafito: "#55627d",
+            borde: "#d3dbe9",
+            superficie: "#ffffff",
+            pelota: "#d9f03f",
+            estado: {
+              aprobado: "#146c48",
+              aprobadoBg: "#e0f3ea",
+              rechazado: "#b02d23",
+              rechazadoBg: "#fbe9e7",
+              pendiente: "#7d4a00",
+              pendienteBg: "#fcefd8",
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Public Sans", "sans-serif"],
+            display: ["Archivo Narrow", "sans-serif"],
+            body: ["Public Sans", "sans-serif"],
+            label: ["Public Sans", "sans-serif"],
+            tabular: ["Archivo Narrow", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .score-input {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-full font-body text-tinta antialiased bg-[#eef2f8] flex justify-center selection:bg-pelota selection:text-tinta">
+<!-- Main Mobile Container (PWA Canvas) -->
+<div class="w-full max-w-md min-h-screen bg-[#eef2f8] relative flex flex-col shadow-2xl overflow-hidden pb-12">
+<!-- ========================================== -->
+<!-- BACKGROUND SCREEN: FIXTURE DE FISCALÍA     -->
+<!-- ========================================== -->
+<!-- TopAppBar (Shared Component Token Blueprint) -->
+<header class="bg-[#1846a3] text-white h-14 px-4 flex items-center justify-between sticky top-0 z-10 select-none">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-white text-[22px]" data-icon="sports_tennis">sports_tennis</span>
+<span class="font-headline text-lg font-bold tracking-tight text-white">Emparejados Pádel</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-[#0c2357] text-pelota border border-pelota/30 mr-1">Fiscalía</span>
+<button aria-label="Notificaciones" class="w-9 h-9 flex items-center justify-center rounded text-white/80 hover:bg-[#0c2357] transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Background Fixture Subheader -->
+<div class="bg-white border-b border-borde px-4 pt-3 pb-2.5">
+<div class="flex items-center justify-between">
+<div>
+<span class="text-[11px] font-bold text-grafito tracking-wide uppercase">Torneo Aniversario 2025</span>
+<h1 class="text-base font-bold text-tinta leading-tight">Club Náutico San Isidro</h1>
+</div>
+<span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-pista-light text-pista">
+<span class="w-2 h-2 rounded-full bg-pelota animate-pulse"></span> 5ª Caballeros
+        </span>
+</div>
+<!-- Fase Nav Tabs -->
+<div class="flex gap-2 mt-3 overflow-x-auto no-scrollbar text-xs font-semibold">
+<button class="px-3 py-1.5 rounded-lg bg-[#eef2f8] text-grafito">Zonas</button>
+<button class="px-3 py-1.5 rounded-lg bg-[#eef2f8] text-grafito">Cuartos</button>
+<button class="px-3 py-1.5 rounded-lg bg-pista text-white font-bold">Semifinales</button>
+<button class="px-3 py-1.5 rounded-lg bg-[#eef2f8] text-grafito">Final</button>
+</div>
+</div>
+<!-- Fixture Matches List (Atenuado detrás del modal) -->
+<div class="p-3 space-y-2.5 opacity-60 pointer-events-none select-none">
+<!-- Match 1 Card -->
+<div class="bg-white border border-borde rounded-lg p-3 shadow-none">
+<div class="flex items-center justify-between text-xs text-grafito pb-2 border-b border-borde/60">
+<span class="font-bold text-tinta">Semifinal 1 · Cancha 1</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#fcefd8] text-[#7d4a00]">En juego (3º set)</span>
+</div>
+<div class="py-2.5 space-y-2">
+<div class="flex justify-between items-center text-sm font-semibold">
+<span class="truncate">M. Morales / F. Rossi</span>
+<div class="flex gap-2 font-display tabular-nums text-sm font-bold">
+<span class="w-5 text-center">6</span>
+<span class="w-5 text-center">3</span>
+<span class="w-5 text-center text-pista">9</span>
+</div>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="truncate text-grafito">B. Acosta / H. Benítez</span>
+<div class="flex gap-2 font-display tabular-nums text-sm text-grafito">
+<span class="w-5 text-center">4</span>
+<span class="w-5 text-center">6</span>
+<span class="w-5 text-center">8</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Match 2 Card -->
+<div class="bg-white border border-borde rounded-lg p-3 shadow-none">
+<div class="flex items-center justify-between text-xs text-grafito pb-2 border-b border-borde/60">
+<span class="font-bold text-tinta">Semifinal 2 · Cancha 2</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#e8eefb] text-pista">Programado 18:30</span>
+</div>
+<div class="py-2.5 space-y-1.5 text-sm">
+<p class="font-semibold text-tinta truncate">G. Valenzuela / I. Larrondo</p>
+<p class="text-grafito truncate">J. P. Carrizo / T. Méndez</p>
+</div>
+</div>
+</div>
+<!-- ======================================================= -->
+<!-- DIÁLOGO MODAL: 'CARGAR RESULTADO' (TOPPING LAYER)      -->
+<!-- ======================================================= -->
+<!-- Backdrop translúcido de alto contraste -->
+<div class="absolute inset-0 bg-[#0c2357]/70 backdrop-blur-[2px] z-40 transition-opacity flex flex-col justify-end sm:justify-center p-0 sm:p-4">
+<!-- Modal Card Panel -->
+<div class="bg-white rounded-t-2xl sm:rounded-xl border border-borde shadow-2xl w-full max-h-[813px] overflow-y-auto flex flex-col animate-in slide-in-from-bottom-6 duration-200">
+<!-- Header del Modal -->
+<div class="px-4 pt-4 pb-3 border-b border-borde flex items-start justify-between bg-white sticky top-0 z-10">
+<div class="pr-2">
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase bg-pista-light text-pista">
+                5ª Caballeros
+              </span>
+<span class="text-xs font-semibold text-grafito">
+                Semifinal · Cancha 1 (Cristal)
+              </span>
+</div>
+<h2 class="text-xl font-bold font-headline text-tinta tracking-tight">Cargá el resultado</h2>
+<p class="text-xs text-grafito mt-0.5">Al mejor de 3 sets · 3º Súper Tie-break a 10 ptos.</p>
+</div>
+<button aria-label="Cerrar ventana" class="w-8 h-8 rounded-full flex items-center justify-center text-grafito hover:bg-[#eef2f8] active:scale-95 transition-all -mr-1">
+<span class="material-symbols-outlined text-xl" data-icon="close">close</span>
+</button>
+</div>
+<!-- Cuerpo del Formulario de Tanteador -->
+<div class="p-4 space-y-4 bg-white">
+<!-- Encabezado de Columnas del Tanteador -->
+<div class="flex items-center justify-between text-xs font-bold text-grafito px-1 uppercase tracking-wider">
+<span class="w-1/2">Parejas</span>
+<div class="flex items-center gap-2 text-center w-1/2 justify-end pr-1">
+<span class="w-11">Set 1</span>
+<span class="w-11">Set 2</span>
+<span class="w-11 text-pista font-extrabold">STB</span>
+</div>
+</div>
+<!-- PAREJA A (GANADORA) -->
+<div class="border-2 border-pista/30 bg-[#f8faff] rounded-lg p-3 relative transition-all">
+<!-- Badge Ganador Flotante -->
+<div class="flex items-center justify-between mb-2">
+<div class="inline-flex items-center gap-1.5 bg-pelota text-tinta text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-tinta/10 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-tinta"></span>
+<span>Ganadores · A la Final</span>
+</div>
+<span class="text-[11px] font-medium text-grafito">Club Náutico San Isidro</span>
+</div>
+<!-- Fila Nombres e Inputs -->
+<div class="flex items-center justify-between gap-2">
+<div class="w-1/2 pr-1">
+<p class="font-headline font-bold text-sm text-tinta leading-snug">
+                  Martín Morales
+                </p>
+<p class="font-headline font-bold text-sm text-tinta leading-snug">
+                  Facundo Rossi
+                </p>
+</div>
+<!-- Inputs Sets Pareja A -->
+<div class="flex items-center gap-2 w-1/2 justify-end">
+<div class="w-11">
+<input aria-label="Set 1 Morales Rossi" class="score-input w-full h-12 text-center text-xl font-bold bg-white text-tinta rounded-lg border-2 border-borde focus:border-pista focus:ring-0 p-0 shadow-inner" max="7" min="0" type="number" value="6"/>
+</div>
+<div class="w-11">
+<input aria-label="Set 2 Morales Rossi" class="score-input w-full h-12 text-center text-xl font-bold bg-white text-tinta rounded-lg border-2 border-borde focus:border-pista focus:ring-0 p-0 shadow-inner" max="7" min="0" type="number" value="3"/>
+</div>
+<div class="w-11">
+<input aria-label="Super Tie-break Morales Rossi" class="score-input w-full h-12 text-center text-xl font-extrabold bg-pelota/30 text-tinta rounded-lg border-2 border-pelota focus:border-pista focus:ring-0 p-0 shadow-inner" max="30" min="0" type="number" value="10"/>
+</div>
+</div>
+</div>
+<!-- Opción W.O. Pareja A -->
+<div class="mt-2.5 pt-2 border-t border-borde/70 flex items-center justify-between text-xs text-grafito">
+<label class="inline-flex items-center gap-1.5 cursor-pointer">
+<input class="w-4 h-4 rounded border-borde text-pista focus:ring-0 focus:ring-offset-0" type="checkbox"/>
+<span>No se presentó (W.O.)</span>
+</label>
+<span class="text-[11px] font-semibold text-estado-aprobado flex items-center gap-0.5">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span> Confirmado
+              </span>
+</div>
+</div>
+<!-- DIVISOR VS -->
+<div class="relative flex py-0.5 items-center justify-center">
+<div class="flex-grow border-t border-borde"></div>
+<span class="flex-shrink mx-2 text-[10px] font-black text-grafito uppercase tracking-widest bg-[#eef2f8] px-2 py-0.5 rounded">VS</span>
+<div class="flex-grow border-t border-borde"></div>
+</div>
+<!-- PAREJA B -->
+<div class="border border-borde bg-white rounded-lg p-3 relative transition-all">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[11px] font-semibold text-grafito">Subcampeones de zona</span>
+<span class="text-[11px] font-medium text-grafito">Club Atlético San Isidro</span>
+</div>
+<!-- Fila Nombres e Inputs -->
+<div class="flex items-center justify-between gap-2">
+<div class="w-1/2 pr-1">
+<p class="font-headline font-semibold text-sm text-tinta leading-snug">
+                  Bruno Acosta
+                </p>
+<p class="font-headline font-semibold text-sm text-tinta leading-snug">
+                  Hernán Benítez
+                </p>
+</div>
+<!-- Inputs Sets Pareja B -->
+<div class="flex items-center gap-2 w-1/2 justify-end">
+<div class="w-11">
+<input aria-label="Set 1 Acosta Benitez" class="score-input w-full h-12 text-center text-xl font-bold bg-[#eef2f8] text-tinta rounded-lg border border-borde focus:border-pista focus:ring-0 p-0" max="7" min="0" type="number" value="4"/>
+</div>
+<div class="w-11">
+<input aria-label="Set 2 Acosta Benitez" class="score-input w-full h-12 text-center text-xl font-bold bg-[#eef2f8] text-tinta rounded-lg border border-borde focus:border-pista focus:ring-0 p-0" max="7" min="0" type="number" value="6"/>
+</div>
+<div class="w-11">
+<input aria-label="Super Tie-break Acosta Benitez" class="score-input w-full h-12 text-center text-xl font-bold bg-[#eef2f8] text-grafito rounded-lg border border-borde focus:border-pista focus:ring-0 p-0" max="30" min="0" type="number" value="8"/>
+</div>
+</div>
+</div>
+<!-- Opción W.O. Pareja B -->
+<div class="mt-2.5 pt-2 border-t border-borde/70 flex items-center justify-between text-xs text-grafito">
+<label class="inline-flex items-center gap-1.5 cursor-pointer">
+<input class="w-4 h-4 rounded border-borde text-pista focus:ring-0 focus:ring-offset-0" type="checkbox"/>
+<span>No se presentó (W.O.)</span>
+</label>
+<span class="text-[11px] text-grafito italic">Diferencia: -2 pts en STB</span>
+</div>
+</div>
+<!-- Disclaimer / Notificación APA de Fiscalía -->
+<div class="bg-pista-light/60 border border-pista/20 rounded-lg p-2.5 flex items-start gap-2 text-xs text-tinta">
+<span class="material-symbols-outlined text-pista text-lg shrink-0 mt-0.5" data-icon="info">info</span>
+<div class="leading-relaxed">
+<p class="font-bold text-pista">Súper tie-break a 10 puntos (APA)</p>
+<p class="text-grafito text-[11px] mt-0.5">Al confirmar, se actualizan las llaves del cuadro y el fixture en vivo para los espectadores del club.</p>
+</div>
+</div>
+</div>
+<!-- Footer / Botones de Acción (Mínimo 44px de alto) -->
+<div class="p-4 bg-white border-t border-borde space-y-2 sticky bottom-0">
+<button class="w-full h-12 bg-pista hover:bg-pista-dark active:scale-[0.98] text-white font-headline font-bold text-sm rounded-lg flex items-center justify-center gap-2 shadow-sm transition-all duration-150" type="button">
+<span class="material-symbols-outlined text-xl" data-icon="check">check</span>
+<span>Guardar resultado</span>
+</button>
+<button class="w-full h-11 bg-transparent hover:bg-[#eef2f8] active:scale-[0.98] text-grafito font-headline font-semibold text-sm rounded-lg border border-borde transition-all duration-150" type="button">
+            Cancelar y volver al fixture
+          </button>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- BOTTOM NAVBAR (Shared Component)           -->
+<!-- Semantic Shell: Hidden when Modal Open     -->
+<!-- Included in code matching design system    -->
+<!-- ========================================== -->
+<nav class="hidden fixed bottom-0 left-0 w-full z-30 flex justify-around items-center h-16 px-2 bg-white border-t border-[#d3dbe9]">
+<a class="flex flex-col items-center justify-center text-[#55627d] font-normal py-1" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="home">home</span>
+<span class="font-label text-xs font-semibold">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#55627d] font-normal py-1" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="group">group</span>
+<span class="font-label text-xs font-semibold">Parejas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1846a3] font-bold py-1" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="sports_tennis">sports_tennis</span>
+<span class="font-label text-xs font-semibold">Partidos</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#55627d] font-normal py-1" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="emoji_events">emoji_events</span>
+<span class="font-label text-xs font-semibold">Torneos</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#55627d] font-normal py-1" href="#">
+<span class="material-symbols-outlined text-xl" data-icon="person">person</span>
+<span class="font-label text-xs font-semibold">Mis datos</span>
+</a>
+</nav>
+</div>
+</body></html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Emparejados Pádel - Detalle del Torneo</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,600;0,700;1,700&amp;family=Public+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {},
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {},
+          fontFamily: {
+            headline: ["Public Sans", "sans-serif"],
+            display: ["Public Sans", "sans-serif"],
+            body: ["Public Sans", "sans-serif"],
+            label: ["Public Sans", "sans-serif"],
+            scoreboard: ["Archivo Narrow", "sans-serif"]
+          },
+          fontSize: {}
+        },
+      },
+    }
+  </script>
+<style>
+    .font-scoreboard {
+      font-family: 'Archivo Narrow', sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    /* Hide scrollbar for clean chip rail */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#eef2f8] text-[#0e1b3d] font-body antialiased min-h-screen pb-24 pt-14 selection:bg-[#1846a3] selection:text-white">
+<!-- TOP APP BAR (Shared Component Anchor) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-4 h-14 bg-[#1846a3] border-b border-[#0c2357] shadow-none">
+<div class="flex items-center space-x-2">
+<!-- Back Action Button for deep dive tournament detail -->
+<button aria-label="Volver atrás" class="text-white hover:bg-[#0c2357] active:scale-95 transition-transform duration-100 p-1.5 rounded-lg flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[22px]">arrow_back</span>
+</button>
+<!-- Brand & Leading Icon -->
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-white text-[22px]">sports_tennis</span>
+<h1 class="font-headline text-lg font-bold tracking-tight text-white">Emparejados Pádel</h1>
+</div>
+</div>
+<!-- Trailing Action: Notification Bell with Badge -->
+<div class="flex items-center">
+<button aria-label="Notificaciones" class="relative p-2 text-white hover:bg-[#0c2357] active:scale-95 transition-all duration-150 rounded-lg flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[22px]">notifications</span>
+<!-- Amber/Yellow Pending counter badge as per DS rule -->
+<span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-[#d9f03f] rounded-full ring-2 ring-[#1846a3]"></span>
+</button>
+</div>
+</header>
+<!-- MAIN WRAPPER (Mobile-first, centered canvas up to 1024px) -->
+<main class="max-w-[1024px] mx-auto px-4 pt-3 space-y-4">
+<!-- BREADCRUMB NAVIGATION -->
+<nav aria-label="Migas de pan" class="flex items-center space-x-1.5 text-xs text-[#55627d]">
+<a class="hover:text-[#1846a3] transition-colors" href="#">Torneos</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-[#0e1b3d] font-semibold">Copa Aniversario</span>
+</nav>
+<!-- TOURNAMENT HEADER (Hero Card) -->
+<section class="bg-white rounded-lg border border-[#d3dbe9] p-4">
+<div class="flex items-start justify-between gap-3 mb-2">
+<div>
+<span class="inline-block text-[11px] font-bold text-[#1846a3] tracking-wide uppercase">5ª caballeros · Zonas y llaves</span>
+<h2 class="text-2xl font-bold font-headline text-[#0e1b3d] tracking-tight leading-tight">Torneo Aniversario</h2>
+</div>
+<!-- Status Badge: En curso (Verde Pádel) -->
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-[#e0f3ea] text-[#146c48] border border-[#146c48]/20 shrink-0">
+<span class="w-2 h-2 rounded-full bg-[#146c48] mr-1.5 animate-pulse"></span>
+          En curso
+        </span>
+</div>
+<!-- Quick Specs List -->
+<div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-[#0e1b3d]">
+<div class="flex items-center space-x-2 text-[#55627d]">
+<span class="material-symbols-outlined text-[18px] text-[#1846a3]">calendar_today</span>
+<span class="text-[#0e1b3d] font-medium">10 al 12 de Octubre 2025</span>
+</div>
+<div class="flex items-center space-x-2 text-[#55627d]">
+<span class="material-symbols-outlined text-[18px] text-[#1846a3]">location_on</span>
+<span class="text-[#0e1b3d] font-medium">Club El Monasterio Pádel <span class="text-[#55627d] font-normal">(Flores, CABA)</span></span>
+</div>
+<div class="flex items-center space-x-2 text-[#55627d] sm:col-span-2">
+<span class="material-symbols-outlined text-[18px] text-[#1846a3]">group</span>
+<span class="text-[#0e1b3d] font-medium">16 parejas en competencia <span class="text-[#55627d] font-normal">· 4 zonas de 4 duplas</span></span>
+</div>
+</div>
+<!-- Hero Actions -->
+<div class="mt-4 pt-3 border-t border-[#d3dbe9] flex items-center justify-between gap-2">
+<button class="flex-1 min-h-[44px] px-3 bg-[#e8eefb] hover:bg-[#d8e3f9] text-[#1846a3] rounded-lg text-xs font-bold flex items-center justify-center space-x-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">share</span>
+<span>Compartir torneo</span>
+</button>
+<button class="flex-1 min-h-[44px] px-3 bg-white border border-[#d3dbe9] hover:bg-[#f4f6fa] text-[#0e1b3d] rounded-lg text-xs font-bold flex items-center justify-center space-x-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-[#55627d]">description</span>
+<span>Reglamento oficial</span>
+</button>
+</div>
+</section>
+<!-- HORIZONTAL TABS (Navigation inside tournament) -->
+<nav aria-label="Pestañas del torneo" class="bg-white rounded-lg border border-[#d3dbe9] p-1 shadow-none overflow-x-auto no-scrollbar">
+<div class="flex space-x-1 min-w-max">
+<!-- Active Tab: Fixture -->
+<button class="py-2 px-3.5 rounded-lg bg-[#1846a3] text-white text-xs font-bold flex items-center space-x-1.5 shadow-none transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">sports_tennis</span>
+<span>Fixture</span>
+</button>
+<button class="py-2 px-3.5 rounded-lg text-[#55627d] hover:text-[#1846a3] hover:bg-[#e8eefb] text-xs font-semibold flex items-center space-x-1.5 transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">account_tree</span>
+<span>Llave final</span>
+</button>
+<button class="py-2 px-3.5 rounded-lg text-[#55627d] hover:text-[#1846a3] hover:bg-[#e8eefb] text-xs font-semibold flex items-center space-x-1.5 transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">leaderboard</span>
+<span>Posiciones</span>
+</button>
+<button class="py-2 px-3.5 rounded-lg text-[#55627d] hover:text-[#1846a3] hover:bg-[#e8eefb] text-xs font-semibold flex items-center space-x-1.5 transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">groups</span>
+<span>Parejas</span>
+</button>
+<button class="py-2 px-3.5 rounded-lg text-[#55627d] hover:text-[#1846a3] hover:bg-[#e8eefb] text-xs font-semibold flex items-center space-x-1.5 transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">gavel</span>
+<span>Reglas</span>
+</button>
+</div>
+</nav>
+<!-- QUICK FILTER CHIPS -->
+<div class="flex items-center space-x-2 overflow-x-auto no-scrollbar py-0.5">
+<button class="shrink-0 px-3 py-1.5 bg-[#1846a3] text-white text-xs font-bold rounded-full" type="button">
+        Todos los partidos
+      </button>
+<button class="shrink-0 px-3 py-1.5 bg-white border border-[#d3dbe9] text-[#55627d] hover:text-[#1846a3] text-xs font-semibold rounded-full hover:border-[#1846a3]" type="button">
+        Zona A
+      </button>
+<button class="shrink-0 px-3 py-1.5 bg-white border border-[#d3dbe9] text-[#55627d] hover:text-[#1846a3] text-xs font-semibold rounded-full hover:border-[#1846a3]" type="button">
+        Zona B
+      </button>
+<button class="shrink-0 px-3 py-1.5 bg-white border border-[#d3dbe9] text-[#55627d] hover:text-[#1846a3] text-xs font-semibold rounded-full hover:border-[#1846a3]" type="button">
+        Zona C
+      </button>
+<button class="shrink-0 px-3 py-1.5 bg-white border border-[#d3dbe9] text-[#55627d] hover:text-[#1846a3] text-xs font-semibold rounded-full hover:border-[#1846a3]" type="button">
+        Zona D
+      </button>
+<button class="shrink-0 px-3 py-1.5 bg-white border border-[#d3dbe9] text-[#55627d] hover:text-[#1846a3] text-xs font-semibold rounded-full hover:border-[#1846a3]" type="button">
+        Cancha Central
+      </button>
+</div>
+<!-- FIXTURE SECTION: JORNADA 1 -->
+<section class="space-y-3">
+<!-- Section Date Header -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-[#1846a3] text-[20px]">event</span>
+<h3 class="font-bold text-sm text-[#0e1b3d]">Sábado 10 de Octubre · Jornada inaugural</h3>
+</div>
+<span class="inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#d9f03f] text-[#0e1b3d]">
+          En disputa hoy
+        </span>
+</div>
+<!-- MATCH 1: EN JUEGO AHORA -->
+<article class="bg-white rounded-lg border-2 border-[#1846a3] shadow-none overflow-hidden transition-shadow">
+<!-- Card Header with live indicator -->
+<div class="bg-[#e8eefb] px-3.5 py-2 flex items-center justify-between border-b border-[#d3dbe9]">
+<span class="text-xs font-semibold text-[#0c2357] flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-[#1846a3]">stadium</span>
+            Zona A · Cancha 1 (Cristal techada)
+          </span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-extrabold bg-[#d9f03f] text-[#0e1b3d] animate-pulse">
+            • EN JUEGO - 2º Set
+          </span>
+</div>
+<!-- Scoreboard Body -->
+<div class="p-3.5">
+<div class="grid grid-cols-[1fr_auto_auto_auto] items-center gap-y-2.5">
+<!-- Headers for Scoreboard Columns -->
+<div class="text-[10px] font-bold text-[#55627d] uppercase tracking-wider">Pareja</div>
+<div class="w-8 text-center text-[10px] font-bold text-[#55627d]">S1</div>
+<div class="w-8 text-center text-[10px] font-bold text-[#55627d]">S2</div>
+<div class="w-10 text-center text-[10px] font-bold text-[#1846a3]">PTS</div>
+<!-- Dupla 1 (Currently Serving) -->
+<div class="flex items-center space-x-2 pr-2">
+<span class="w-2.5 h-2.5 rounded-full bg-[#d9f03f] ring-1 ring-[#0e1b3d]" title="Al saque"></span>
+<span class="font-bold text-sm text-[#0e1b3d]">M. Morales / F. Rossi</span>
+</div>
+<div class="font-scoreboard text-base font-bold text-[#0e1b3d] text-center">6</div>
+<div class="font-scoreboard text-base font-bold text-[#1846a3] text-center bg-[#e8eefb] rounded py-0.5">4</div>
+<div class="font-scoreboard text-base font-extrabold text-[#0e1b3d] text-center bg-[#d9f03f] rounded py-0.5">40</div>
+<!-- Dupla 2 -->
+<div class="flex items-center space-x-2 pr-2">
+<span class="w-2.5 h-2.5 rounded-full bg-transparent"></span>
+<span class="font-medium text-sm text-[#55627d]">G. Pereyra / L. Di Santo</span>
+</div>
+<div class="font-scoreboard text-base font-medium text-[#55627d] text-center">4</div>
+<div class="font-scoreboard text-base font-bold text-[#1846a3] text-center bg-[#e8eefb] rounded py-0.5">3</div>
+<div class="font-scoreboard text-base font-bold text-[#55627d] text-center bg-gray-100 rounded py-0.5">30</div>
+</div>
+<!-- Bottom Action Button for Live Match -->
+<div class="mt-3.5 pt-3 border-t border-[#d3dbe9] flex items-center justify-between">
+<span class="text-xs text-[#55627d] flex items-center">
+<span class="material-symbols-outlined text-[15px] mr-1 text-[#146c48]">timer</span>
+              Tiempo: 52 min
+            </span>
+<button class="min-h-[44px] px-4 bg-[#1846a3] hover:bg-[#0c2357] text-white rounded-lg text-xs font-bold flex items-center justify-center space-x-1.5 transition-all active:scale-95" type="button">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+<span>Seguí el partido en vivo</span>
+</button>
+</div>
+</div>
+</article>
+<!-- MATCH 2: FINALIZADO -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] shadow-none overflow-hidden">
+<!-- Header -->
+<div class="bg-white px-3.5 py-2 flex items-center justify-between border-b border-[#d3dbe9]">
+<span class="text-xs font-medium text-[#55627d]">
+            Zona A · Cancha 2 · 09:30 hs
+          </span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#e0f3ea] text-[#146c48]">
+            Finalizado
+          </span>
+</div>
+<!-- Body -->
+<div class="p-3.5">
+<div class="grid grid-cols-[1fr_auto_auto] items-center gap-y-2">
+<!-- Headers -->
+<div class="text-[10px] font-bold text-[#55627d] uppercase">Pareja</div>
+<div class="w-8 text-center text-[10px] font-bold text-[#55627d]">S1</div>
+<div class="w-8 text-center text-[10px] font-bold text-[#55627d]">S2</div>
+<!-- Ganadores -->
+<div class="flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-[#d9f03f]" title="Ganador"></span>
+<div class="flex items-center space-x-1">
+<span class="font-bold text-sm text-[#0e1b3d]">B. Acosta / H. Benítez</span>
+<span class="material-symbols-outlined text-[#146c48] text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<div class="font-scoreboard text-base font-bold text-[#0e1b3d] text-center">6</div>
+<div class="font-scoreboard text-base font-bold text-[#0e1b3d] text-center">6</div>
+<!-- Rivales -->
+<div class="flex items-center space-x-2 pl-4">
+<span class="font-normal text-sm text-[#55627d]">J. Riquelme / M. Palermo</span>
+</div>
+<div class="font-scoreboard text-base font-normal text-[#55627d] text-center">3</div>
+<div class="font-scoreboard text-base font-normal text-[#55627d] text-center">4</div>
+</div>
+<div class="mt-3 pt-2.5 border-t border-[#d3dbe9] flex items-center justify-between text-xs text-[#55627d]">
+<span class="flex items-center">
+<span class="material-symbols-outlined text-[15px] mr-1 text-[#55627d]">schedule</span>
+              Duración: 1h 15m · Arbitrado
+            </span>
+<button class="text-[#1846a3] font-bold hover:underline" type="button">
+              Ver planilla
+            </button>
+</div>
+</div>
+</article>
+<!-- MATCH 3: PROGRAMADO / POR JUGAR -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] shadow-none overflow-hidden">
+<!-- Header -->
+<div class="bg-white px-3.5 py-2 flex items-center justify-between border-b border-[#d3dbe9]">
+<span class="text-xs font-semibold text-[#0e1b3d] flex items-center space-x-1">
+<span class="material-symbols-outlined text-[16px] text-[#1846a3]">schedule</span>
+<span>Zona B · Cancha 3 · Hoy 16:30 hs</span>
+</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#fcefd8] text-[#7d4a00]">
+            Por jugar
+          </span>
+</div>
+<!-- Body -->
+<div class="p-3.5">
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="w-6 h-6 rounded-full bg-[#e8eefb] text-[#1846a3] text-[11px] font-bold flex items-center justify-center">1</span>
+<span class="font-semibold text-sm text-[#0e1b3d]">T. Silva / N. Domínguez</span>
+</div>
+<span class="text-xs text-[#55627d] font-mono">Pareja #4</span>
+</div>
+<div class="text-center py-0.5">
+<span class="text-xs font-bold text-[#55627d] bg-[#eef2f8] px-2 py-0.5 rounded">VS</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="w-6 h-6 rounded-full bg-[#e8eefb] text-[#1846a3] text-[11px] font-bold flex items-center justify-center">2</span>
+<span class="font-semibold text-sm text-[#0e1b3d]">E. Gómez / P. Díaz</span>
+</div>
+<span class="text-xs text-[#55627d] font-mono">Pareja #9</span>
+</div>
+</div>
+<div class="mt-3.5 pt-3 border-t border-[#d3dbe9] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+<p class="text-[11px] text-[#55627d] flex items-center">
+<span class="material-symbols-outlined text-[15px] mr-1 text-[#55627d]">info</span>
+              Calentamiento: 16:15 hs · Bolas Head Pro
+            </p>
+<button class="min-h-[44px] px-3.5 bg-white border border-[#1846a3] text-[#1846a3] hover:bg-[#e8eefb] rounded-lg text-xs font-bold flex items-center justify-center space-x-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">notifications_active</span>
+<span>Avisarme al inicio</span>
+</button>
+</div>
+</div>
+</article>
+<!-- SECTION: JORNADA 2 -->
+<div class="flex items-center space-x-2 pt-4">
+<span class="material-symbols-outlined text-[#1846a3] text-[20px]">calendar_month</span>
+<h3 class="font-bold text-sm text-[#0e1b3d]">Domingo 11 de Octubre · Definición y Cuartos</h3>
+</div>
+<!-- MATCH 4: CUARTOS DE FINAL (A DEFINIR) -->
+<article class="bg-white rounded-lg border border-dashed border-[#d3dbe9] p-3.5">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-semibold text-[#55627d]">
+            Cuartos de final 1 · Cancha Central · Domingo 14:00 hs
+          </span>
+<span class="text-[10px] font-bold text-[#55627d] bg-[#eef2f8] px-2 py-0.5 rounded">
+            Eliminatoria directa
+          </span>
+</div>
+<div class="bg-[#f8fafc] rounded p-2.5 text-center text-xs text-[#55627d]">
+<p class="font-bold text-[#0e1b3d] text-sm mb-1">1º Zona A vs 2º Zona B</p>
+<p class="text-[11px]">Duplas clasificadas a confirmar al cierre de la fase de grupos</p>
+</div>
+</article>
+</section>
+<!-- HELP & SUPPORT SECTION (Mesa de control) -->
+<aside class="bg-white rounded-lg border border-[#d3dbe9] p-4 flex items-start space-x-3">
+<div class="p-2 bg-[#e8eefb] text-[#1846a3] rounded-lg shrink-0">
+<span class="material-symbols-outlined text-[24px]">support_agent</span>
+</div>
+<div class="space-y-1">
+<h4 class="text-xs font-bold text-[#0e1b3d] tracking-tight">¿Dudas con tu horario o cancha?</h4>
+<p class="text-xs text-[#55627d] leading-relaxed">
+          Acercate a la mesa de fiscales en la recepción del club o escribiles directo por el WhatsApp oficial del torneo.
+        </p>
+<div class="pt-1">
+<a class="inline-flex items-center text-xs font-bold text-[#1846a3] hover:underline" href="#">
+<span>Contactar mesa de control</span>
+<span class="material-symbols-outlined text-xs ml-0.5">arrow_forward</span>
+</a>
+</div>
+</div>
+</aside>
+</main>
+<!-- BOTTOM NAVIGATION BAR (Shared Component Anchor) -->
+<!--
+    JSON Anchor Specifications:
+    - label_texts: ["Inicio", "Parejas", "Partidos", "Torneos", "Mis datos"]
+    - icons: ["home", "group", "sports_tennis", "emoji_events", "person"]
+    - Active label: "Torneos" (Matches the current page context: Tournament detail)
+    - style_active_navigation: "flex flex-col items-center justify-center text-[#1846a3] dark:text-[#1846a3] font-bold py-1"
+    - style_inactive_navigation: "flex flex-col items-center justify-center text-[#55627d] dark:text-[#55627d] font-normal py-1"
+  -->
+<nav aria-label="Navegación principal" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 bg-white border-t border-[#d3dbe9] shadow-none">
+<!-- Item 1: Inicio -->
+<a class="flex flex-col items-center justify-center text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]">home</span>
+<span class="font-label text-xs font-semibold mt-0.5">Inicio</span>
+</a>
+<!-- Item 2: Parejas -->
+<a class="flex flex-col items-center justify-center text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]">group</span>
+<span class="font-label text-xs font-semibold mt-0.5">Parejas</span>
+</a>
+<!-- Item 3: Partidos -->
+<a class="flex flex-col items-center justify-center text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]">sports_tennis</span>
+<span class="font-label text-xs font-semibold mt-0.5">Partidos</span>
+</a>
+<!-- Item 4: Torneos (ACTIVE DESTINATION) -->
+<a aria-current="page" class="flex flex-col items-center justify-center text-[#1846a3] font-bold py-1 transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+<span class="font-label text-xs font-semibold mt-0.5">Torneos</span>
+</a>
+<!-- Item 5: Mis datos -->
+<a class="flex flex-col items-center justify-center text-[#55627d] font-normal py-1 hover:text-[#1846a3] transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]">person</span>
+<span class="font-label text-xs font-semibold mt-0.5">Mis datos</span>
+</a>
+</nav>
+</body></html>

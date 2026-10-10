@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-slate-50" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Torneos de Pádel | Emparejados Pádel</title>
+<!-- Tailwind CSS v3 & Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Public Sans & Archivo Narrow -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,500;0,600;0,700;1,600&amp;family=Public+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Custom Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: '#1846a3',
+              dark: '#0c2357',
+              light: '#e8eefb',
+              accent: '#d9f03f',
+            },
+            padel: {
+              ink: '#0e1b3d',
+              muted: '#55627d',
+              border: '#d3dbe9',
+              surface: '#ffffff',
+              canvas: '#eef2f8',
+            },
+            status: {
+              approvedBg: '#e0f3ea',
+              approvedText: '#146c48',
+              pendingBg: '#fcefd8',
+              pendingText: '#7d4a00',
+              dangerBg: '#fbe9e7',
+              dangerText: '#b02d23',
+            }
+          },
+          fontFamily: {
+            headline: ["'Public Sans'", "sans-serif"],
+            display: ["'Archivo Narrow'", "'Public Sans'", "sans-serif"],
+            body: ["'Public Sans'", "sans-serif"],
+            label: ["'Public Sans'", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .font-condensed {
+      font-family: 'Archivo Narrow', 'Public Sans', sans-serif;
+      font-feature-settings: "tnum" 1;
+    }
+    /* Estilo sutil para scroll horizontal de filtros */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-full bg-[#eef2f8] text-[#0e1b3d] font-body flex flex-col antialiased selection:bg-brand-accent selection:text-padel-ink">
+<!-- ================= TOP APP BAR ================= -->
+<!-- Contextual Shell: Modo público sin sesión, sin BottomNavBar -->
+<header class="sticky top-0 z-50 w-full bg-[#1846a3] shadow-md border-b border-[#0c2357] transition-all">
+<div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+<!-- Brand Logo e Isotipo -->
+<a class="flex items-center gap-2.5 text-white focus:outline-none focus:ring-2 focus:ring-brand-accent rounded-lg py-1 px-1.5 transition-transform active:scale-95" href="#">
+<div class="w-8 h-8 rounded-lg bg-brand-accent text-padel-ink flex items-center justify-center font-bold shadow-sm">
+<span class="material-symbols-outlined text-xl leading-none" data-icon="sports_tennis" style="font-variation-settings: 'FILL' 1;">sports_tennis</span>
+</div>
+<div class="flex flex-col leading-tight">
+<span class="font-headline font-extrabold text-base tracking-tight text-white uppercase">Emparejados</span>
+<span class="text-[10px] font-semibold text-brand-light tracking-widest uppercase -mt-0.5">Pádel Circuit</span>
+</div>
+</a>
+<!-- Acciones de barra superior sin sesión iniciada -->
+<div class="flex items-center gap-2">
+<button aria-label="Búsqueda rápida" class="w-9 h-9 flex items-center justify-center rounded-full text-white/90 hover:bg-[#0c2357] hover:text-white transition-colors duration-150 active:scale-95" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="search">search</span>
+</button>
+<button class="inline-flex items-center gap-1.5 bg-white text-[#1846a3] font-headline font-bold text-xs px-3.5 py-1.5 rounded-full hover:bg-slate-100 shadow-sm transition-all duration-150 active:scale-95 focus:outline-none focus:ring-2 focus:ring-brand-accent" type="button">
+<span class="material-symbols-outlined text-sm leading-none" data-icon="login">login</span>
+<span>Ingresar</span>
+</button>
+</div>
+</div>
+</header>
+<!-- ================= CONTENEDOR PRINCIPAL ================= -->
+<main class="flex-1 w-full max-w-4xl mx-auto px-3.5 sm:px-6 pt-5 pb-16">
+<!-- Hero / Intro Rioplatense -->
+<section class="mb-4">
+<div class="flex items-center gap-2 text-xs font-bold text-[#1846a3] uppercase tracking-wider mb-1">
+<span class="inline-block w-2 h-2 rounded-full bg-brand-accent animate-pulse"></span>
+<span>Temporada Oficial 2025</span>
+</div>
+<h1 class="text-2xl sm:text-3xl font-extrabold font-condensed tracking-tight text-[#0e1b3d] uppercase leading-tight">
+        Torneos de Pádel
+      </h1>
+<p class="text-sm text-[#55627d] mt-1 leading-snug">
+        Anotate con tu dupla o seguí el fixture y los resultados en vivo en los mejores clubes de Argentina.
+      </p>
+</section>
+<!-- Buscador interactivo -->
+<div class="relative mb-4">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#55627d]">
+<span class="material-symbols-outlined text-xl" data-icon="search">search</span>
+</span>
+<input class="w-full pl-10 pr-10 py-2.5 text-sm bg-white border border-[#d3dbe9] rounded-lg text-[#0e1b3d] placeholder-[#55627d]/70 focus:outline-none focus:ring-2 focus:ring-[#1846a3] focus:border-transparent transition-shadow shadow-sm" placeholder="Buscar torneo, club o localidad (ej. San Isidro, Pilar...)" type="search"/>
+<button aria-label="Filtro geográfico" class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#55627d] hover:text-[#1846a3]" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="tune">tune</span>
+</button>
+</div>
+<!-- Filtros Horizontales Primarios (Chips Scrolleables) -->
+<section aria-label="Filtro por estado de torneo" class="mb-3">
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-xs">
+<!-- Todos -->
+<button class="whitespace-nowrap px-3.5 py-1.5 rounded-full border border-[#d3dbe9] bg-white text-[#55627d] font-semibold hover:border-[#1846a3] hover:text-[#1846a3] transition-colors active:scale-95" type="button">
+          Todos <span class="text-[11px] font-normal opacity-80">(8)</span>
+</button>
+<!-- Inscripción abierta (Activo por defecto) -->
+<button class="whitespace-nowrap px-3.5 py-1.5 rounded-full bg-[#1846a3] text-white font-bold shadow-sm flex items-center gap-1.5 transition-transform active:scale-95" type="button">
+<span class="w-2 h-2 rounded-full bg-brand-accent"></span>
+<span>Inscripción abierta</span>
+<span class="bg-white/20 text-white rounded-full px-1.5 py-0.2 text-[10px] font-extrabold">4</span>
+</button>
+<!-- En curso -->
+<button class="whitespace-nowrap px-3.5 py-1.5 rounded-full border border-[#d3dbe9] bg-white text-[#55627d] font-semibold hover:border-[#1846a3] hover:text-[#1846a3] transition-colors active:scale-95" type="button">
+          En juego <span class="text-[11px] font-normal opacity-80">(2)</span>
+</button>
+<!-- Próximos -->
+<button class="whitespace-nowrap px-3.5 py-1.5 rounded-full border border-[#d3dbe9] bg-white text-[#55627d] font-semibold hover:border-[#1846a3] hover:text-[#1846a3] transition-colors active:scale-95" type="button">
+          Próximos <span class="text-[11px] font-normal opacity-80">(1)</span>
+</button>
+<!-- Finalizados -->
+<button class="whitespace-nowrap px-3.5 py-1.5 rounded-full border border-[#d3dbe9] bg-white text-[#55627d] font-semibold hover:border-[#1846a3] hover:text-[#1846a3] transition-colors active:scale-95" type="button">
+          Finalizados <span class="text-[11px] font-normal opacity-80">(1)</span>
+</button>
+</div>
+</section>
+<!-- Subfiltros rápidos (Ramas y categorías) -->
+<div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-3 mb-2 text-[11px]">
+<span class="text-[#55627d] font-semibold pl-0.5">Filtrar:</span>
+<button class="px-2.5 py-1 bg-white border border-[#d3dbe9] text-[#0e1b3d] rounded-md font-medium hover:bg-slate-100 flex items-center gap-1">
+<span>Caballeros</span>
+</button>
+<button class="px-2.5 py-1 bg-white border border-[#d3dbe9] text-[#0e1b3d] rounded-md font-medium hover:bg-slate-100 flex items-center gap-1">
+<span>Damas</span>
+</button>
+<button class="px-2.5 py-1 bg-white border border-[#d3dbe9] text-[#0e1b3d] rounded-md font-medium hover:bg-slate-100 flex items-center gap-1">
+<span>Mixto</span>
+</button>
+<button class="px-2.5 py-1 bg-[#e8eefb] border border-[#1846a3]/20 text-[#1846a3] rounded-md font-semibold flex items-center gap-1">
+<span>5ª Categoría</span>
+<span class="material-symbols-outlined text-[13px]" data-icon="close">close</span>
+</button>
+<button class="px-2 py-1 text-[#1846a3] font-semibold hover:underline">
+        Limpiar
+      </button>
+</div>
+<!-- ================= LISTADO DE TORNEOS ================= -->
+<div class="space-y-4">
+<!-- TARJETA 1: INSCRIPCIÓN ABIERTA (Copa San Isidro) -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] p-4 shadow-sm hover:border-[#1846a3]/50 transition-all duration-200">
+<!-- Top row: Categoría y Estado Pill -->
+<div class="flex items-start justify-between gap-2 mb-2.5">
+<div class="flex flex-wrap items-center gap-1.5">
+<span class="bg-[#1846a3] text-white text-[11px] font-condensed font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+              5ª Caballeros
+            </span>
+<span class="bg-slate-100 text-[#55627d] text-[11px] font-medium px-2 py-0.5 rounded">
+              Zonas y llaves
+            </span>
+</div>
+<!-- Estado Verde con punto pulsante -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#e0f3ea] text-[#146c48]">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#146c48] opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-[#146c48]"></span>
+</span>
+            Inscripción abierta
+          </span>
+</div>
+<!-- Título y Club -->
+<h2 class="text-lg font-bold font-condensed tracking-tight text-[#0e1b3d] leading-snug">
+          Copa San Isidro Pádel 2025 · Edición Otoño
+        </h2>
+<div class="flex items-center gap-1.5 text-xs text-[#55627d] mt-1 font-medium">
+<span class="material-symbols-outlined text-sm text-[#1846a3]" data-icon="location_on">location_on</span>
+<span>Club Náutico San Isidro (San Isidro, Bs. As.)</span>
+</div>
+<!-- Fechas y Formato -->
+<div class="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-slate-100 text-xs">
+<div class="flex items-center gap-1.5 text-[#0e1b3d]">
+<span class="material-symbols-outlined text-base text-[#55627d]" data-icon="calendar_month">calendar_month</span>
+<div>
+<span class="text-[10px] text-[#55627d] block font-medium">Fecha</span>
+<span class="font-semibold">18 al 20 de Abril</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 text-[#0e1b3d]">
+<span class="material-symbols-outlined text-base text-[#55627d]" data-icon="schedule">schedule</span>
+<div>
+<span class="text-[10px] text-[#55627d] block font-medium">Horario</span>
+<span class="font-semibold">Viernes de 18:30 hs</span>
+</div>
+</div>
+</div>
+<!-- Cupo & Barra de Progreso -->
+<div class="mt-3 bg-slate-50 p-2.5 rounded-md border border-slate-100">
+<div class="flex justify-between items-center text-xs mb-1.5">
+<span class="font-medium text-[#55627d]">Cupo confirmado:</span>
+<span class="font-condensed font-bold text-[#0e1b3d]">
+              12 de 16 parejas <span class="text-amber-700 bg-amber-100 text-[10px] px-1.5 py-0.5 rounded font-bold ml-1">¡Últimos 4 cupos!</span>
+</span>
+</div>
+<div class="w-full bg-[#d3dbe9] h-2 rounded-full overflow-hidden">
+<div class="bg-[#1846a3] h-full rounded-full transition-all duration-300" style="width: 75%;"></div>
+</div>
+</div>
+<!-- Premios & Precio -->
+<div class="mt-2.5 flex items-center justify-between text-xs text-[#55627d]">
+<div class="flex items-center gap-1 truncate">
+<span class="material-symbols-outlined text-base text-amber-600" data-icon="emoji_events">emoji_events</span>
+<span class="truncate">Paletas Bullpadel + Remeras</span>
+</div>
+<span class="font-bold text-[#0e1b3d] whitespace-nowrap">$26.000 <span class="text-[10px] font-normal text-[#55627d]">/ dupla</span></span>
+</div>
+<!-- CTA Action -->
+<div class="mt-3.5 pt-3 border-t border-[#d3dbe9] flex items-center justify-between gap-3">
+<button class="text-xs font-semibold text-[#1846a3] hover:underline flex items-center gap-1 py-2" type="button">
+<span class="material-symbols-outlined text-base" data-icon="info">info</span>
+<span>Bases y reglamento</span>
+</button>
+<a class="inline-flex items-center justify-center gap-1.5 bg-[#1846a3] text-white text-xs font-bold py-2.5 px-4 rounded-lg hover:bg-[#0c2357] transition-all duration-150 active:scale-95 shadow-sm" href="#">
+<span>Anotá tu dupla</span>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- TARJETA 2: EN CURSO (Circuito APA Vicente López) -->
+<article class="bg-white rounded-lg border-2 border-[#1846a3]/40 p-4 shadow-sm hover:border-[#1846a3] transition-all duration-200 relative overflow-hidden">
+<!-- Badge de torneo en vivo de fondo sutil -->
+<div class="absolute -right-8 top-5 bg-brand-accent text-padel-ink text-[10px] font-condensed font-extrabold uppercase py-0.5 px-8 rotate-45 shadow-sm tracking-wider">
+          En juego
+        </div>
+<!-- Top row: Categoría y Estado Pill -->
+<div class="flex items-start justify-between gap-2 mb-2.5">
+<div class="flex flex-wrap items-center gap-1.5">
+<span class="bg-[#0c2357] text-white text-[11px] font-condensed font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+              6ª Caballeros
+            </span>
+<span class="bg-[#e8eefb] text-[#1846a3] text-[11px] font-semibold px-2 py-0.5 rounded">
+              Fase de Zonas
+            </span>
+</div>
+<!-- Estado En Juego (Amarillo/Azul) -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-brand-accent text-padel-ink">
+<span class="material-symbols-outlined text-sm leading-none" data-icon="sports_tennis" style="font-variation-settings: 'FILL' 1;">sports_tennis</span>
+            En vivo hoy
+          </span>
+</div>
+<!-- Título y Club -->
+<h2 class="text-lg font-bold font-condensed tracking-tight text-[#0e1b3d] leading-snug pr-8">
+          Circuito APA Zona Norte · Etapa 3
+        </h2>
+<div class="flex items-center gap-1.5 text-xs text-[#55627d] mt-1 font-medium">
+<span class="material-symbols-outlined text-sm text-[#1846a3]" data-icon="location_on">location_on</span>
+<span>Asturiano Pádel Club (Vicente López)</span>
+</div>
+<!-- Partidos de hoy en vivo -->
+<div class="mt-3 p-2.5 bg-[#e8eefb]/70 border border-[#1846a3]/20 rounded-md">
+<div class="flex items-center justify-between text-xs text-[#1846a3] font-semibold mb-1">
+<span class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+              Cancha Central: Semifinal en desarrollo
+            </span>
+<span class="font-condensed font-bold bg-white px-2 py-0.5 rounded text-[11px] text-[#0e1b3d] border border-blue-200">
+              Set 2: 6-4 / 3-2
+            </span>
+</div>
+<p class="text-[11px] text-[#55627d]">
+            Gómez / Rossi vs. Peralta / Díaz · 16 duplas en cuadro principal.
+          </p>
+</div>
+<!-- Datos del torneo -->
+<div class="grid grid-cols-2 gap-2 mt-3 text-xs">
+<div class="text-[#0e1b3d]">
+<span class="text-[10px] text-[#55627d] block font-medium">Instancia</span>
+<span class="font-semibold text-xs">Zona B y Cuartos</span>
+</div>
+<div class="text-[#0e1b3d]">
+<span class="text-[10px] text-[#55627d] block font-medium">Final</span>
+<span class="font-semibold text-xs">Domingo 20:00 hs</span>
+</div>
+</div>
+<!-- CTA Action para torneo en curso -->
+<div class="mt-3.5 pt-3 border-t border-[#d3dbe9] flex items-center justify-between gap-3">
+<div class="text-xs text-[#55627d]">
+<span class="font-medium">Inscripciones cerradas</span>
+</div>
+<a class="inline-flex items-center justify-center gap-1.5 bg-[#1846a3] text-white text-xs font-bold py-2.5 px-4 rounded-lg hover:bg-[#0c2357] transition-all duration-150 active:scale-95 shadow-sm" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="scoreboard">scoreboard</span>
+<span>Seguir fixture y en vivo</span>
+</a>
+</div>
+</article>
+<!-- TARJETA 3: INSCRIPCIÓN ABIERTA (Damas 7ª - Pilar) -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] p-4 shadow-sm hover:border-[#1846a3]/50 transition-all duration-200">
+<!-- Top row: Categoría y Estado Pill -->
+<div class="flex items-start justify-between gap-2 mb-2.5">
+<div class="flex flex-wrap items-center gap-1.5">
+<span class="bg-[#7d4a00] text-white text-[11px] font-condensed font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+              7ª Damas
+            </span>
+<span class="bg-slate-100 text-[#55627d] text-[11px] font-medium px-2 py-0.5 rounded">
+              Round Robin + Repechaje
+            </span>
+</div>
+<!-- Estado Verde -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#e0f3ea] text-[#146c48]">
+<span class="w-2 h-2 rounded-full bg-[#146c48]"></span>
+            Inscripción abierta
+          </span>
+</div>
+<!-- Título y Club -->
+<h2 class="text-lg font-bold font-condensed tracking-tight text-[#0e1b3d] leading-snug">
+          Torneo Relámpago Damas Weekend
+        </h2>
+<div class="flex items-center gap-1.5 text-xs text-[#55627d] mt-1 font-medium">
+<span class="material-symbols-outlined text-sm text-[#1846a3]" data-icon="location_on">location_on</span>
+<span>El Balcón Pádel (Pilar, Panamericana Km 48)</span>
+</div>
+<!-- Fechas y Formato -->
+<div class="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-slate-100 text-xs">
+<div class="flex items-center gap-1.5 text-[#0e1b3d]">
+<span class="material-symbols-outlined text-base text-[#55627d]" data-icon="calendar_month">calendar_month</span>
+<div>
+<span class="text-[10px] text-[#55627d] block font-medium">Sábado único</span>
+<span class="font-semibold">26 de Abril 2025</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 text-[#0e1b3d]">
+<span class="material-symbols-outlined text-base text-[#55627d]" data-icon="schedule">schedule</span>
+<div>
+<span class="text-[10px] text-[#55627d] block font-medium">Jornada completa</span>
+<span class="font-semibold">Desde las 14:00 hs</span>
+</div>
+</div>
+</div>
+<!-- Cupo & Barra de Progreso (50% lleno) -->
+<div class="mt-3 bg-slate-50 p-2.5 rounded-md border border-slate-100">
+<div class="flex justify-between items-center text-xs mb-1.5">
+<span class="font-medium text-[#55627d]">Cupos disponibles:</span>
+<span class="font-condensed font-bold text-[#0e1b3d]">
+              6 de 12 parejas anotadas
+            </span>
+</div>
+<div class="w-full bg-[#d3dbe9] h-2 rounded-full overflow-hidden">
+<div class="bg-[#1846a3] h-full rounded-full" style="width: 50%;"></div>
+</div>
+</div>
+<!-- Premios & Precio -->
+<div class="mt-2.5 flex items-center justify-between text-xs text-[#55627d]">
+<div class="flex items-center gap-1 truncate">
+<span class="material-symbols-outlined text-base text-amber-600" data-icon="emoji_events">emoji_events</span>
+<span class="truncate">Indumentaria oficial + Cena en club</span>
+</div>
+<span class="font-bold text-[#0e1b3d] whitespace-nowrap">$22.000 <span class="text-[10px] font-normal text-[#55627d]">/ dupla</span></span>
+</div>
+<!-- CTA Action -->
+<div class="mt-3.5 pt-3 border-t border-[#d3dbe9] flex items-center justify-between gap-3">
+<span class="text-xs text-[#55627d] font-medium">Mínimo 2 partidos garantizados</span>
+<a class="inline-flex items-center justify-center gap-1.5 bg-[#1846a3] text-white text-xs font-bold py-2.5 px-4 rounded-lg hover:bg-[#0c2357] transition-all duration-150 active:scale-95 shadow-sm" href="#">
+<span>Anotarse ahora</span>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- TARJETA 4: FINALIZADO (Resultados concluidos) -->
+<article class="bg-white rounded-lg border border-[#d3dbe9] p-4 shadow-sm opacity-95">
+<!-- Top row: Categoría y Estado Concluido -->
+<div class="flex items-start justify-between gap-2 mb-2.5">
+<div class="flex flex-wrap items-center gap-1.5">
+<span class="bg-[#55627d] text-white text-[11px] font-condensed font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+              4ª Caballeros (Suma 11)
+            </span>
+<span class="bg-slate-100 text-[#55627d] text-[11px] font-medium px-2 py-0.5 rounded">
+              Eliminación directa
+            </span>
+</div>
+<!-- Estado Finalizado -->
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-[#55627d] border border-slate-200">
+<span class="material-symbols-outlined text-xs leading-none" data-icon="check_circle">check_circle</span>
+            Concluido
+          </span>
+</div>
+<!-- Título y Club -->
+<h2 class="text-lg font-bold font-condensed tracking-tight text-[#0e1b3d] leading-snug">
+          Master Series Olivos · Torneo Apertura
+        </h2>
+<div class="flex items-center gap-1.5 text-xs text-[#55627d] mt-1 font-medium">
+<span class="material-symbols-outlined text-sm text-[#55627d]" data-icon="location_on">location_on</span>
+<span>La Quinta Pádel (Olivos) · Disputado el 05 y 06 de Abril</span>
+</div>
+<!-- Podio / Campeones -->
+<div class="mt-3 p-2.5 bg-slate-50 border border-slate-200 rounded-md flex items-center justify-between text-xs">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-brand-accent flex items-center justify-center font-bold text-padel-ink">
+              1º
+            </div>
+<div>
+<span class="text-[10px] text-[#55627d] uppercase tracking-wider block font-bold">Campeones</span>
+<span class="font-bold text-[#0e1b3d]">M. Benítez &amp; F. Carrizo</span>
+</div>
+</div>
+<span class="text-xs font-condensed font-bold text-[#1846a3]">6-4 / 7-5</span>
+</div>
+<!-- CTA Action para torneo finalizado -->
+<div class="mt-3.5 pt-3 border-t border-[#d3dbe9] flex items-center justify-between gap-3">
+<span class="text-xs text-[#55627d]">Cuadro de 24 duplas completado</span>
+<button class="inline-flex items-center justify-center gap-1.5 bg-white border border-[#1846a3] text-[#1846a3] text-xs font-bold py-2 px-3.5 rounded-lg hover:bg-[#e8eefb] transition-all duration-150 active:scale-95" type="button">
+<span class="material-symbols-outlined text-sm" data-icon="visibility">visibility</span>
+<span>Ver resultados y llave</span>
+</button>
+</div>
+</article>
+</div>
+<!-- ================= BANNER DE INCENTIVO AL REGISTRO ================= -->
+<section class="mt-8 bg-gradient-to-br from-[#1846a3] to-[#0c2357] rounded-xl p-5 text-white shadow-md relative overflow-hidden">
+<!-- Acento decorativo sutil estilo red/pelota -->
+<div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full border-8 border-white/10 pointer-events-none"></div>
+<div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<div class="inline-flex items-center gap-1.5 bg-brand-accent text-padel-ink font-condensed font-bold text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full mb-2">
+<span class="material-symbols-outlined text-xs leading-none" data-icon="qr_code_scanner">qr_code_scanner</span>
+<span>Alta de parejas por QR</span>
+</div>
+<h3 class="text-lg font-bold font-condensed tracking-tight uppercase leading-snug">
+            ¿Querés anotar tu dupla a un torneo?
+          </h3>
+<p class="text-xs text-white/90 mt-1 max-w-md leading-relaxed">
+            Creá tu cuenta gratis o ingresá para reservar tu cupo en segundos escaneando el código de tu compañero. La confirmación es instantánea tras la aprobación del club.
+          </p>
+</div>
+<div class="flex flex-col sm:flex-row gap-2 shrink-0">
+<button class="bg-brand-accent hover:bg-yellow-300 text-padel-ink font-bold text-xs py-3 px-5 rounded-lg transition-transform active:scale-95 shadow-sm text-center" type="button">
+            Ingresar o Registrarme
+          </button>
+</div>
+</div>
+</section>
+<!-- Reglas rápidas de inscripción en clubes amateur -->
+<section class="mt-6 bg-white border border-[#d3dbe9] rounded-lg p-4 text-xs text-[#55627d]">
+<h4 class="font-bold text-[#0e1b3d] text-sm mb-2 flex items-center gap-1.5 font-condensed uppercase tracking-wide">
+<span class="material-symbols-outlined text-base text-[#1846a3]" data-icon="help_outline">help_outline</span>
+        ¿Cómo funciona la inscripción en Emparejados?
+      </h4>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+<div class="flex items-start gap-2">
+<span class="font-condensed font-bold text-sm text-[#1846a3] bg-blue-50 w-5 h-5 rounded-full flex items-center justify-center shrink-0">1</span>
+<p><strong class="text-[#0e1b3d]">Armá tu dupla:</strong> Vos o tu compa inician la inscripción con el DNI o QR.</p>
+</div>
+<div class="flex items-start gap-2">
+<span class="font-condensed font-bold text-sm text-[#1846a3] bg-blue-50 w-5 h-5 rounded-full flex items-center justify-center shrink-0">2</span>
+<p><strong class="text-[#0e1b3d]">Aprobación del club:</strong> La organización valida la categoría para garantizar paridad deportiva.</p>
+</div>
+<div class="flex items-start gap-2">
+<span class="font-condensed font-bold text-sm text-[#1846a3] bg-blue-50 w-5 h-5 rounded-full flex items-center justify-center shrink-0">3</span>
+<p><strong class="text-[#0e1b3d]">Jugás y seguís:</strong> Te llega el horario de partido por notificación y el fixture al instante.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- ================= PIE DE PÁGINA PÚBLICO (SIN BOTTOM NAV) ================= -->
+<footer class="w-full bg-white border-t border-[#d3dbe9] py-6 px-4 text-center text-xs text-[#55627d]">
+<div class="max-w-4xl mx-auto flex flex-col items-center gap-3">
+<div class="flex items-center gap-2 text-[#0e1b3d] font-condensed font-bold text-sm uppercase tracking-wider">
+<span class="material-symbols-outlined text-lg text-[#1846a3]" data-icon="sports_tennis">sports_tennis</span>
+<span>Emparejados Pádel Argentina</span>
+</div>
+<p class="max-w-md text-[11px] leading-relaxed">
+        Plataforma oficial para la gestión de torneos y ranking amateur en clubes de Buenos Aires, Córdoba, Rosario y todo el país.
+      </p>
+<div class="flex flex-wrap justify-center gap-4 text-xs font-semibold text-[#1846a3] pt-1">
+<a class="hover:underline" href="#">Reglamento APA</a>
+<span class="text-slate-300">•</span>
+<a class="hover:underline" href="#">Para Clubes y Fiscales</a>
+<span class="text-slate-300">•</span>
+<a class="hover:underline" href="#">Ayuda / Soporte</a>
+<span class="text-slate-300">•</span>
+<a class="hover:underline" href="#">Términos de servicio</a>
+</div>
+<div class="text-[10px] text-[#55627d]/80 pt-2 border-t border-slate-100 w-full max-w-xs">
+        © 2025 Emparejados Pádel. Todos los derechos reservados.
+      </div>
+</div>
+</footer>
+</body></html>

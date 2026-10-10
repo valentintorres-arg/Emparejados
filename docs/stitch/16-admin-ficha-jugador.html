@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bruno Acosta - Ficha de Jugador | Emparejados Pádel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f4fc',
+              100: '#e1e9f8',
+              200: '#c5d5f2',
+              600: '#1e54c4',
+              700: '#1846a3',
+              800: '#12347d',
+              900: '#0c2357',
+              lime: '#d6f038',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1;
+    }
+  </style>
+</head>
+<body class="bg-[#f4f7fb] text-slate-800 font-sans antialiased min-h-screen flex flex-row">
+
+  <!-- BARRA LATERAL AZUL OSCURA (FIJA) -->
+  <aside class="w-64 bg-[#0c2357] text-white flex-shrink-0 flex flex-col justify-between min-h-screen border-r border-[#12347d] select-none">
+    <div>
+      <!-- Marca / Logo -->
+      <div class="px-6 py-6 border-b border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-blue-500 flex items-center justify-center text-white shadow-inner relative">
+            <span class="material-symbols-outlined text-2xl text-brand-lime">sports_tennis</span>
+            <span class="absolute -top-1 -right-1 w-3 h-3 bg-brand-lime rounded-full border-2 border-[#0c2357]"></span>
+          </div>
+          <div>
+            <div class="text-base font-extrabold tracking-tight leading-tight flex items-center gap-1">
+              EMPAREJADOS <span class="text-brand-lime">PÁDEL</span>
+            </div>
+            <p class="text-[11px] text-slate-300 font-medium tracking-wide">Club Náutico San Isidro</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badge Fiscal Oficial -->
+      <div class="px-6 pt-4 pb-2">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-emerald-300 border border-emerald-400/20">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          FISCALÍA OFICIAL
+        </span>
+      </div>
+
+      <!-- Navegación Principal -->
+      <nav class="mt-2 px-3 space-y-1">
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-xl">dashboard</span>
+          Inicio
+        </a>
+        <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-xl">fact_check</span>
+            Aprobaciones
+          </div>
+          <span class="bg-[#eab308] text-slate-900 font-bold text-xs px-2 py-0.5 rounded-full shadow-sm">5</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-xl">emoji_events</span>
+          Torneos
+        </a>
+        <a href="#" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-700/60 border border-blue-400/30 shadow-sm">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-xl text-brand-lime">groups</span>
+            Jugadores
+          </div>
+          <span class="w-2 h-2 rounded-full bg-brand-lime"></span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-xl">stadium</span>
+          Sedes y Canchas
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-xl">manage_accounts</span>
+          Usuarios
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-xl">history_toggle_off</span>
+          Auditoría
+        </a>
+      </nav>
+    </div>
+
+    <!-- Usuario autenticado y logout -->
+    <div class="p-4 border-t border-white/10 bg-[#081a42]/50">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-10 h-10 rounded-full bg-brand-lime text-[#0c2357] font-extrabold flex items-center justify-center text-sm ring-2 ring-white/20">
+          FG
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="text-xs font-bold text-white truncate">Fiscal General</div>
+          <div class="text-[11px] text-slate-400 truncate">fiscalia@nauticosanisidro.com.ar</div>
+        </div>
+      </div>
+      <button class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/10 border border-white/10 transition-colors">
+        <span class="material-symbols-outlined text-base">logout</span>
+        Cerrar sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="flex-1 flex flex-col min-w-0">
+    
+    <!-- Topbar superior -->
+    <header class="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+      <!-- Breadcrumb & Contexto -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center text-xs font-medium text-slate-500 gap-1.5">
+          <a href="#" class="hover:text-brand-700">Organización</a>
+          <span class="material-symbols-outlined text-sm text-slate-400">chevron_right</span>
+          <a href="#" class="hover:text-brand-700">Jugadores</a>
+          <span class="material-symbols-outlined text-sm text-slate-400">chevron_right</span>
+          <span class="text-slate-900 font-semibold">Ficha #6091 - Bruno Acosta</span>
+        </div>
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 ml-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          Temporada 2025 · Circuito Oficial APA
+        </span>
+      </div>
+
+      <!-- Acciones de cuenta / notificaciones -->
+      <div class="flex items-center gap-4">
+        <button class="relative p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Notificaciones">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-400 rounded-full ring-2 ring-white"></span>
+        </button>
+        <button class="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-colors" title="Ayuda">
+          <span class="material-symbols-outlined">help</span>
+        </button>
+        <div class="h-6 w-px bg-slate-200"></div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-1 bg-brand-50 border border-brand-200 text-brand-700 font-bold text-xs rounded-md">CNSI</span>
+          <span class="text-xs font-semibold text-slate-700">Sede Central</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Área de trabajo scrollable -->
+    <div class="p-8 max-w-7xl w-full mx-auto space-y-6">
+
+      <!-- ENCABEZADO DEL JUGADOR CON VOLVER Y ACCIONES -->
+      <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          
+          <!-- Lado Izquierdo: Volver + Avatar + Identidad -->
+          <div class="flex items-start gap-4">
+            <button onclick="history.back()" class="mt-1 p-2.5 rounded-xl border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center group" title="Volver al padrón de jugadores">
+              <span class="material-symbols-outlined text-xl group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+            </button>
+
+            <!-- Avatar con iniciales grandes -->
+            <div class="relative">
+              <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#0c2357] to-[#1e54c4] text-white flex items-center justify-center font-extrabold text-2xl tracking-wider shadow-md border-2 border-white ring-2 ring-brand-100">
+                BA
+              </div>
+              <span class="absolute -bottom-1.5 -right-1.5 px-2 py-0.5 bg-amber-400 text-slate-950 font-bold text-[10px] rounded-full border border-white shadow-sm">
+                6ª Cat
+              </span>
+            </div>
+
+            <!-- Detalles de identidad -->
+            <div>
+              <div class="flex flex-wrap items-center gap-2.5">
+                <h1 class="text-2xl font-black text-slate-900 tracking-tight">Bruno Acosta</h1>
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                  <span class="material-symbols-outlined text-xs fill">trending_up</span>
+                  Ascenso APA 6ª → 5ª
+                </span>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Habilitado en torneo
+                </span>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-2 text-xs font-medium text-slate-600">
+                <span class="flex items-center gap-1 text-slate-700 font-semibold">
+                  <span class="material-symbols-outlined text-base text-brand-700">badge</span>
+                  Ficha APA: #6091-APA
+                </span>
+                <span class="text-slate-300">•</span>
+                <span class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-base text-slate-500">location_on</span>
+                  Club Náutico San Isidro (Local)
+                </span>
+                <span class="text-slate-300">•</span>
+                <span class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-base text-slate-500">sports_tennis</span>
+                  Drive (Derecha) · Diestro
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lado Derecho: Botones de Acción (Editar y Dar de baja) -->
+          <div class="flex items-center gap-3 self-end lg:self-center">
+            <button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs transition-colors shadow-sm">
+              <span class="material-symbols-outlined text-base text-slate-600">edit</span>
+              Editar
+            </button>
+            <button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-rose-200 bg-rose-50/70 hover:bg-rose-100 text-rose-700 font-semibold text-xs transition-colors">
+              <span class="material-symbols-outlined text-base">person_remove</span>
+              Dar de baja
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- GRID PRINCIPAL DE 2 COLUMNAS -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- COLUMNA IZQUIERDA (1 de 3): Tarjeta de Datos Personales y de Juego -->
+        <div class="lg:col-span-1 space-y-6">
+          
+          <!-- Tarjeta de Datos -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-brand-700 text-lg">person</span>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Datos del Jugador</h2>
+              </div>
+              <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">DNI Validado</span>
+            </div>
+
+            <div class="p-5 space-y-4 text-xs">
+              <!-- DNI -->
+              <div class="flex justify-between items-center py-1 border-b border-slate-100">
+                <span class="text-slate-500 font-medium">DNI / Documento</span>
+                <span class="font-bold text-slate-900 tracking-wide">36.104.920</span>
+              </div>
+
+              <!-- Nacimiento -->
+              <div class="flex justify-between items-center py-1 border-b border-slate-100">
+                <span class="text-slate-500 font-medium">Fecha de nacimiento</span>
+                <span class="font-semibold text-slate-800">18/08/1991 (33 años)</span>
+              </div>
+
+              <!-- Teléfono / WhatsApp -->
+              <div class="flex justify-between items-center py-1 border-b border-slate-100">
+                <span class="text-slate-500 font-medium">Teléfono / WhatsApp</span>
+                <a href="https://wa.me/5491167194420" target="_blank" class="inline-flex items-center gap-1 font-bold text-emerald-700 hover:text-emerald-800 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-200 transition-colors">
+                  <span class="material-symbols-outlined text-sm">chat</span>
+                  11 6719-4420
+                </a>
+              </div>
+
+              <!-- Email -->
+              <div class="flex justify-between items-center py-1 border-b border-slate-100">
+                <span class="text-slate-500 font-medium">Correo electrónico</span>
+                <span class="font-semibold text-slate-800 truncate max-w-[170px]" title="bruno.acosta@gmail.com">bruno.acosta@gmail.com</span>
+              </div>
+
+              <!-- Ciudad -->
+              <div class="flex justify-between items-center py-1 border-b border-slate-100">
+                <span class="text-slate-500 font-medium">Ciudad / Localidad</span>
+                <span class="font-semibold text-slate-800">San Isidro, Bs. As.</span>
+              </div>
+
+              <!-- Mano hábil -->
+              <div class="flex justify-between items-center py-1 border-b border-slate-100">
+                <span class="text-slate-500 font-medium">Mano hábil</span>
+                <span class="inline-flex items-center gap-1 font-semibold text-slate-800">
+                  <span class="material-symbols-outlined text-sm text-slate-500">front_hand</span>
+                  Diestro
+                </span>
+              </div>
+
+              <!-- Posición preferida -->
+              <div class="flex justify-between items-center py-1">
+                <span class="text-slate-500 font-medium">Posición preferida</span>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 text-brand-700 font-bold rounded border border-blue-200">
+                  Drive (Derecha)
+                </span>
+              </div>
+            </div>
+
+            <!-- Ficha médica y cuota -->
+            <div class="p-4 bg-brand-50/40 border-t border-slate-100 text-[11px] text-slate-600 flex items-center justify-between">
+              <span class="flex items-center gap-1 font-medium text-slate-700">
+                <span class="material-symbols-outlined text-base text-emerald-600">verified</span>
+                Apto médico y cuota al día
+              </span>
+              <span class="font-bold text-slate-500">Vence 12/2025</span>
+            </div>
+          </div>
+
+          <!-- Resumen de Estadísticas Rápidas -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 space-y-3">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Métricas en el Circuito</h3>
+            <div class="grid grid-cols-3 gap-2 text-center pt-1">
+              <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                <div class="text-lg font-black text-brand-700">18</div>
+                <div class="text-[10px] font-semibold text-slate-500">PJ</div>
+              </div>
+              <div class="bg-emerald-50 p-2.5 rounded-xl border border-emerald-200">
+                <div class="text-lg font-black text-emerald-700">13</div>
+                <div class="text-[10px] font-semibold text-emerald-800">PG (72%)</div>
+              </div>
+              <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                <div class="text-lg font-black text-amber-700">1</div>
+                <div class="text-[10px] font-semibold text-slate-500">Títulos</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- COLUMNA DERECHA (2 de 3): Pareja actual, Historial y Torneos -->
+        <div class="lg:col-span-2 space-y-6">
+
+          <!-- SECCIÓN: PAREJA ACTUAL -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-brand-700 text-lg">favorite</span>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Pareja Actual</h2>
+              </div>
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Dupla Activa
+              </span>
+            </div>
+
+            <div class="p-6">
+              <div class="bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-white rounded-xl border border-blue-200/70 p-5 flex flex-col md:flex-row md:items-center justify-between gap-5">
+                
+                <!-- Pareja Avatar & Nombres -->
+                <div class="flex items-center gap-4">
+                  <!-- Avatares entrelazados -->
+                  <div class="flex -space-x-3">
+                    <div class="w-13 h-13 w-12 h-12 rounded-full bg-[#0c2357] text-white flex items-center justify-center font-bold text-sm ring-4 ring-white shadow">
+                      BA
+                    </div>
+                    <div class="w-13 h-13 w-12 h-12 rounded-full bg-brand-700 text-white flex items-center justify-center font-bold text-sm ring-4 ring-white shadow">
+                      HB
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h3 class="text-base font-bold text-slate-900">Hernán "El Chino" Benítez</h3>
+                      <span class="px-2 py-0.5 bg-brand-100 text-brand-800 font-bold text-[11px] rounded">6ª Caballeros</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-0.5">Posición: Revés · Club Náutico San Isidro · Ficha #5419-APA</p>
+                    <div class="flex items-center gap-3 mt-2 text-xs font-semibold text-slate-700">
+                      <span class="inline-flex items-center gap-1 text-brand-700">
+                        <span class="material-symbols-outlined text-sm">trophy</span>
+                        Torneo Clausura 6ª (En competencia)
+                      </span>
+                      <span class="text-slate-300">•</span>
+                      <span>Récord juntos: 8 PJ (6 PG - 2 PP)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Botón de gestión rápida -->
+                <div class="flex items-center gap-2 self-start md:self-center">
+                  <a href="https://wa.me/5491144029199" target="_blank" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-xl border border-slate-300 shadow-sm flex items-center gap-1.5 transition-colors">
+                    <span class="material-symbols-outlined text-emerald-600 text-base">chat</span>
+                    WhatsApp dupla
+                  </a>
+                  <button class="px-3 py-2 bg-brand-700 hover:bg-brand-800 text-white font-semibold text-xs rounded-xl transition-colors shadow-sm">
+                    Ver ficha compa
+                  </button>
+                </div>
+
+              </div>
+
+              <!-- Nota de fiscalía sobre la dupla -->
+              <div class="mt-4 px-4 py-3 bg-amber-50/80 rounded-xl border border-amber-200/80 flex items-start gap-3">
+                <span class="material-symbols-outlined text-amber-700 text-base mt-0.5">info</span>
+                <p class="text-xs text-amber-900 leading-relaxed">
+                  <span class="font-bold">Observación de Fiscalía:</span> La dupla Acosta/Benítez está anotada en 6ª categoría para el Cuadro de 16. Debido a la solicitud de ascenso de Bruno, el comité fiscalizador mantendrá la habilitación hasta la conclusión del Torneo Clausura.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECCIÓN: HISTORIAL DE PAREJAS -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-brand-700 text-lg">history</span>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Historial de Parejas</h2>
+              </div>
+              <span class="text-xs text-slate-500 font-medium">3 duplas registradas</span>
+            </div>
+
+            <div class="divide-y divide-slate-100">
+              
+              <!-- Item 1: Hernán Benítez (Actual) -->
+              <div class="p-4 hover:bg-slate-50/80 transition-colors flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-brand-100 text-brand-800 font-bold text-xs flex items-center justify-center">
+                    HB
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-bold text-slate-900">Hernán Benítez</span>
+                      <span class="text-[10px] font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">Actual</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-0.5">6ª Cat · Revés · Torneo Clausura y Apertura 2025</p>
+                  </div>
+                </div>
+                <div class="text-right text-xs">
+                  <div class="font-bold text-slate-800">8 partidos</div>
+                  <div class="text-[11px] text-emerald-600 font-semibold">75% victorias</div>
+                </div>
+              </div>
+
+              <!-- Item 2: Lucía Benítez (Mixto) -->
+              <div class="p-4 hover:bg-slate-50/80 transition-colors flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-800 font-bold text-xs flex items-center justify-center">
+                    LB
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-bold text-slate-900">Lucía Benítez</span>
+                      <span class="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">Mixto B</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-0.5">6ª Damas · Torneo Mixto de Verano 2025 (Cabeza de Serie 4)</p>
+                  </div>
+                </div>
+                <div class="text-right text-xs">
+                  <div class="font-bold text-slate-800">4 partidos</div>
+                  <div class="text-[11px] text-slate-500 font-medium">Semifinalistas</div>
+                </div>
+              </div>
+
+              <!-- Item 3: Lucas Di Santo -->
+              <div class="p-4 hover:bg-slate-50/80 transition-colors flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-slate-100 text-slate-700 font-bold text-xs flex items-center justify-center">
+                    LD
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-xs font-bold text-slate-900">Lucas Di Santo</span>
+                      <span class="text-[10px] font-semibold bg-rose-50 text-rose-700 px-2 py-0.5 rounded-full">Disuelta</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 mt-0.5">6ª Cat · Torneo Nocturno Los Pinos 2024</p>
+                  </div>
+                </div>
+                <div class="text-right text-xs">
+                  <div class="font-bold text-slate-800">3 partidos</div>
+                  <div class="text-[11px] text-slate-400 font-medium">Fase de grupos</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- SECCIÓN: TORNEOS JUGADOS -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-brand-700 text-lg">emoji_events</span>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-700">Torneos Jugados y Resultados</h2>
+              </div>
+              <span class="text-xs text-slate-500 font-medium">Temporada 2024 / 2025</span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="bg-slate-50/80 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200 text-[11px]">
+                    <th class="px-6 py-3.5">Torneo / Club</th>
+                    <th class="px-4 py-3.5">Categoría</th>
+                    <th class="px-4 py-3.5">Compañero</th>
+                    <th class="px-4 py-3.5">Resultado Alcanzado</th>
+                    <th class="px-4 py-3.5 text-right">Puntos APA</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  
+                  <!-- Torneo 1 -->
+                  <tr class="hover:bg-slate-50/70 transition-colors">
+                    <td class="px-6 py-4">
+                      <div class="font-bold text-slate-900">Torneo Clausura 2025</div>
+                      <div class="text-[11px] text-slate-500">Club Náutico San Isidro · Octubre 2025</div>
+                    </td>
+                    <td class="px-4 py-4">
+                      <span class="px-2 py-0.5 rounded bg-blue-50 text-brand-700 font-semibold border border-blue-200 text-[11px]">6ª Caballeros</span>
+                    </td>
+                    <td class="px-4 py-4 font-medium text-slate-700">Hernán Benítez</td>
+                    <td class="px-4 py-4">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping"></span>
+                        Cuartos de final (En juego)
+                      </span>
+                    </td>
+                    <td class="px-4 py-4 text-right font-black text-slate-800">+240 pts</td>
+                  </tr>
+
+                  <!-- Torneo 2 -->
+                  <tr class="hover:bg-slate-50/70 transition-colors">
+                    <td class="px-6 py-4">
+                      <div class="font-bold text-slate-900">Copa Primavera 2025</div>
+                      <div class="text-[11px] text-slate-500">Club Náutico San Isidro · Marzo 2025</div>
+                    </td>
+                    <td class="px-4 py-4">
+                      <span class="px-2 py-0.5 rounded bg-blue-50 text-brand-700 font-semibold border border-blue-200 text-[11px]">6ª Caballeros</span>
+                    </td>
+                    <td class="px-4 py-4 font-medium text-slate-700">Hernán Benítez</td>
+                    <td class="px-4 py-4">
+                      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-300">
+                        <span class="material-symbols-outlined text-sm text-slate-500">military_tech</span>
+                        Subcampeón (Finalista)
+                      </span>
+                    </td>
+                    <td class="px-4 py-4 text-right font-black text-slate-800">+800 pts</td>
+                  </tr>
+
+                  <!-- Torneo 3 -->
+                  <tr class="hover:bg-slate-50/70 transition-colors">
+                    <td class="px-6 py-4">
+                      <div class="font-bold text-slate-900">Torneo Mixto de Verano</div>
+                      <div class="text-[11px] text-slate-500">Club San Jorge Pádel (Palermo) · Noviembre 2024</div>
+                    </td>
+                    <td class="px-4 py-4">
+                      <span class="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-semibold border border-purple-200 text-[11px]">Mixto B</span>
+                    </td>
+                    <td class="px-4 py-4 font-medium text-slate-700">Lucía Benítez</td>
+                    <td class="px-4 py-4">
+                      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                        Semifinales
+                      </span>
+                    </td>
+                    <td class="px-4 py-4 text-right font-black text-slate-800">+450 pts</td>
+                  </tr>
+
+                  <!-- Torneo 4 -->
+                  <tr class="hover:bg-slate-50/70 transition-colors">
+                    <td class="px-6 py-4">
+                      <div class="font-bold text-slate-900">Torneo Apertura 2025</div>
+                      <div class="text-[11px] text-slate-500">Sede San Isidro Pistas 3 y 4 · Abril 2025</div>
+                    </td>
+                    <td class="px-4 py-4">
+                      <span class="px-2 py-0.5 rounded bg-blue-50 text-brand-700 font-semibold border border-blue-200 text-[11px]">6ª Caballeros</span>
+                    </td>
+                    <td class="px-4 py-4 font-medium text-slate-700">Hernán Benítez</td>
+                    <td class="px-4 py-4">
+                      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-black bg-lime-100 text-lime-900 border border-lime-400">
+                        <span class="material-symbols-outlined text-sm text-lime-700 fill">emoji_events</span>
+                        Campeón 1º Puesto
+                      </span>
+                    </td>
+                    <td class="px-4 py-4 text-right font-black text-emerald-700">+1.200 pts</td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Footer con paginado o descarga de certificado -->
+            <div class="p-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+              <span>Total acumulado en circuito: <strong class="text-slate-800">2.690 puntos APA</strong></span>
+              <button class="inline-flex items-center gap-1.5 font-semibold text-brand-700 hover:text-brand-800 transition-colors">
+                <span class="material-symbols-outlined text-base">download</span>
+                Descargar historial federativo (PDF)
+              </button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</body>
+</html>
